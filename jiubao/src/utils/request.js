@@ -1,4 +1,5 @@
 import axios from 'axios';
+console.log(12,axios)
 axios.defaults.withCredent = true;//是否允许携带cookie请求
 const BASE_API = 'www.baidu.com';//请求的域名
 const service = axios.create({
