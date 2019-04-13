@@ -1,11 +1,24 @@
 import request from "@/utils/request.js";
 export default {
-    index(data,url){
-        console.log(333,data,url)
+    index(data) {
         return request({
-            url: url,
+            url: "/apis/ApisDefault/porductsList",
             method: 'post',
             data
-        })
+        });
+    },
+    indexAd(data) {
+        return request({
+            url: "/apis/ApisDefault/IndexAdv",
+            method: 'post',
+            data
+        });
+    },
+    recommend(data) {
+        return request({
+            url: "/apis/ApisDefault/Indextuijian",
+            method: 'post',
+            data
+        });
     },
 }
