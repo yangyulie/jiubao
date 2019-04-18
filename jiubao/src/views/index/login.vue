@@ -90,6 +90,7 @@ export default {
             this.toastObj = Toast(res.msg);
             let storage=window.localStorage;
             let token = storage.setItem("token",res.token);
+           this.$router.go(-1);
         })
     },
     closeToast(){//关闭已有提示层
