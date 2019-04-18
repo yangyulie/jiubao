@@ -1,5 +1,5 @@
 <template>
-  <div class="home">1
+  <div class="home">
     <search></search>
     <div class="adBox">
       <mt-swipe v-if="adList.length>0" :auto="4000" continuous>
