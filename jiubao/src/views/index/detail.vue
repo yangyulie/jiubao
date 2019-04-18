@@ -3,14 +3,12 @@
     <div class="adBox">
       <mt-swipe v-if="adList.length>0" :auto="4000" continuous>
         <mt-swipe-item v-for="(item,index) in adList" :key="index">
-          <router-link :to="item.urls">
-            <img :src="item.picurls" alt>
-            <p>{{item.remarks}}</p>
-          </router-link>
+          <img :src="item" alt>
         </mt-swipe-item>
       </mt-swipe>
     </div>
     
+    <div class="detail" v-html="datas.contents"></div>
   </div>
 </template>
 
@@ -24,8 +22,7 @@ export default {
   },
   data() {
     return {
-      list: [1, 2, 3],
-      proList: [],
+      datas: {},
       adList: []
     };
   },
@@ -38,17 +35,14 @@ export default {
   },
   methods: {
     init() {
-      this.getIndex();
-      this.getAd();
+      this.getDetail();
     },
-    getIndex() {
-      Api.index({ Number: 6 }).then(res => {
-        this.proList = res.data;
-      });
-    },
-    getAd() {
-      Api.indexAd({ tid: 1 }).then(res => {
-        this.adList = res.data;
+    getDetail() {
+      let questDataId = this.$route.query.id;
+      Api.indexDetail({ Id: questDataId }).then(res => {
+        this.datas = res.data;
+        this.adList.push(res.data.purls);
+        console.log(this.adList,res.data.purls)
       });
     }
     //...mapActions(["setData"])
@@ -60,6 +54,6 @@ export default {
 </script>
 <style lang='less' scoped>
 .adBox {
-  height: 355px;
+  height: 640px;
 }
 </style>

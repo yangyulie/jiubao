@@ -30,10 +30,22 @@ img {
     max-width: 100%;
     vertical-align: middle;
 }
+input{ border: 0; background: none;}
+a{
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    -webkit-user-select: none;
+    -moz-user-focus: none;
+    -moz-user-select: none;
+    text-decoration: none;
+}
 @act_color:#2892fe;
 @color:#6e6e6e;
 @bgColor:#f4f8ff;
 @borderColor:#c1c1c1;
+@allHei:100vh;
+.fullHei{
+    height: @allHei;
+}
 .center{
   display: flex;
   justify-content: space-between;
@@ -41,3 +53,6 @@ img {
 }
 // 轮播图小圆点激活状态
 .mint-swipe-indicator.is-active { width: 25px; background-color: #2791ff; opacity: 1; border-radius: 5px;}
+
+//提示层文字
+.mint-toast-text{ font-size: 24px;}

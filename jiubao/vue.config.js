@@ -100,16 +100,16 @@ module.exports = {
       myConfig.externals = externals
       myConfig.plugins = []
       // 2. 构建时开启gzip，降低服务器压缩对CPU资源的占用，服务器也要相应开启gzip
-      productionGzip &&
-        myConfig.plugins.push(
-          new CompressionWebpackPlugin({
-            test: new RegExp(
-              '\\.(' + productionGzipExtensions.join('|') + ')$'
-            ),
-            threshold: 8192, // 当文件大于8192字节时才进行压缩
-            minRatio: 0.8 // 只有压缩率比这个值小的资源才会被处理
-          })
-        )
+      // productionGzip &&
+      //   myConfig.plugins.push(
+      //     new CompressionWebpackPlugin({
+      //       test: new RegExp(
+      //         '\\.(' + productionGzipExtensions.join('|') + ')$'
+      //       ),
+      //       threshold: 8192, // 当文件大于8192字节时才进行压缩
+      //       minRatio: 0.8 // 只有压缩率比这个值小的资源才会被处理
+      //     })
+      //   )
     }
     if (process.env.NODE_ENV === 'development') {
       /**
