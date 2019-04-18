@@ -59,7 +59,9 @@ export default {
     // console.log(this.data)
   },
   methods: {
-    init() {},
+    init() {
+      
+    },
     testPhone(){
         this.closeToast();
         let reg = /1\d{10}/;
@@ -86,6 +88,8 @@ export default {
         }
         Api.loginFn(questData).then(res=>{
             this.toastObj = Toast(res.msg);
+            let storage=window.localStorage;
+            let token = storage.setItem("token",res.token);
         })
     },
     closeToast(){//关闭已有提示层
@@ -99,24 +103,27 @@ export default {
             this.toastObj = Toast('倒计时结束后才可重新获取');
             return;
         }
-        this.count = this.countdown;
-        this.timer=setInterval(()=>{
-            this.count = this.count-1;
-            if(this.count<=0){
-                this.text = "发送验证码";
-                clearInterval(this.timer);
-                this.timer = null
-                this.count = this.countdown;
-            }else{
-                this.text=this.count+"s后重新获取";
-            }
-        },1000)
+        
         let questData={
             phone:this.tel,
             typeId:this.loginType
         }
         Api.getTestCode(questData).then(res=>{
             this.toastObj = Toast(res.msg);
+            if(res.code==0){
+              this.count = this.countdown;
+              this.timer=setInterval(()=>{
+                  this.count = this.count-1;
+                  if(this.count<=0){
+                      this.text = "发送验证码";
+                      clearInterval(this.timer);
+                      this.timer = null
+                      this.count = this.countdown;
+                  }else{
+                      this.text=this.count+"s后重新获取";
+                  }
+              },1000)
+            }
         })
     },
     returnPage() {//返回

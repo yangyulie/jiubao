@@ -6,11 +6,11 @@
         :key="index"
         :class="{now:is_now==index}"
       >
-        <router-link :to="item.url">
+        <div @click="isLogin(item)">
           <img :src="item.img" class="defImg" v-if="is_now!=index" alt>
           <img :src="item.actImg" class="actImg" v-else alt>
           <p>{{item.name}}</p>
-        </router-link>
+        </div>
       </li>
     </ul>
     <ul v-else>
@@ -42,34 +42,55 @@ export default {
           name: "首页",
           url: "/",
           img: require("@/assets/imgs/navbar/index.png"),
-          actImg: require("@/assets/imgs/navbar/index_1.png")
+          actImg: require("@/assets/imgs/navbar/index_1.png"),
+          isLogin:false
         },
         {
           name: "商品分类",
           url: "/class",
           img: require("@/assets/imgs/navbar/class.png"),
-          actImg: require("@/assets/imgs/navbar/class_1.png")
+          actImg: require("@/assets/imgs/navbar/class_1.png"),
+          isLogin:false
         },
         {
           name: "我的订单",
           url: "/",
           img: require("@/assets/imgs/navbar/order.png"),
-          actImg: require("@/assets/imgs/navbar/order_1.png")
+          actImg: require("@/assets/imgs/navbar/order_1.png"),
+          isLogin:true
         },
         {
           name: "购物车",
           url: "/",
           img: require("@/assets/imgs/navbar/car.png"),
-          actImg: require("@/assets/imgs/navbar/car_1.png")
+          actImg: require("@/assets/imgs/navbar/car_1.png"),
+          isLogin:true
         },
         {
           name: "会员中心",
           url: "/",
           img: require("@/assets/imgs/navbar/my.png"),
-          actImg: require("@/assets/imgs/navbar/my_1.png")
+          actImg: require("@/assets/imgs/navbar/my_1.png"),
+          isLogin:true
         }
       ]
     };
+  },
+  methods:{
+    isLogin(data){
+      let isLogin = data.isLogin;
+      let storage=window.localStorage;
+      console.log(isLogin,!storage.getItem("token"))
+      if(isLogin&&!storage.getItem("token")){
+        this.$router.push({
+          path: '/login'
+        });
+      }else{
+        this.$router.push({
+          path: data.url
+        });
+      }
+    },
   },
   watch: {}
 };

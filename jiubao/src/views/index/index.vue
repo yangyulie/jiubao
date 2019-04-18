@@ -11,12 +11,57 @@
         </mt-swipe-item>
       </mt-swipe>
     </div>
+    <ul class="classly">
+      <li v-for="(item,index) in classList" :key="index">
+        <router-link :to="item.urls">
+          <img :src="item.picurls" alt="">
+          <p>{{item.name}}</p>
+        </router-link>
+      </li>
+    </ul>
+    <div class="act">
+      <dl>
+        <dt class="tit">
+          <div>活动酒水</div>
+        </dt>
+        <dd class="pro">
+          <div class="list" v-for="(i,idx) in actList" :key="idx">
+            <router-link :to="i.urls">
+              <img class="proImg" :src="i.picurls" alt>
+            </router-link>
+          </div>
+        </dd>
+      </dl>
+    </div>
+    <div class="brand">
+      <dl>
+        <dt class="tit">
+          <div><img src="@/assets/imgs/icon_11.png" alt=""></div>
+          <p>
+            <router-link :to="i.urls" v-for="(i,idx) in brandListAd" :key="idx">
+              <img :src="i.picurls" alt>
+            </router-link>
+          </p>
+        </dt>
+        <dd class="pro">
+          <div class="list" v-for="(i,idx) in brandList" :key="idx">
+            <router-link :to="i.urls">
+              <p class="name">{{i.name}}</p>
+              <p class="remarks">{{i.remarks}}</p>
+              <img class="proImg" :src="i.picurls" alt>
+            </router-link>
+          </div>
+        </dd>
+      </dl>
+    </div>
     <div class="recommend" v-if="recommendList.data&&recommendList.data.length>0">
       <dl>
         <dt class="tit">
           <div>{{recommendList.name}}</div>
-          <img :src="recommendList.urls" v-if="recommendList.urls!='#'" alt>
-          <img src="@/assets/imgs/pic/pic_01.jpg" v-else alt>
+          <router-link :to="recommendList.urls">
+            <img :src="recommendList.urls" v-if="recommendList.urls!='#'" alt>
+            <img src="@/assets/imgs/pic/pic_01.jpg" v-else alt>
+          </router-link>
         </dt>
         <dd class="pro">
           <div class="list" v-for="(i,idx) in recommendList.data" :key="idx">
@@ -41,11 +86,11 @@
         </dd>
       </dl>
     </div>
-    <div class="proList" v-if="proList.length>0">
+    <div class="proList" v-if="proList&&proList.length>0">
       <dl v-for="(item,index) in proList" :key="index" v-if="item.rows.length>0">
         <dt class="tit">
           <div><router-link :to="'/class'">{{item.typeName}} <span></span> </router-link></div>
-          <img :src="item.picurls" alt>
+          <router-link :to="'/class?typeId='+item.typeId"><img :src="item.picurls" alt></router-link>
         </dt>
         <dd v-if="item.rows.length>0"  class="pro">
           <div class="list" v-for="(i,idx) in item.rows" :key="idx">
@@ -92,6 +137,12 @@ export default {
       recommendList: {},
       proList: [],
       adList: [],
+      classList:[],
+      actList:[],
+      brandList:[],
+      brandListAd:[],
+      adRecommend:[],
+      token:''
     };
   },
   mounted() {
@@ -103,27 +154,15 @@ export default {
   },
   methods: {
     init() {
+      let storage=window.localStorage;
+      this.token = storage.getItem("token");
       this.getIndex(); //获取商品列表
       this.getAd(); //获取顶部广告
       this.getRecommend(); //获取推荐商品
     },
-    closeToast(){//关闭已有提示层
-        if (this.toastObj) this.toastObj.close();
-    },
-    goSearch(){
-      let shearchText = this.shearchText;
-      if(shearchText==""){
-        this.closeToast()
-        this.toastObj = Toast('手机号格式错误');
-      }else{
-        console.log(shearchText)
-      }
-
-    },
     isLogin(){//判断是否登录
-      let storage=window.localStorage;
-      let token = storage.getItem("token");
-      if(!token){
+      
+      if(!this.token){
         this.$router.push({
           path: '/login'
         });
@@ -140,17 +179,32 @@ export default {
       console.log(id,tcId)
     },
     getIndex() {
-      Api.index({ Number: 6 }).then(res => {
+      Api.index({ Number: 6,token: this.token }).then(res => {
         this.proList = res.data;
       });
     },
     getAd() {
-      Api.indexAd({ tid: 1 }).then(res => {
+      Api.indexAd({ tid: 1 }).then(res => {//顶部轮播广告
         this.adList = res.data;
+      });
+      Api.indexAd({ tid: 2 }).then(res => {//分类导航
+        this.classList = res.data;
+      });
+      Api.indexAd({ tid: 3 }).then(res => {//活动酒水
+        this.actList = res.data;
+      });
+      Api.indexAd({ tid: 4 }).then(res => {//品牌馆广告
+        this.brandListAd = res.data;
+      });
+      Api.indexAd({ tid: 5 }).then(res => {//品牌列表
+        this.brandList = res.data;
+      });
+      Api.indexAd({ tid: 6 }).then(res => {//推荐广告
+        this.adRecommend = res.data;
       });
     },
     getRecommend() {
-      Api.recommend({ token: "" }).then(res => {
+      Api.recommend({ token: this.token }).then(res => {
         this.recommendList = res;
       });
     }
@@ -174,6 +228,73 @@ export default {
 
 .adBox {
   height: 355px;
+}
+.brand{
+  padding: @padding;
+  .tit{
+    div::before{
+        display: none;
+      }
+    div{
+      img{
+        width: 92px;
+        margin-bottom: 0;
+      }
+    }
+    p{
+      .flex();
+      justify-content: space-between;
+      a{
+        flex: 1;
+      }
+    }
+  }
+  .list{
+    width: 25%;
+    text-align: center;
+    .name{
+      height: auto; font-size: 24px; color: #313131;
+    }
+    .remarks{
+      font-size: 18px;
+      color: #f39128;
+      margin-bottom: 25px;
+    }
+    .proImg{
+      margin-bottom: 45px;
+    }
+  }
+}
+.act{
+  padding: @padding;
+  .list{ 
+    width: 50%;
+    border: 0;
+    padding: 0;
+    .proImg{
+      width: 100%;
+      margin: 0;
+    }
+  }
+}
+.classly{
+  .flex();
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  padding: 0 30px 25px;
+  li{
+    .flex();
+    justify-content: center;
+    text-align: center;
+    width: 20%;
+    padding: 30px 10px 0;
+    box-sizing: border-box;
+    a{
+      font-size: 18px;
+      color: #232323;
+      img{ width: 96px; margin-bottom: 10px;}
+    }
+  }
 }
 .recommend{ padding: @padding;}
 .tit{

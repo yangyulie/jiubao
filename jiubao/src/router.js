@@ -24,5 +24,11 @@ export default new Router({
       component: () => import('./views/index/login.vue'),
       meta: { title: '登录' },
     },
+    {
+      path: '/product',
+      name: 'product',
+      component: () => import('./views/index/product.vue'),
+      meta: { title: '产品列表' },
+    },
   ],
 });

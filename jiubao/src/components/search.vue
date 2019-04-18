@@ -34,7 +34,7 @@ export default {
         this.closeToast()
         this.toastObj = Toast('手机号格式错误');
       }else{
-        console.log(shearchText)
+        this.$router.push('/product?skey='+shearchText);
       }
 
     },
