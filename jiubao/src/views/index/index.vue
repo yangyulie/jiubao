@@ -89,7 +89,7 @@
     <div class="proList" v-if="proList&&proList.length>0">
       <dl v-for="(item,index) in proList" :key="index" v-if="item.rows.length>0">
         <dt class="tit">
-          <div><router-link :to="'/class'">{{item.typeName}} <span></span> </router-link></div>
+          <div><router-link :to="'/class?typeId='+item.typeId">{{item.typeName}} <span></span> </router-link></div>
           <router-link :to="'/class?typeId='+item.typeId"><img :src="item.picurls" alt></router-link>
         </dt>
         <dd v-if="item.rows.length>0"  class="pro">
@@ -179,7 +179,7 @@ export default {
       console.log(id,tcId)
     },
     getIndex() {
-      Api.index({ Number: 6,token: this.token }).then(res => {
+      Api.index({ Number: 6 }).then(res => {
         this.proList = res.data;
       });
     },
@@ -204,7 +204,7 @@ export default {
       });
     },
     getRecommend() {
-      Api.recommend({ token: this.token }).then(res => {
+      Api.recommend().then(res => {
         this.recommendList = res;
       });
     }
