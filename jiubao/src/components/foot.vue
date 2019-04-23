@@ -47,7 +47,7 @@ export default {
         },
         {
           name: "商品分类",
-          url: "/class",
+          url: "/class?typeId=17&isType=true",
           img: require("@/assets/imgs/navbar/class.png"),
           actImg: require("@/assets/imgs/navbar/class_1.png"),
           isLogin:false
