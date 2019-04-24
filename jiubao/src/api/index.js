@@ -57,7 +57,6 @@ export default {
         })
     },
     getSecClass(data={}){//获取二级分类下的产品列表
-        console.log(21,data)
         return request({
             url:"/apis/ApisDefault/productsListPage",
             method:"post",

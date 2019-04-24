@@ -2,7 +2,7 @@
   <div class="home">
     <div class="head">
         <div class="headInner" v-if="!isSecClass">
-            <div class="back">
+            <div class="back" @click="backPage">
                 <div class="backArrow"><span></span></div>
                 <span>商品分类</span>
             </div>
@@ -12,46 +12,49 @@
             </div>
         </div>
         <div class="headInner" v-else>
-            <div class="backArrow"><span></span></div>
+            <div class="backArrow" @click="backPage"><span></span></div>
             <div class="tit" @click="showSelectPop">
                 <span>{{tit}}</span>
             </div>
-            <img src="@/assets/imgs/icon_12.png" alt="">
-            <img src="@/assets/imgs/icon_13.png" alt="">
+            <img @click="backPop" src="@/assets/imgs/icon_12.png" alt="">
+            <img @click="goCar" src="@/assets/imgs/icon_13.png" alt="">
         </div>
     </div>
     <div class="con">
         <ul class="leftNav secreenHei">
             <li v-for="(item,index) in leftNavList" :class="{now:typeId==item.Id}" :key="index" @click="getAllpro(item.Id,index,item.name)">{{item.name}}</li>
         </ul>
-        <ul class="rightList secreenHei" v-if="!isShowProList">
+        <ul class="rightList secreenHei" v-show="!isShowProList">
             <li v-for="(item,index) in rightSecClassList" :key="index" @click="selectSecClass(item.bigId)">
                 <img :src="item.icon" alt="">
                 <p>{{item.name}}</p>
             </li>
         </ul>
-        <div class="rightList secreenHei" v-else>
-            <ul>
-                <li v-for="(item,index) in datas.data" :key="index">
-                    <img :src="item.purls" alt="">
-                    <dl>
-                        <dt>{{item.name}}</dt>
-                        <dd>
-                            <p>
-                                <span>{{item.jhl}} x {{item.guige}}</span>
-                                <em>{{item.chandi}}</em>
-                            </p>
-                            <div>
-                                <em>{{item.price}}</em>
-                                <p>
-                                    <span v-if="item.DisCount*1">满赠</span>
-                                    <img @click.stop="addCar" :data-id="item.Id" :data-tcId="item.tcId?item.tcId:0" src="@/assets/imgs/icon_10.png" alt="">
+        <div class="rightList secreenHei" ref="proList"  v-show="isShowProList">
+            <div ref="proListInner">
+                <ul class="list" v-if="proList.length>0">
+                    <router-link tag="li" :to="'/detail?id='+item.Id" v-for="(item,index) in proList" :key="index">
+                        <img class="listProPic" :src="item.purls" alt="">
+                        <dl>
+                            <dt>{{item.name}}</dt>
+                            <dd>
+                                <p class="listInfo">
+                                    <span>{{item.jhl}} x {{item.guige}}</span>
+                                    <em>{{item.chandi}}</em>
                                 </p>
-                            </div>
-                        </dd>
-                    </dl>
-                </li>
-            </ul>
+                                <div class="listPrice">
+                                    <em>{{item.price}}</em>
+                                    <p>
+                                        <span v-if="item.DisCount*1">满赠</span>
+                                        <img @click.stop="addCar" :data-id="item.Id" :data-tcId="item.tcId?item.tcId:0" src="@/assets/imgs/icon_10.png" alt="">
+                                    </p>
+                                </div>
+                            </dd>
+                        </dl>
+                    </router-link>
+                </ul>
+                <div v-else>暂时没有此类商品</div>
+            </div>
         </div>
         
     </div>
@@ -93,7 +96,14 @@ export default {
       rightSecClassList:[],
       isShowProList:false,
       isType:false,
-      questData:{}
+      questData:{
+          page:1
+      },
+      scrollData:{
+          isQuest:true,
+          scrollBottom:100,
+      },
+      proList:[],
     };
   },
   mounted() {
@@ -105,10 +115,41 @@ export default {
     // setData(this.app)
     // console.log(this.data)
   },
+  watch:{
+      isShowProList(v,o){
+        let proList = this.$refs.proList;
+        console.log(444,v,o)
+        if(v){
+            proList.addEventListener('scroll',this.scrollFn,false);
+        }else{
+            proList.scrollTop=0
+        }
+        
+      },
+  },
   methods: {
     init() {
       this.getAllClass();
       
+    },
+    goCar(){//前往购物车列表
+        let storage=window.localStorage;
+        if(!storage.getItem("token")){
+            this.$router.push({
+                path: '/login'
+            });
+        }else{
+            this.$router.push({
+                path: '/car'
+            });
+        }
+    },
+    backPop(){//返回
+        this.isShowProList = false;
+        this.isSecClass = false;
+    },
+    backPage(){//返回上一页
+        this.$router.go(-1);
     },
     addCar(e){//添加购物车
       let isLogin = this.isLogin();
@@ -117,13 +158,13 @@ export default {
       let tcId = e.target.getAttribute("data-tcId");
       console.log(id,tcId)
     },
-    getAllClass(){//获取全部分来
+    getAllClass(){//获取全部分类
         Api.getAllClass().then(res=>{
             this.leftNavList = res.rows;
             if(!this.isType){
-                this.questData={
-                    big:this.typeId
-                }
+                this.questData["big"]=this.typeId
+                this.questData.page = 1;
+                this.proList=[];
                 this.isShowProList = true;
                 this.isSecClass = true;
                 this.getProList();
@@ -149,22 +190,55 @@ export default {
         this.isShowSelectPop = !this.isShowSelectPop;
     },
     selectSecClass(id){//点击下拉分类，获取分类下产品列表
+        console.log(id)
         this.selectId = id;
         this.isSecClass = true;
         this.isShowProList = true;
-        this.questData = {
-            sig:id
-        }
+        this.questData["sig"] = id;
+        this.questData.page = 1;
+        this.proList=[];
         this.getProList();
     },
     getProList(){
+        console.log(32,this.questData)
         Api.getSecClass(this.questData).then(res=>{
-            this.datas = res;
+            if(res.page==0){
+                return;
+            }
+            if(res.page>=res.currentPage){
+                this.scrollData.isQuest = false;
+            }else{
+                this.scrollData.isQuest = true;
+            }
+            if(res.page==1){
+                this.proList = res.data;
+            }else{
+                this.proList = this.proList.concat(res.data);
+            }
             this.tit = res.bigclass;
             this.isShowSelectPop = false;
+            
         })
+        
+    },
+    scrollFn(){
+        let proList = this.$refs.proList;
+        this.scrollData["proList"] = proList;
+        this.scrollData["proListHei"] = proList.offsetHeight;
+        this.scrollData["proListInner"] = this.$refs.proListInner;
+        let proListInnerHei = this.scrollData.proListInner.offsetHeight;
+        let scrollHei = proListInnerHei-this.scrollData.proListHei-this.scrollData.scrollBottom;
+        let sTop = this.scrollData.proList.scrollTop;
+        if(scrollHei<=sTop&&this.scrollData.isQuest){
+            console.log(5555)
+            this.questData.page = this.questData.page+1;
+            this.scrollData.isQuest = false;
+            this.getProList();
+        }
     },
     getAllpro(typeId,index,name){//点击左侧分类获取分类下相应子分类
+        console.log(22,typeId,index,name)
+        this.questData["big"]=typeId
         this.typeId = typeId;
         this.tit = name;
         this.isShowProList = false;
@@ -190,7 +264,7 @@ export default {
     align-items: flex-start;
 }
 .rightList{
-    width: 420px;
+    width: 435px;
     padding-right: 20px;
     display: flex;
     justify-content: flex-start;
@@ -207,6 +281,37 @@ export default {
         font-size: 20px;
         img{
             margin-bottom: 15px;
+        }
+    }
+}
+.list{
+    li{
+        display: flex; justify-content: flex-start; align-items: flex-start; width: 100%; text-align: left; padding: 25px 0; border-bottom: 1px solid #f3f3f3;
+        .listProPic{
+            width: 136px;
+        }
+        dl{
+            margin-left: 20px;
+            flex: 1;
+        }
+        dt{
+            font-size: 22px; color: #313131; margin-bottom: 10px;
+        }
+        .listInfo{
+            display: flex; justify-content: space-between; align-items: center; color: #929292; font-size: 18px;
+            em{
+                font-style: normal; border: 1px solid #d81e06; font-size: 14px; height: 20px; border-radius: 10px; padding: 0 15px; color: #d81e06;
+            }
+        }
+        .listPrice{
+            display: flex; justify-content: space-between; align-items: center; margin-top: 50px; font-size: 18px; color: #d81e06; font-weight: normal;
+            p{
+                img{
+                    margin-left: 15px;
+                    margin-bottom: 0;
+                    width: 29px;
+                }
+            }
         }
     }
 }
@@ -294,6 +399,7 @@ export default {
         align-items: center;
         font-size: 24px; 
         font-weight: bold;
+        margin-right: 20px;
     }
     .tit::after{
         content: '';
