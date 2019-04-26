@@ -61,7 +61,7 @@ export default {
         },
         {
           name: "购物车",
-          url: "/",
+          url: "/car",
           img: require("@/assets/imgs/navbar/car.png"),
           actImg: require("@/assets/imgs/navbar/car_1.png"),
           isLogin:true

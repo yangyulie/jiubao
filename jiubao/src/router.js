@@ -35,6 +35,12 @@ export default new Router({
       name: 'class',
       component: () => import('./views/index/class.vue'),
       meta: { title: '分类列表' },
+    },
+    {
+      path: '/car',
+      name: 'car',
+      component: () => import('./views/order/car.vue'),
+      meta: { title: '购物车' },
     }
   ],
 });

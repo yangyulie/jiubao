@@ -69,5 +69,12 @@ export default {
             method:"post",
             data
         })
+    },
+    addCarFn(data={}){//添加购物车
+        return request({
+            url:"/apis/order/Addshop",
+            method:"post",
+            data
+        })
     }
 }

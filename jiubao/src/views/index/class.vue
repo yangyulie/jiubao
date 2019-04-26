@@ -31,7 +31,7 @@
             </li>
         </ul>
         <div class="rightList secreenHei" ref="proList"  v-show="isShowProList">
-            <div ref="proListInner">
+            <div ref="proListInner" class="proListInner">
                 <ul class="list" v-if="proList.length>0">
                     <router-link tag="li" :to="'/detail?id='+item.Id" v-for="(item,index) in proList" :key="index">
                         <img class="listProPic" :src="item.purls" alt="">
@@ -43,7 +43,7 @@
                                     <em>{{item.chandi}}</em>
                                 </p>
                                 <div class="listPrice">
-                                    <em>{{item.price}}</em>
+                                    <em>￥{{item.price}}</em>
                                     <p>
                                         <span v-if="item.DisCount*1">满赠</span>
                                         <img @click.stop="addCar" :data-id="item.Id" :data-tcId="item.tcId?item.tcId:0" src="@/assets/imgs/icon_10.png" alt="">
@@ -53,7 +53,7 @@
                         </dl>
                     </router-link>
                 </ul>
-                <div v-else>暂时没有此类商品</div>
+                <div class="notData" v-else>暂时没有此类商品</div>
             </div>
         </div>
         
@@ -61,7 +61,7 @@
     <div class="secClassPop" v-show="isShowSelectPop">
         <ul>
             <li :class="{now:selectId==item.bigId}" v-for="(item,index) in rightSecClassList" :key="index" @click="selectSecClass(item.bigId)">
-                {{item.name}}
+                <span>{{item.name}}</span>
                 <img src="@/assets/imgs/icon_14.png" />
             </li>
         </ul>
@@ -75,7 +75,7 @@
 import Api from "@/api/index.js";
 import foot from "@/components/foot.vue";
 import search from "@/components/search.vue";
-import { Toast } from 'mint-ui';
+import { Indicator ,Toast } from 'mint-ui';
 import { mapActions, mapState } from "vuex";
 export default {
   components: {
@@ -104,12 +104,20 @@ export default {
           scrollBottom:100,
       },
       proList:[],
+      token:"",
+      addCarData:{
+        Id:"",
+        tcId:0,
+        Number:1,
+      }
     };
   },
   mounted() {
     this.init();
     this.typeId = this.$route.query.typeId;
     this.isType = this.$route.query.isType;
+    let storage=window.localStorage;
+    this.token = storage.getItem("token");
     // const {setData} = this;
     // console.log(this.data)
     // setData(this.app)
@@ -129,7 +137,9 @@ export default {
   },
   methods: {
     init() {
-      this.getAllClass();
+        let storage=window.localStorage;
+        this.token = storage.getItem("token");
+        this.getAllClass();
       
     },
     goCar(){//前往购物车列表
@@ -151,12 +161,31 @@ export default {
     backPage(){//返回上一页
         this.$router.go(-1);
     },
+    isLogin(){//判断是否登录
+      
+      if(!this.token){
+        this.$router.push({
+          path: '/login'
+        });
+        return false;
+      }else{
+        return true;
+      }
+    },
     addCar(e){//添加购物车
       let isLogin = this.isLogin();
       if(!isLogin) return;
-      let id=e.target.getAttribute("data-id");
-      let tcId = e.target.getAttribute("data-tcId");
-      console.log(id,tcId)
+      Indicator.open({
+        text: '加载中...',
+        spinnerType: 'fading-circle'
+      });
+      this.addCarData.Id=e.target.getAttribute("data-id");
+      this.addCarData.tcId = e.target.getAttribute("data-tcId");
+      Api.addCarFn(this.addCarData).then(res=>{
+        Indicator.close();
+        Toast(res.msg)
+        console.log(123,res)
+      })
     },
     getAllClass(){//获取全部分类
         Api.getAllClass().then(res=>{
@@ -198,6 +227,7 @@ export default {
         this.questData.page = 1;
         this.proList=[];
         this.getProList();
+        this.isShowSelectPop = false;
     },
     getProList(){
         console.log(32,this.questData)
@@ -305,6 +335,9 @@ export default {
         }
         .listPrice{
             display: flex; justify-content: space-between; align-items: center; margin-top: 50px; font-size: 18px; color: #d81e06; font-weight: normal;
+            em{
+                font-style: normal;
+            }
             p{
                 img{
                     margin-left: 15px;
@@ -332,6 +365,13 @@ export default {
         color: #2892fe;
     }
 }
+.notData{
+    font-size: 26px;
+    text-align: center; color: #929292; font-weight: bold; padding-top: 50px; width: 100%;
+}
+.proListInner{
+    width: 100%;
+}
 .secClassPop{
     position: fixed;
     width: 100%;
@@ -350,16 +390,19 @@ export default {
         align-items: center;
         font-size: 18px;
         color: #313131;
+        span{
+            text-align: center;
+            padding-right: 20px;
+        }
         img{
-            display: none;
+            opacity: 0;
         }
     }
     .now{
         color: #2892fe;
         img{
-            display: inline-block;
+            opacity: 1;
             width: 24px;
-            margin-left: 20px;
         }
     }
 }
