@@ -8,6 +8,7 @@
       </div>
     </div>
     <div class="loginForm fullHei" v-else>
+      <headed :tit="loginType==1?'商家登录':'业务员登录'" :isShowRight="false" :isClose="true" @close="showLoginForm"></headed>
       <div class="logo">
         <img src="@/assets/imgs/icon_03.png" alt>
       </div>
@@ -24,8 +25,19 @@
               </p>
           </label>
           <div class="loginBtn" @click="login">登录</div>
-          <router-link to="/register" class="registerBtn">注册</router-link>
+          <div class="registerBtn" @click="showRegister" v-if="loginType==1">注册</div>
       </div>
+    </div>
+    <div class="registerBox fullHei" :class="{show:isShowRegister}">
+      <headed :tit="'商家注册'" :isShowRight="true" :isClose="true" @close="showRegister">
+        <span @click="submit">提交</span>
+      </headed>
+      <ul class="registerInner">
+        <li v-for="(item,index) in formList" :key="index">
+          <span :class="{showStar:item.isStar}">{{item.name}}</span>
+          <input :type="item.type" v-model="item.value" :placeholder="item.tips">
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -33,14 +45,18 @@
 <script>
 // @ is an alias to /src
 import Api from "@/api/index.js";
+import headed from "@/components/headed.vue";
 import { Toast } from 'mint-ui';
 import { mapActions, mapState } from "vuex";
-import { setInterval, clearInterval } from 'timers';
+import { setInterval, clearInterval, setTimeout } from 'timers';
 export default {
-  components: {},
+  components: {
+    headed
+  },
   data() {
     return {
       isShowLoginForm: false,
+      isShowRegister: false,
       loginType: '',
       text:"发送验证码",
       timer:null,
@@ -49,6 +65,56 @@ export default {
       countdown:120,//倒计时初始值
       tel:"",
       code:'',
+      formList:[
+        {
+          isStar:true,
+          name:"商家名称",
+          type:"text",
+          value:"",
+          tips:"请输入公司或者商家名称",
+          key:"CompanyName"
+        },
+        {
+          isStar:true,
+          name:"业务员",
+          type:"number",
+          value:"",
+          tips:"请输入推荐人或者业务员手机号",
+          key:"tuijianren"
+        },
+        {
+          isStar:true,
+          name:"联系人",
+          type:"text",
+          value:"",
+          tips:"请输入商家联系人姓名",
+          key:"linksName"
+        },
+        {
+          isStar:true,
+          name:"手机",
+          type:"number",
+          value:"",
+          tips:"请输入商家联系人手机号码",
+          key:"phone"
+        },
+        {
+          isStar:false,
+          name:"电话",
+          type:"text",
+          value:"",
+          tips:"请输入商家联系号码，没有可不填",
+          key:"tel"
+        },
+        {
+          isStar:true,
+          name:"地址",
+          type:"text",
+          value:"",
+          tips:"请输入商家地址",
+          key:"address"
+        }
+      ]
     };
   },
   mounted() {
@@ -62,7 +128,45 @@ export default {
     init() {
       
     },
-    testPhone(){
+    submit(){
+      let questData = {};
+      let isTest = this.formList.every((item,index)=>{
+          let isFor = true;
+        if(item.value==""&&item.isStar){
+          this.toastObj = Toast(item.name+"不能为空");
+          isFor = false;
+        }else{
+          if(item.key=="tuijianren"||item.key=="phone"){
+            this.closeToast();
+            let reg = /1\d{10}/;
+            if(!reg.test(item.value)){
+                this.toastObj = Toast(item.name+'手机号格式错误');
+                isFor = false;
+            }else{
+              questData[item.key] = item.value;
+            }
+          }else{
+            questData[item.key] = item.value;
+          }
+          
+        }
+        return isFor;
+      })
+      if(isTest){
+        Api.register(questData).then(res=>{
+          this.closeToast();
+          this.toastObj = Toast(res.msg);
+          setTimeout(()=>{
+            this.$router.go(-1);
+          },3000)
+        })
+      }
+      //console.log(isTest)
+    },
+    showRegister(){//显示隐藏注册页面
+      this.isShowRegister=!this.isShowRegister;
+    },
+    testPhone(){//验证手机号
         this.closeToast();
         let reg = /1\d{10}/;
         if(!reg.test(this.tel)){
@@ -71,14 +175,14 @@ export default {
         }
         return true;
     },
-    testCode(){
+    testCode(){//验证验证码
         if(!this.testPhone()||!/\d{4}/.test(this.code)){
             this.toastObj = Toast('验证码格式错误');
             return false;
         }
         return true;
     },
-    login(){
+    login(){//登录
         let isTest = this.testCode();
         if(!isTest) return;
         let questData={
@@ -130,8 +234,11 @@ export default {
     returnPage() {//返回
       this.$router.go(-1);
     },
+    showLoginForm(){
+      this.isShowLoginForm = !this.isShowLoginForm;
+    },
     selectLogin(type) {//选择登录方式：1，商户；2，工作人员
-      this.isShowLoginForm = true;
+      this.showLoginForm()
       this.loginType = type;
     }
     //...mapActions(["setData"])
@@ -224,4 +331,57 @@ export default {
 }
 .loginBtn{ width: 100%; color: #fff; font-size: 24px; display: flex; justify-content: center; align-items: center; background-color: #2892fe; border-radius: 10px; margin-bottom: 40px; height: 80px;}
 .registerBtn{ font-size: 18px;color: #2892fe; padding: 5px 30px;}
+.registerBox{
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  width: 100%;
+  background-color: #fff;
+  transform: translateX(100%);
+  visibility: hidden;
+  transition: all .5s;
+}
+.registerBox.show{
+  transform: translateX(0);
+  visibility: visible;
+}
+.registerInner{
+  padding: 15px;
+  border-bottom: 20px solid #f4f8ff;
+  li:last-child{
+    border: 0;
+  }
+  li{
+    display: flex;
+    padding: 0 10px;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid #c1c1c1;
+    span{
+      width: 175px;
+      color: #313131;
+      font-size: 24px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+    .showStar::before{
+      content: "*";
+      color: red;
+      line-height: 5px;
+      height: 5px;
+      vertical-align: middle;
+      font-size: 30px;
+      margin-top: 13px;
+      margin-right: 5px;
+    }
+    input{
+      height: 70px;
+      flex: 1;
+      font-size: 24px;
+
+    }
+  }
+}
 </style>

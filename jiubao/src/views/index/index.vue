@@ -74,7 +74,7 @@
                 <em>{{i.chandi}}</em>
               </div>
               <div class="price">
-                <span>{{i.price}}</span>
+                <span>￥{{i.price}}</span>
                 <p>
                   <em v-if="i.DisCount*1">满赠</em>
                   <a href="javascript:;"><img @click.stop="addCar($event)" :data-id="i.Id" :data-tcId="i.tcId?i.tcId:0" src="@/assets/imgs/icon_10.png" alt=""></a>
@@ -89,7 +89,7 @@
     <div class="proList" v-if="proList&&proList.length>0">
       <dl v-for="(item,index) in proList" :key="index" v-if="item.rows.length>0">
         <dt class="tit">
-          <div><router-link :to="'/class'">{{item.typeName}} <span></span> </router-link></div>
+          <div><router-link :to="'/class?typeId='+item.typeId">{{item.typeName}} <span></span> </router-link></div>
           <router-link :to="'/class?typeId='+item.typeId"><img :src="item.picurls" alt></router-link>
         </dt>
         <dd v-if="item.rows.length>0"  class="pro">
@@ -103,7 +103,7 @@
                 <em>{{i.chandi}}</em>
               </div>
               <div class="price">
-                <span>{{i.price}}</span>
+                <span>￥{{i.price}}</span>
                 <p>
                   <em v-if="i.DisCount*1">满赠</em>
                   <a href="javascript:;"><img @click.stop="addCar" :data-id="i.Id" :data-tcId="i.tcId?i.tcId:0" src="@/assets/imgs/icon_10.png" alt=""></a>
@@ -125,6 +125,7 @@ import Api from "@/api/index.js";
 import foot from "@/components/foot.vue";
 import search from "@/components/search.vue";
 import proTag from "@/components/proTags.vue";
+import { Indicator ,Toast } from 'mint-ui';
 import { mapActions, mapState } from "vuex";
 export default {
   components: {
@@ -142,7 +143,12 @@ export default {
       brandList:[],
       brandListAd:[],
       adRecommend:[],
-      token:''
+      token:'',
+      addCarData:{
+        Id:"",
+        tcId:0,
+        Number:1,
+      }
     };
   },
   mounted() {
@@ -174,12 +180,20 @@ export default {
     addCar(e){
       let isLogin = this.isLogin();
       if(!isLogin) return;
-      let id=e.target.getAttribute("data-id");
-      let tcId = e.target.getAttribute("data-tcId");
-      console.log(id,tcId)
+      Indicator.open({
+        text: '加载中...',
+        spinnerType: 'fading-circle'
+      });
+      this.addCarData.Id=e.target.getAttribute("data-id");
+      this.addCarData.tcId = e.target.getAttribute("data-tcId");
+      Api.addCarFn(this.addCarData).then(res=>{
+        Indicator.close();
+        Toast(res.msg)
+        console.log(123,res)
+      })
     },
     getIndex() {
-      Api.index({ Number: 6,token: this.token }).then(res => {
+      Api.index({ Number: 6 }).then(res => {
         this.proList = res.data;
       });
     },
@@ -204,7 +218,7 @@ export default {
       });
     },
     getRecommend() {
-      Api.recommend({ token: this.token }).then(res => {
+      Api.recommend().then(res => {
         this.recommendList = res;
       });
     }

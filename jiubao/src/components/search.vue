@@ -32,7 +32,7 @@ export default {
       let shearchText = this.shearchText;
       if(shearchText==""){
         this.closeToast()
-        this.toastObj = Toast('手机号格式错误');
+        this.toastObj = Toast('搜索内容不能为空');
       }else{
         this.$router.push('/product?skey='+shearchText);
       }
