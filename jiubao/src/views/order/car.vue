@@ -4,7 +4,7 @@
         <span @click="delate">删除</span>
     </headed>
     <div class="wrap secreenHei">
-        <ul class="list">
+        <ul class="list" v-if="list.length>0">
             <li v-for="(item,index) in list" :key="index">
                 <label :class="{show:item.checked}" class="isChecked" @click="checkedFn(index)"><span><img src="@/assets/imgs/icon_15.png" alt=""></span><input type="checkbox" :value="item.Id" v-model="item.checked"></label>
                 <img :src="item.picurls" alt="">
@@ -24,6 +24,13 @@
                 </dl>
             </li>
         </ul>
+        <div class="list notData" v-else>
+          <div>
+            <span><img src="@/assets/imgs/icon_16.png" alt=""></span>
+            购物车还是空的
+          </div>
+          <router-link to="/class?typeId=17&isType=true">马上去选购</router-link>
+        </div>
         <div class="total">
           <label :class="{show:allChecked}" class="isChecked"><span><img src="@/assets/imgs/icon_15.png" alt=""></span><input type="checkbox" v-model="allChecked" @change="allCheckedFn">{{allChecked?"取消全选":"全选"}}</label>
           <div class="totalBox">
@@ -53,7 +60,8 @@ export default {
       datas:{},
       submitData:[],
       allChecked:false,
-      list:[]
+      list:[],
+      handleData:[]
     };
   },
   mounted() {
@@ -65,7 +73,22 @@ export default {
     // console.log(this.data)
   },
   watch:{
-    
+    list:{//监听购物车列表选中状态，并返回到待操作数组
+      handler(n,o){
+        
+        if(n&&n.length<1){
+          this.allChecked = false;
+        }else{
+          this.handleData = n.filter((item,index)=>{
+            return item.checked
+          })
+          this.allChecked = n.every((item,index)=>{
+            return item.checked
+          })
+        }
+      },
+      deep:true
+    }
   },
   methods: {
     init() {
@@ -73,7 +96,33 @@ export default {
       this.token = storage.getItem("token");
       this.getCarListFn()
     },
-    delate(){},
+    delate(){
+      console.log(this.handleData)
+      let ids = [];
+      let questData={
+        Id:''
+      }
+      for(let j=0;j<this.handleData.length;j++){
+        ids.push(this.handleData[j].id)
+      }
+      questData.Id = ids.join(',');
+      console.log(questData)
+      Api.delCarList(questData).then(res=>{
+        if(res.code==1){
+          Toast(res.msg)
+          let arr = this.list;
+          for(let i=0;i<arr.length;i++){
+            if(arr[i].checked){
+              console.log(i)
+              arr.splice(i,1)
+              i--
+              //this.$set(this.list, i, this.list[i]);
+            }
+          }
+        }
+        console.log(res.msg)
+      })
+    },
     allCheckedFn(){
       let arr = this.list;
       for(let i=0;i<arr.length;i++){
@@ -81,9 +130,31 @@ export default {
         this.$set(this.list, i, this.list[i]);
       }
     },
+    changeNumFn(obj,num,index){
+      Indicator.open({
+        text: '加载中...',
+        spinnerType: 'fading-circle'
+      });
+      let questData = {
+        Id:obj.id,
+        tcId:obj.tcId,
+        Number:num
+      }
+      Api.carListNumUpdate(questData).then(res=>{
+        Indicator.close();
+        if(res.code==1){
+          obj.number = num;
+          obj.checked = true;
+          this.$set(this.list, index, obj);
+        }else{
+          Toast(res.msg)
+        }
+      })
+    },
     changeFn(index){
-      this.list[index].checked = true;
-      this.$set(this.list, index, this.list[index]);
+      let obj = this.list[index];
+      let num = obj.number*1;
+      this.changeNumFn(obj,num,index)
     },
     checkedFn(index){
       this.list[index].checked = !this.list[index].checked;
@@ -93,10 +164,10 @@ export default {
       this.$set(this.list, index, this.list[index]);
     },
     addFn(index){
-      let num = this.list[index].number*1+1;
-      this.list[index].number = num;
-      this.list[index].checked = true;
-      this.$set(this.list, index, this.list[index]);
+      let obj = this.list[index];
+      let num = obj.number*1+1;
+      this.changeNumFn(obj,num,index)
+      
     },
     reduceFn(index){
       let num = this.list[index].number*1-1;
@@ -107,10 +178,21 @@ export default {
       this.list[index].checked = true;
       this.$set(this.list, index, this.list[index]);
     },
+    handleDataFn(data){
+      let idx = this.handleData.indexOf(data.id);
+      if(idx>-1){
+        this.handleData.splice(idx,1)
+      }else{
+        this.handleData.push(index.id);
+      }
+      console.log(2,this.handleData)
+    },
     getCarListFn(){
         Api.getCarList().then(res=>{
-            this.datas = res;
+          this.datas = res;
+          if(res.code==1){
             this.list = res.rows;
+          }
         })
     },
     
@@ -121,11 +203,10 @@ export default {
     total(){
       if(this.list&&this.list.length>0){
         return this.list.reduce((item,index)=>{
-          console.log(23,index.checked)
           if(index.checked){
-          console.log(123,index.number*index.price,item)
             return index.number*index.price+item
           }else{
+            
             return item
           }
           
@@ -144,40 +225,6 @@ export default {
         flex: 1; overflow-y: auto;
         li{
             display: flex; justify-content: flex-start; align-items: center; padding: 20px; border-bottom: 15px solid #f4f8ff;
-            .proInfoBox{
-              font-size: 22px; color: #313131; display: flex; flex-direction: column; height: 132px; flex: 1;
-              dt{
-                flex: 1;
-                p{
-                  color: #929292; font-size: 18px; padding-top: 5px;
-                }
-              }
-              dd{
-                display: flex; justify-content: space-between; align-items: center;
-                >span{
-                  color: #d81e06; font-size: 24px; font-weight: bold;
-                }
-                >div{
-                  border: 1px solid #c1c1c1; display: flex; justify-content: center; align-items: center; height: 44px;
-                  span{
-                    display: flex; justify-content: center; align-items: center; width: 44px; height: 44px; position: relative;
-                  }
-                  input{
-                    width: 59px; border-left:1px solid #c1c1c1; border-right: 1px solid #c1c1c1; height: 44px; text-align: center; font-size: 26px; 
-                  }
-                  .reduce::after{
-                    content: ''; width: 50%; height: 2px; background-color: #c1c1c1;
-                  }
-                  .add::after,.add::before{
-                    content: ''; width: 50%; height: 2px; background-color: #2892fe;
-                  }
-                  .add::before{
-                    position: absolute; left: 50%; margin-left: -25%; transform: rotate(90deg);
-                  }
-                }
-              }
-            }
-            
             >img{
               width: 132px; margin: 0 20px 0 0;
             }
@@ -216,6 +263,20 @@ export default {
       }
       span:before{
         content: "￥"
+      }
+    }
+    .notData{
+      font-size: 30px; color: #6e6e6e; text-align: center;
+      div{
+        span{
+          width: 216px; height: 216px; border-radius: 50%; display: flex; justify-content: center; align-items: center; background-color: #f4f8ff; margin: 180px auto 35px;
+          img{
+            width: 134px;
+          }
+        }
+      }
+      a{
+        color: #2892fe; font-size: 24px; text-decoration: underline; margin-top: 25px; display: inline-block;
       }
     }
 }

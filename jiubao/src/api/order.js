@@ -7,5 +7,25 @@ export default {
             data
         });
     },
-    
+    delCarList(data={}){//删除购物车列表
+        return request({
+            url:"/apis/order/shopDel",
+            method:'post',
+            data
+        })
+    },
+    carListNumUpdate(data={}){//更新购买数量验证库存
+        return request({
+            url:"/apis/order/shopUpdate",
+            method:"post",
+            data
+        })
+    },
+    handleCollect(data={}){//添加或取消收藏
+        return request({
+            url:"/apis/order/MyCollectionPost",
+            method:"post",
+            data
+        })
+    },
 }
