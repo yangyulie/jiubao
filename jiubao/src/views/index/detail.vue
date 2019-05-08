@@ -96,6 +96,8 @@ export default {
     //TODO：套餐功能未完善
     handleCollectFn(state){//添加或取消收藏
       console.log(state)
+      let isLogin = this.isLogin();
+      if(!isLogin) return;
       let questData={
         Id:this.id,
         states:0
