@@ -93,6 +93,7 @@ export default {
       this.token = storage.getItem("token");
       this.getDetail();
     },
+    //TODO：套餐功能未完善
     handleCollectFn(state){//添加或取消收藏
       console.log(state)
       let questData={

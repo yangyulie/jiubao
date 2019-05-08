@@ -142,6 +142,7 @@ export default {
         this.getAllClass();
       
     },
+    //TODO:搜索功能，筛选功能待完成
     goCar(){//前往购物车列表
         let storage=window.localStorage;
         if(!storage.getItem("token")){
