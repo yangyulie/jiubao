@@ -28,4 +28,11 @@ export default {
             data
         })
     },
+    getUserInfo(data={}){//获取个人中心数据
+        return request({
+            url:"/apis/order/MyUser",
+            method:"post",
+            data
+        })
+    }
 }

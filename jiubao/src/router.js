@@ -41,6 +41,12 @@ export default new Router({
       name: 'car',
       component: () => import('./views/order/car.vue'),
       meta: { title: '购物车' },
+    },
+    {
+      path: '/user',
+      name: 'user',
+      component: () => import('./views/order/user.vue'),
+      meta: { title: '会员中心' },
     }
   ],
 });
