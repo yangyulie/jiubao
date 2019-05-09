@@ -65,6 +65,24 @@ export default new Router({
       name: 'shoppingList',
       component: () => import('./views/order/shoppingList.vue'),
       meta: { title: '商品清单' },
+    },
+    {
+      path: '/order',
+      name: 'order',
+      component: () => import('./views/order/order.vue'),
+      meta: { title: '提交订单' },
+    },
+    {
+      path: '/address',
+      name: 'address',
+      component: () => import('./views/user/address.vue'),
+      meta: { title: '收货地址' },
+    },
+    {
+      path: '/invoice',
+      name: 'invoice',
+      component: () => import('./views/user/invoice.vue'),
+      meta: { title: '发票信息' },
     }
   ],
 });

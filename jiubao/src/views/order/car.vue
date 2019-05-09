@@ -97,32 +97,18 @@ export default {
       this.getCarListFn()
     },
     goOrder(){
+      
       let ids = [];
-      let questData={
-        Id:''
-      }
       if(this.handleData.length==0){
         Toast("请选择需要购买的商品")
         return
       }
-      Indicator.open({
-        text: '加载中...',
-        spinnerType: 'fading-circle'
-      });
       for(let j=0;j<this.handleData.length;j++){
         ids.push(this.handleData[j].id)
       }
-      questData.Id = ids.join(',');
-      Api.submitCarList(questData).then(res=>{
-        console.log(2223,res)
-        Indicator.close();
-        Toast(res.msg)
-        if(res.code==1){
-          this.$router.push({
-            path: '/order'
-          });
-        }
-      })
+      this.$router.push({
+        path: '/order?cartIds='+ids.join(',')
+      });
       
     },
     delate(){

@@ -2,43 +2,79 @@
   <div class="home">
     <headed :tit="'提交订单'" :isShowRight="false" :isClose="false">
     </headed>
-    <div class="wrap secreenHei">
-        <ul class="list" v-if="list.length>0">
-            <li v-for="(item,index) in list" :key="index">
-                <label :class="{show:item.checked}" class="isChecked" @click="checkedFn(index)"><span><img src="@/assets/imgs/icon_15.png" alt=""></span><input type="checkbox" :value="item.Id" v-model="item.checked"></label>
-                <img :src="item.picurls" alt="">
-                <dl class="proInfoBox">
-                    <dt>
-                        {{item.name}}
-                        <p>{{item.JHL}} x {{item.guige}}</p>
-                    </dt>
-                    <dd>
-                        <span>￥{{item.price}}</span>
-                        <div>
-                            <span class="reduce" @click="reduceFn(index)"></span>
-                            <input type="number" v-model="item.number" @input="changeFn(index)">
-                            <span class="add" @click="addFn(index)"></span>
-                        </div>
-                    </dd>
+    <div class="wrap" v-if="isShow">
+        <div class="addressBox" v-if="datas.addessinfo">
+            <router-link to="/address" class="notAddress address" v-if="datas.addessinfo.address.length==0">
+                <span>请选择收货地址</span>
+            </router-link>
+            <router-link to="/address" tag="div" class="address" v-else>
+                <img src="@/assets/imgs/icon_36.png" alt="">
+                <dl>
+                    <dt>{{datas.addessinfo.linkName}} <span>{{datas.addessinfo.Phone}}</span></dt>
+                    <dd>{{datas.addessinfo.address}}</dd>
                 </dl>
-            </li>
-        </ul>
-        <div class="list notData" v-else>
-          <div>
-            <span><img src="@/assets/imgs/icon_16.png" alt=""></span>
-            购物车还是空的
-          </div>
-          <router-link to="/class?typeId=17&isType=true">马上去选购</router-link>
+            </router-link>
         </div>
-        <div class="total">
-          <label :class="{show:allChecked}" class="isChecked"><span><img src="@/assets/imgs/icon_15.png" alt=""></span><input type="checkbox" v-model="allChecked" @change="allCheckedFn">{{allChecked?"取消全选":"全选"}}</label>
-          <div class="totalBox">
-            总计：<span>{{total}}</span>
-          </div>
-          <button>去结算</button>
+        <div class="invoiceBox">
+            <router-link to="/invoice" class="notAddress address" v-if="!datas.invoiceinfo">
+                <span>请设置开票信息</span>
+            </router-link>
+            <div class="notAddress address" v-else>
+                <span>本次不开具发票</span>
+            </div>
+        </div>
+        <div class="proListBox" v-if="datas.DiscartList">
+            <dl class="prolist">
+                <dt>参与满减活动商品</dt>
+                <dd v-for="(item,index) in datas.DiscartList" :key="index">
+                    <img :src="item.picurls" alt="">
+                    <dl>
+                        <dt>{{item.name}}</dt>
+                        <dd class="gray">{{item.jhl}} x {{item.guige}}</dd>
+                        <dd class="price"><span>￥{{item.price}}</span><span> x {{item.Number}}</span></dd>
+                    </dl>
+                </dd>
+            </dl>
+            <div class="prolistTotal">
+                <div>满减活动商品总计： <span>{{datas.DiscartListSum}}</span></div>
+            </div>
+        </div>
+        <div class="proListBox" v-if="datas.AcartList.length>0">
+            <dl class="prolist">
+                <dt>其他商品</dt>
+                <dd v-for="(item,index) in datas.AcartList" :key="index" :class="{allProTop:item.tcList&&item.tcList.length>0}">
+                    <img :src="item.picurls" alt="">
+                    <dl>
+                        <dt>{{item.name}}</dt>
+                        <dd class="gray">{{item.jhl}} x {{item.guige}}</dd>
+                        <dd class="price"><span>￥{{item.price}}</span><span> x {{item.Number}}</span></dd>
+                    </dl>
+                    <div v-if="item.tcList&&item.tcList.length>0" class="allPro">
+                        <dl>
+                            <dt><span>{{item.name}}套餐</span> <span>￥{{item.price}}</span><span> x {{item.Number}}</span></dt>
+                            <dd v-for="(i,idx) in item.tcList" :key="idx">
+                                <div>
+                                    <img :src="i.picurls" alt="">
+                                    <dl>
+                                        <dt>{{i.name}}</dt>
+                                        <dd class="gray">{{item.jhl}} x {{i.guige}}</dd>
+                                        <dd class="price"><span>￥{{item.price}}</span><span> x {{item.Number}}</span></dd>
+                                    </dl>
+                                </div>
+                            </dd>
+                        </dl>
+                    </div>
+                </dd>
+            </dl>
+            <div class="prolistTotal">
+                <div>其他商品总计： <span>￥{{datas.AcartListSum}}</span></div>
+            </div>
+        </div>
+        <div class="totalPriceBox">
+            订单金额总计： <span>{{}}</span>
         </div>
     </div>
-    <foot :is_now="3"></foot>
+    <foot :is_now="2"></foot>
   </div>
 </template>
 
@@ -57,10 +93,7 @@ export default {
   data() {
     return {
       datas:{},
-      submitData:[],
-      allChecked:false,
-      list:[],
-      handleData:[]
+      isShow:false,
     };
   },
   mounted() {
@@ -72,211 +105,112 @@ export default {
     // console.log(this.data)
   },
   watch:{
-    list:{//监听购物车列表选中状态，并返回到待操作数组
-      handler(n,o){
-        
-        if(n&&n.length<1){
-          this.allChecked = false;
-        }else{
-          this.handleData = n.filter((item,index)=>{
-            return item.checked
-          })
-          this.allChecked = n.every((item,index)=>{
-            return item.checked
-          })
-        }
-      },
-      deep:true
-    }
+    
   },
   methods: {
     init() {
-      let storage=window.localStorage;
-      this.token = storage.getItem("token");
-      this.getCarListFn()
+      this.getOrder()
     },
-    delate(){
-      console.log(this.handleData)
-      let ids = [];
-      let questData={
-        Id:''
-      }
-      for(let j=0;j<this.handleData.length;j++){
-        ids.push(this.handleData[j].id)
-      }
-      questData.Id = ids.join(',');
-      console.log(questData)
-      Api.delCarList(questData).then(res=>{
-        if(res.code==1){
-          Toast(res.msg)
-          let arr = this.list;
-          for(let i=0;i<arr.length;i++){
-            if(arr[i].checked){
-              console.log(i)
-              arr.splice(i,1)
-              i--
-              //this.$set(this.list, i, this.list[i]);
+    getOrder(){
+        let questData={};
+        Indicator.open({
+            text: '加载中...',
+            spinnerType: 'fading-circle'
+        });
+        questData.cartIds = this.$route.query.cartIds;
+        Api.submitCarList(questData).then(res=>{
+            console.log(2223,res)
+            Indicator.close();
+            if(res.code==1){
+                this.datas = res.rows;
+                this.isShow = true;
             }
-          }
-        }
-        console.log(res.msg)
-      })
-    },
-    allCheckedFn(){
-      let arr = this.list;
-      for(let i=0;i<arr.length;i++){
-        arr[i].checked = this.allChecked
-        this.$set(this.list, i, this.list[i]);
-      }
-    },
-    changeNumFn(obj,num,index){
-      Indicator.open({
-        text: '加载中...',
-        spinnerType: 'fading-circle'
-      });
-      let questData = {
-        Id:obj.id,
-        tcId:obj.tcId,
-        Number:num
-      }
-      Api.carListNumUpdate(questData).then(res=>{
-        Indicator.close();
-        if(res.code==1){
-          obj.number = num;
-          obj.checked = true;
-          this.$set(this.list, index, obj);
-        }else{
-          Toast(res.msg)
-        }
-      })
-    },
-    changeFn(index){
-      let obj = this.list[index];
-      let num = obj.number*1;
-      this.changeNumFn(obj,num,index)
-    },
-    checkedFn(index){
-      this.list[index].checked = !this.list[index].checked;
-      if(!this.list[index].checked){
-        this.allChecked=false
-      }
-      this.$set(this.list, index, this.list[index]);
-    },
-    addFn(index){
-      let obj = this.list[index];
-      let num = obj.number*1+1;
-      this.changeNumFn(obj,num,index)
-      
-    },
-    reduceFn(index){
-      let num = this.list[index].number*1-1;
-      if(num<=0){
-        return;
-      }
-      this.list[index].number = num;
-      this.list[index].checked = true;
-      this.$set(this.list, index, this.list[index]);
-    },
-    handleDataFn(data){
-      let idx = this.handleData.indexOf(data.id);
-      if(idx>-1){
-        this.handleData.splice(idx,1)
-      }else{
-        this.handleData.push(index.id);
-      }
-      console.log(2,this.handleData)
-    },
-    getCarListFn(){
-        Api.getCarList().then(res=>{
-          this.datas = res;
-          if(res.code==1){
-            this.list = res.rows;
-          }
         })
+      
     },
     
     //...mapActions(["setData"])
   },
   computed: {
     // ...mapState(['app','app2',"data"])
-    total(){
-      if(this.list&&this.list.length>0){
-        return this.list.reduce((item,index)=>{
-          if(index.checked){
-            return index.number*index.price+item
-          }else{
-            
-            return item
-          }
-          
-        },0)
-      }else{
-        return 0;
-      }
-    }
+    
   }
 };
 </script>
 <style lang='less' scoped>
-.wrap{
-    display: flex; flex-direction: column;
-    .list{ 
-        flex: 1; overflow-y: auto; position: relative; z-index: 1;
-        li{
-            display: flex; justify-content: flex-start; align-items: center; padding: 20px; border-bottom: 15px solid #f4f8ff;
-            >img{
-              width: 132px; margin: 0 20px 0 0; z-index: 1;
+@bor:10px solid #f4f8ff;
+.address{
+    padding: 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: @bor; font-size: 20px; color: #929292; background-color: #f4f8ff;
+    dl{
+        flex: 1; margin: 0 20px;
+        dt{
+            color: #313131; font-size: 24px; padding-bottom: 5px;
+        }
+    }
+}
+.notAddress{
+    height: 80px; background-color: #fff;
+}
+.address::after{
+    content: ''; border: 1px solid #444; border-left: 0; border-bottom: 0; transform: rotate(45deg); width: 10px; height: 10px;
+}
+.proListBox{
+    padding: 20px; border-bottom: @bor;
+    >dl{
+        >dt{
+            font-size: 18px; color: #ff4344; height: 50px; border-bottom: 1px solid #c1c1c1; line-height: 50px;
+        }
+        >dd{
+            display: flex; justify-content: flex-start; align-items: flex-start; font-size: 18px; color: #313131; padding: 25px 20px 0; flex-wrap: wrap;
+            img{
+                width: 132px; margin-right: 27px;
             }
-            .isChecked{ width: auto;}
-            
+            dl{ 
+                width: 400px; padding-top: 20px;
+                dd{
+                    margin-top: 5px;
+                }
+                .gray{ color: #929292}
+            }
+            .allPro{ 
+                 width: 100%;
+                >dl{
+                    width: 100%;
+                    >dt{
+                        border-bottom: 1px dashed #929292; font-size: 18px; color: #313131; padding: 0 0 15px 0;
+                    }
+                    >dd{
+                        div{
+                            display: flex; align-items: flex-start;
+                        }
+                        
+                    }
+                }
+            }
         }
-        li:last-child{
-          border: 0;
+    }
+    .allProTop{
+        background-color: #f4f8ff;
+        >img{
+            display: none;
+        }
+        >dl{
+            display: none;
+        }
+        .allPro{
+            >dl{
+                >dt{
+                    display: flex; justify-content: space-between; align-items: center;
+                }
+            }
         }
     }
-    .total{
-        background-color: #fff; border-top: 1px solid #c1c1c1; height: 85px; display: flex; justify-content: space-between; align-items: center; padding-left: 20px; z-index: 9999; position: relative;
-        button{
-          width: 195px; height: 86px; background-color: #2892fe; color: #fff; font-size: 24px; text-align: center; line-height: 86px; border: 0;
-        }
-    }
-    .isChecked{
-       position: relative; display: flex; justify-content: flex-start; align-items: center; font-size: 24px; color: #6e6e6e; width: 148px;
-      span{
-        width: 32px; height: 32px; border-radius: 50%; border: 1px solid #ccc; overflow: hidden; display: block; margin-right: 20px;
-      }
-      img{
-        display: none;
-      }
-    }
-    input[type="checkbox"]{
-        border: 0; background: none; opacity: 0; position: absolute; left: 0; top: 0;
-    }
-    .isChecked.show img{
-      display: block;
-    }
-    .totalBox{
-      font-size: 18px; color: #6e6e6e; margin: 0 20px; flex: 1;
-      span{
-        color: #d81e06; font-size: 24px; font-weight: bold;
-      }
-      span:before{
-        content: "￥"
-      }
-    }
-    .notData{
-      font-size: 30px; color: #6e6e6e; text-align: center;
-      div{
-        span{
-          width: 216px; height: 216px; border-radius: 50%; display: flex; justify-content: center; align-items: center; background-color: #f4f8ff; margin: 180px auto 35px;
-          img{
-            width: 134px;
-          }
-        }
-      }
-      a{
-        color: #2892fe; font-size: 24px; text-decoration: underline; margin-top: 25px; display: inline-block;
-      }
-    }
+}
+
+.prolistTotal{
+    height: 65px; line-height: 65px; border-top: 1px solid #c1c1c1; color: #d81e06; font-size: 18px; text-align: right; padding-right: 40px; margin-top: 20px;
+}
+.price{ 
+    display: flex; justify-content: space-between; align-items: center;
 }
 </style>

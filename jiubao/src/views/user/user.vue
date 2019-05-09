@@ -1,6 +1,7 @@
 <template>
   <div class="home">
     <div class="wrap">
+        <div class="backLogin" @click="backLogin">退出登录</div>
         <div class="topInfo">
             <img src="@/assets/imgs/icon_19.png" alt="">
             <div>
@@ -152,7 +153,12 @@ export default {
             this.datas = res.rows
         })
     },
-    
+    backLogin(){
+        window.localStorage.clear();
+        this.$router.push({
+          path: '/'
+        });
+    },
     //...mapActions(["setData"])
   },
   computed: {
@@ -164,7 +170,10 @@ export default {
 <style lang='less' scoped>
 @bor:15px solid #f4f8ff;
 .wrap{
-    background: url("./../../assets/imgs/bg/bg_02.jpg") no-repeat center top/100% auto;
+    background: url("./../../assets/imgs/bg/bg_02.jpg") no-repeat center top/100% auto; position: relative;
+    .backLogin{
+        position: absolute; right: 10px; top: 10px; color: #fff; font-size: 24px;
+    }
     .topInfo{
         padding: 70px 25px; display: flex; justify-content: flex-start; align-items: flex-start;
         img{
