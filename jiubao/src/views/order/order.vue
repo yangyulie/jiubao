@@ -1,7 +1,6 @@
 <template>
   <div class="home">
-    <headed :tit="'购物车'" :isShowRight="true" :isClose="false">
-        <span @click="delate">删除</span>
+    <headed :tit="'提交订单'" :isShowRight="false" :isClose="false">
     </headed>
     <div class="wrap secreenHei">
         <ul class="list" v-if="list.length>0">
@@ -36,7 +35,7 @@
           <div class="totalBox">
             总计：<span>{{total}}</span>
           </div>
-          <button @click="goOrder">去结算</button>
+          <button>去结算</button>
         </div>
     </div>
     <foot :is_now="3"></foot>
@@ -95,35 +94,6 @@ export default {
       let storage=window.localStorage;
       this.token = storage.getItem("token");
       this.getCarListFn()
-    },
-    goOrder(){
-      let ids = [];
-      let questData={
-        Id:''
-      }
-      if(this.handleData.length==0){
-        Toast("请选择需要购买的商品")
-        return
-      }
-      Indicator.open({
-        text: '加载中...',
-        spinnerType: 'fading-circle'
-      });
-      for(let j=0;j<this.handleData.length;j++){
-        ids.push(this.handleData[j].id)
-      }
-      questData.Id = ids.join(',');
-      Api.submitCarList(questData).then(res=>{
-        console.log(2223,res)
-        Indicator.close();
-        Toast(res.msg)
-        if(res.code==1){
-          this.$router.push({
-            path: '/order'
-          });
-        }
-      })
-      
     },
     delate(){
       console.log(this.handleData)

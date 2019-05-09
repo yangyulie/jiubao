@@ -4,14 +4,14 @@
         <div class="topInfo">
             <img src="@/assets/imgs/icon_19.png" alt="">
             <div>
-                <p>兰州蔚蓝网络科技有限责任公司</p>
-                <span>15682898555</span>
+                <p>{{datas.companyName}}</p>
+                <span>{{datas.userphone}}</span>
             </div>
         </div>
         <div class="salesmanInfo">
             <div>
-                <p>客户经理：名称</p>
-                <p>电话：12345678900</p>
+                <p>客户经理：{{datas.tuijianName}}</p>
+                <p>电话：{{datas.tuijianphone}}</p>
             </div>
         </div>
     </div>
@@ -32,7 +32,7 @@
 
 <script>
 // @ is an alias to /src
-import Api from "@/api/order.js";
+import Api from "@/api/user.js";
 import foot from "@/components/foot.vue";
 import { Indicator ,Toast } from 'mint-ui';
 import { mapActions, mapState } from "vuex";
@@ -104,7 +104,7 @@ export default {
                 {
                     img:require("@/assets/imgs/icon_30.png"),
                     name:"绑定账户",
-                    url:"/"
+                    url:"/shoperBind"
                 },
                 {
                     img:require("@/assets/imgs/icon_31.png"),
@@ -128,7 +128,8 @@ export default {
                 }
             ]
         }
-      ]
+      ],
+      datas:{}
     };
   },
   mounted() {
@@ -148,7 +149,7 @@ export default {
     },
     getUserInfoFn(){//获取个人中心数据
         Api.getUserInfo().then(res=>{
-            console.log(123,res)
+            this.datas = res.rows
         })
     },
     

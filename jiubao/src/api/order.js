@@ -28,9 +28,16 @@ export default {
             data
         })
     },
-    getUserInfo(data={}){//获取个人中心数据
+    getShoppingList(data={}){//获取商品清单
         return request({
-            url:"/apis/order/MyUser",
+            url:"/apis/order/MyorderProducts",
+            method:"post",
+            data
+        })
+    },
+    submitCarList(data={}){//提交购物车
+        return request({
+            url:"/apis/order/subOrderByCart",
             method:"post",
             data
         })

@@ -45,8 +45,26 @@ export default new Router({
     {
       path: '/user',
       name: 'user',
-      component: () => import('./views/order/user.vue'),
+      component: () => import('./views/user/user.vue'),
       meta: { title: '会员中心' },
+    },
+    {
+      path: '/shoperBind',
+      name: 'shoperBind',
+      component: () => import('./views/user/shoperBind.vue'),
+      meta: { title: '商户绑定' },
+    },
+    {
+      path: '/addShoperBind',
+      name: 'addShoperBind',
+      component: () => import('./views/user/addShoperBind.vue'),
+      meta: { title: '新增商户绑定' },
+    },
+    {
+      path: '/shoppingList',
+      name: 'shoppingList',
+      component: () => import('./views/order/shoppingList.vue'),
+      meta: { title: '商品清单' },
     }
   ],
 });
