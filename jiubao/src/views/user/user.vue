@@ -50,52 +50,52 @@ export default {
                 {
                     img:require("@/assets/imgs/icon_20.png"),
                     name:"业务核价",
-                    url:"/"
+                    url:"/orderList?id=1"
                 },
                 {
                     img:require("@/assets/imgs/icon_21.png"),
                     name:"财务核价",
-                    url:"/"
+                    url:"/orderList?id=2"
                 },
                 {
                     img:require("@/assets/imgs/icon_22.png"),
                     name:"待付款",
-                    url:"/"
+                    url:"/orderList?id=3"
                 },
                 {
                     img:require("@/assets/imgs/icon_23.png"),
                     name:"待确认",
-                    url:"/"
+                    url:"/orderList?id=4"
                 },
                 {
                     img:require("@/assets/imgs/icon_24.png"),
                     name:"待出库",
-                    url:"/"
+                    url:"/orderList?id=5"
                 },
                 {
                     img:require("@/assets/imgs/icon_25.png"),
                     name:"待收货",
-                    url:"/"
+                    url:"/orderList?id=6"
                 },
                 {
                     img:require("@/assets/imgs/icon_26.png"),
                     name:"已完成",
-                    url:"/"
+                    url:"/orderList?id=7"
                 },
                 {
                     img:require("@/assets/imgs/icon_27.png"),
                     name:"作废订单",
-                    url:"/"
+                    url:"/orderList?id=8"
                 },
                 {
                     img:require("@/assets/imgs/icon_28.png"),
                     name:"待退货",
-                    url:"/"
+                    url:"/orderList?id=9"
                 },
                 {
                     img:require("@/assets/imgs/icon_29.png"),
                     name:"全部",
-                    url:"/"
+                    url:"/orderList?id=0"
                 }
             ]
         },
@@ -110,12 +110,12 @@ export default {
                 {
                     img:require("@/assets/imgs/icon_31.png"),
                     name:"地址管理",
-                    url:"/"
+                    url:"/address"
                 },
                 {
                     img:require("@/assets/imgs/icon_32.png"),
                     name:"发票管理",
-                    url:"/"
+                    url:"/invoice"
                 },
                 {
                     img:require("@/assets/imgs/icon_33.png"),
@@ -156,7 +156,8 @@ export default {
     backLogin(){
         window.localStorage.clear();
         this.$router.push({
-          path: '/'
+          path: '/',
+          replace:true
         });
     },
     //...mapActions(["setData"])

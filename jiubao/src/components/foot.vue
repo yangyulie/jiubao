@@ -54,7 +54,7 @@ export default {
         },
         {
           name: "我的订单",
-          url: "/",
+          url: "/orderList?id=0",
           img: require("@/assets/imgs/navbar/order.png"),
           actImg: require("@/assets/imgs/navbar/order_1.png"),
           isLogin:true

@@ -83,6 +83,24 @@ export default new Router({
       name: 'invoice',
       component: () => import('./views/user/invoice.vue'),
       meta: { title: '发票信息' },
+    },
+    {
+      path: '/addAddress',
+      name: 'addAddress',
+      component: () => import('./views/user/addAddress.vue'),
+      meta: { title: '新增收货地址' },
+    },
+    {
+      path: '/addInvoice',
+      name: 'addInvoice',
+      component: () => import('./views/user/addInvoice.vue'),
+      meta: { title: '新增发票信息' },
+    },
+    {
+      path: '/orderList',
+      name: 'orderList',
+      component: () => import('./views/order/orderList.vue'),
+      meta: { title: '订单列表' },
     }
   ],
 });

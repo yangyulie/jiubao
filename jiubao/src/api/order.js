@@ -41,5 +41,19 @@ export default {
             method:"post",
             data
         })
+    },
+    submitOrder(data={}){//提交订单
+        return request({
+            url:"/apis/order/orderAdd",
+            method:"post",
+            data
+        })
+    },
+    getOrderList(data={}){//获取订单列表
+        return request({
+            url:"/apis/order/MyOrder",
+            method:"post",
+            data
+        })
     }
 }

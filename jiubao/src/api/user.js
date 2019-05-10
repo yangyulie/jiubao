@@ -27,5 +27,47 @@ export default {
             method:"post",
             data
         })
+    },
+    getAddressList(data={}){//收货地址列表
+        return request({
+            url:"/apis/order/MyAddess",
+            method:"post",
+            data
+        })
+    },
+    addAddress(data={}){//新增或编辑收货地址
+        return request({
+            url:"/apis/order/MyAddessPost",
+            method:"post",
+            data
+        })
+    },
+    defaultAddress(data={}){//设置默认或取消默认，删除收货地址
+        return request({
+            url:"/apis/order/MyAddessStates",
+            method:"post",
+            data
+        })
+    },
+    getInvoiceList(data={}){//获取发票信息列表
+        return request({
+            url:"/apis/order/Myinvoice",
+            method:"post",
+            data
+        })
+    },
+    addInvoice(data={}){//获取发票信息列表
+        return request({
+            url:"/apis/order/MyinvoicePost",
+            method:"post",
+            data
+        })
+    },
+    defaultInvoice(data={}){//获取发票信息列表
+        return request({
+            url:"/apis/order/invoiceStates",
+            method:"post",
+            data
+        })
     }
 }
