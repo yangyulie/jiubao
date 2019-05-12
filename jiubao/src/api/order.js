@@ -55,5 +55,19 @@ export default {
             method:"post",
             data
         })
+    },
+    getOrderDetail(data={}){//获取订单详情
+        return request({
+            url:"/apis/order/MyOrderDetailed",
+            method:"post",
+            data
+        })
+    },
+    getOrderLog(data={}){//获取订单日志
+        return request({
+            url:"/apis/order/Myorderloglist",
+            method:"post",
+            data
+        })
     }
 }

@@ -1,24 +1,21 @@
 <template>
   <div class="home">
-    <headed :tit="titleList[id]" :isShowRight="false" :isClose="false">
+    <headed :tit="'订单日志'" :isShowRight="false" :isClose="false">
     </headed>
     <div class="wrap">
         <ul class="lists">
-            <li v-for="(item,index) in list" :key="index" @click="goOrderDetail(item.Id)">
+            <li v-for="(item,index) in list" :key="index">
                 <dl>
                     <dt>
-                        <p>
-                            <img src="@/assets/imgs/icon_38.png" alt="">
-                            {{item.orderId}}
-                        </p>
-                        <span>{{item.orderactionName}}</span>
+                        <strong>{{item.actName}}</strong>
+                        <p>{{item.Remarks}}</p>
                     </dt>
                     <dd>
                         <div>
-                            <p>商品数量：{{item.Number}}</p>
-                            支付金额：<span>{{item.payName}}</span>
+                            <p>{{item.actUser}}</p>
                         </div>
                         <p>{{item.addtime}}</p>
+                        
                     </dd>
                 </dl>
             </li>
@@ -42,9 +39,6 @@ export default {
   },
   data() {
     return {
-      titleList:[
-          "全部订单","待核价订单","财务核价订单","待支付订单","待确认订单","待出库订单","待收货订单","已完成订单","作废订单","待退货订单","取消订单"
-      ],
       id:0,
       list:[]
     };
@@ -62,17 +56,11 @@ export default {
   },
   methods: {
     init() {
-      this.getOrderListFn();
+      this.getOrderLogFn();
     },
-    goOrderDetail(id){
-      console.log(123,id)
-      this.$router.push({
-          path:'/orderDetail?id='+id
-      })
-    },
-    getOrderListFn(){
+    getOrderLogFn(){
     console.log(this.id)
-        Api.getOrderList({Id:this.id}).then(res=>{
+        Api.getOrderLog({Id:this.id}).then(res=>{
             this.list = res.rows
         })
     },
@@ -89,11 +77,14 @@ export default {
 .wrap{
     .lists{
         li{
-            border-bottom: @bor; padding: 30px 15px; font-size: 18px; color: #313131;
+            border-bottom: @bor; padding: 30px 15px; font-size: 22px; color: #313131;
             dt{
-                display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #c1c1c1; padding-bottom: 10px;
-                span{
-                    color: #fff; background-color: #e6593b; height: 26px; line-height: 26px; padding: 0 10px; font-size: 16px;
+                border-bottom: 1px solid #c1c1c1; padding-bottom: 10px;
+                strong{
+                    color: #e6593b; height: 26px; line-height: 26px;font-size: 22px;
+                }
+                p{
+                    margin-top: 5px;
                 }
             }
             dd{

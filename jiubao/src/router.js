@@ -101,6 +101,30 @@ export default new Router({
       name: 'orderList',
       component: () => import('./views/order/orderList.vue'),
       meta: { title: '订单列表' },
+    },
+    {
+      path: '/orderDetail',
+      name: 'orderDetail',
+      component: () => import('./views/order/orderDetail.vue'),
+      meta: { title: '订单详情' },
+    },
+    {
+      path: '/orderLog',
+      name: 'orderLog',
+      component: () => import('./views/order/orderLog.vue'),
+      meta: { title: '订单日志' },
+    },
+    {
+      path: '/collect',
+      name: 'collect',
+      component: () => import('./views/user/collect.vue'),
+      meta: { title: '我的收藏' },
+    },
+    {
+      path: '/buyShopList',
+      name: 'buyShopList',
+      component: () => import('./views/user/buyShopList.vue'),
+      meta: { title: '购买历史' },
     }
   ],
 });

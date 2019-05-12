@@ -63,9 +63,23 @@ export default {
             data
         })
     },
-    defaultInvoice(data={}){//获取发票信息列表
+    defaultInvoice(data={}){//设置或取消默认发票
         return request({
             url:"/apis/order/invoiceStates",
+            method:"post",
+            data
+        })
+    },
+    getCollect(data={}){//获取收藏列表
+        return request({
+            url:"/apis/order/MyCollection",
+            method:"post",
+            data
+        })
+    },
+    getBuyShopList(data={}){//获取购买历史
+        return request({
+            url:"/apis/order/MyhistoryList",
             method:"post",
             data
         })

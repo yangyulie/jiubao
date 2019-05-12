@@ -6,7 +6,14 @@
             <img src="@/assets/imgs/icon_19.png" alt="">
             <div>
                 <p>{{datas.companyName}}</p>
-                <span>{{datas.userphone}}</span>
+                <p>{{datas.userphone}}</p>
+                <p>
+                    储值余额：{{datas.mychuzhi}}
+                </p>
+                <p>
+                    积分余额：{{datas.myjifen}}
+                </p>
+                <router-link tag="p" to="buyShopList">购买历史</router-link>
             </div>
         </div>
         <div class="salesmanInfo">
@@ -21,6 +28,12 @@
             <dt>{{item.name}}</dt>
             <dd>
                 <router-link :to="i.url" v-for="(i,idx) in item.listData" :key="idx">
+                    <span class="tagNum" v-if="index==0&&idx==0&&datas.ywpricecount>0">{{datas.ywpricecount}}</span>
+                    <span class="tagNum" v-if="index==0&&idx==1&&datas.cwpricecount>0">{{datas.cwpricecount}}</span>
+                    <span class="tagNum" v-if="index==0&&idx==2&&datas.paycount>0">{{datas.paycount}}</span>
+                    <span class="tagNum" v-if="index==0&&idx==3&&datas.qrcount>0">{{datas.qrcount}}</span>
+                    <span class="tagNum" v-if="index==0&&idx==4&&datas.ckcount>0">{{datas.ckcount}}</span>
+                    <span class="tagNum" v-if="index==0&&idx==5&&datas.shcount>0">{{datas.shcount}}</span>
                     <img :src="i.img" alt="">
                     <p>{{i.name}}</p>
                 </router-link>
@@ -120,7 +133,7 @@ export default {
                 {
                     img:require("@/assets/imgs/icon_33.png"),
                     name:"收藏",
-                    url:"/"
+                    url:"/collect"
                 },
                 {
                     img:require("@/assets/imgs/icon_34.png"),
@@ -176,12 +189,12 @@ export default {
         position: absolute; right: 10px; top: 10px; color: #fff; font-size: 24px;
     }
     .topInfo{
-        padding: 70px 25px; display: flex; justify-content: flex-start; align-items: flex-start;
+        padding: 70px 25px 0; display: flex; justify-content: flex-start; align-items: flex-start;
         img{
             width: 60px;
         }
         div{
-            color: #fff; font-size: 24px; margin-left: 20px;
+            color: #fff; font-size: 24px; margin-left: 20px; height: 200px;
             p{
                 font-family: "黑体"; padding-bottom: 20px;
             }
@@ -202,7 +215,10 @@ export default {
     dd{
         display: flex; justify-content: flex-start; align-items: flex-start; text-align: center; flex-wrap: wrap;
         a{
-            width: 20%; margin-top: 30px; padding-bottom: 20px;
+            width: 20%; margin-top: 30px; padding-bottom: 20px; position: relative;
+            span{
+                width: 20px; height: 20px; border-radius: 50%; color: #fff; background-color: #f00; position: absolute; right: 15px; top: 0; display: flex; justify-content: center; align-items: center; font-size: 15px;
+            }
             p{
                 margin-top: 10px;
             }
