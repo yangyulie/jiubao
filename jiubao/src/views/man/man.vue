@@ -3,23 +3,13 @@
     <div class="wrap">
         <div class="backLogin" @click="backLogin">退出登录</div>
         <div class="topInfo">
-            <img src="@/assets/imgs/icon_19.png" alt="">
             <div>
-                <p>{{datas.companyName}}</p>
-                <p>{{datas.userphone}}</p>
-                <p>
-                    储值余额：{{datas.mychuzhi}}
-                </p>
-                <p>
-                    积分余额：{{datas.myjifen}}
-                </p>
-                <router-link tag="p" to="buyShopList">购买历史</router-link>
+                <p>绑定用户：{{datas.companyName}}</p>
             </div>
         </div>
         <div class="salesmanInfo">
             <div>
-                <p>客户经理：{{datas.tuijianName}}</p>
-                <p>电话：{{datas.tuijianphone}}</p>
+                <img src="@/assets/imgs/icon_39.png" alt="">
             </div>
         </div>
     </div>
@@ -30,24 +20,23 @@
                 <router-link :to="i.url" v-for="(i,idx) in item.listData" :key="idx">
                     <span class="tagNum" v-if="index==0&&idx==0&&datas.ywpricecount>0">{{datas.ywpricecount}}</span>
                     <span class="tagNum" v-if="index==0&&idx==1&&datas.cwpricecount>0">{{datas.cwpricecount}}</span>
-                    <span class="tagNum" v-if="index==0&&idx==2&&datas.paycount>0">{{datas.paycount}}</span>
-                    <span class="tagNum" v-if="index==0&&idx==3&&datas.qrcount>0">{{datas.qrcount}}</span>
-                    <span class="tagNum" v-if="index==0&&idx==4&&datas.ckcount>0">{{datas.ckcount}}</span>
-                    <span class="tagNum" v-if="index==0&&idx==5&&datas.shcount>0">{{datas.shcount}}</span>
+                    <span class="tagNum" v-if="index==0&&idx==2&&datas.qrcount>0">{{datas.qrcount}}</span>
+                    <span class="tagNum" v-if="index==0&&idx==3&&datas.ckcount>0">{{datas.ckcount}}</span>
+                    <span class="tagNum" v-if="index==0&&idx==4&&datas.shcount>0">{{datas.shcount}}</span>
                     <img :src="i.img" alt="">
                     <p>{{i.name}}</p>
                 </router-link>
             </dd>
         </dl>
     </div>
-    <foot :is_now="4"></foot>
+    <foot :is_now="2"></foot>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import Api from "@/api/user.js";
-import foot from "@/components/foot.vue";
+import Api from "@/api/man.js";
+import foot from "@/components/footMan.vue";
 import { Indicator ,Toast } from 'mint-ui';
 import { mapActions, mapState } from "vuex";
 export default {
@@ -58,87 +47,32 @@ export default {
     return {
       list:[
         {
-            name:"我的订单",
+            name:"工作台",
             listData:[
                 {
                     img:require("@/assets/imgs/icon_20.png"),
                     name:"业务核价",
-                    url:"/orderList?id=1"
+                    url:"/manOrderList?sId=1"
                 },
                 {
                     img:require("@/assets/imgs/icon_21.png"),
                     name:"财务核价",
-                    url:"/orderList?id=2"
-                },
-                {
-                    img:require("@/assets/imgs/icon_22.png"),
-                    name:"待付款",
-                    url:"/orderList?id=3"
+                    url:"/manOrderList?sId=2"
                 },
                 {
                     img:require("@/assets/imgs/icon_23.png"),
                     name:"待确认",
-                    url:"/orderList?id=4"
+                    url:"/manOrderList?sId=4"
                 },
                 {
                     img:require("@/assets/imgs/icon_24.png"),
                     name:"待出库",
-                    url:"/orderList?id=5"
+                    url:"/manOrderList?sId=5"
                 },
                 {
                     img:require("@/assets/imgs/icon_25.png"),
                     name:"待收货",
-                    url:"/orderList?id=6"
-                },
-                {
-                    img:require("@/assets/imgs/icon_26.png"),
-                    name:"已完成",
-                    url:"/orderList?id=7"
-                },
-                {
-                    img:require("@/assets/imgs/icon_27.png"),
-                    name:"作废订单",
-                    url:"/orderList?id=8"
-                },
-                {
-                    img:require("@/assets/imgs/icon_28.png"),
-                    name:"待退货",
-                    url:"/orderList?id=9"
-                },
-                {
-                    img:require("@/assets/imgs/icon_29.png"),
-                    name:"全部",
-                    url:"/orderList?id=0"
-                }
-            ]
-        },
-        {
-            name:"常用工具",
-            listData:[
-                {
-                    img:require("@/assets/imgs/icon_30.png"),
-                    name:"绑定账户",
-                    url:"/shoperBind"
-                },
-                {
-                    img:require("@/assets/imgs/icon_31.png"),
-                    name:"地址管理",
-                    url:"/address"
-                },
-                {
-                    img:require("@/assets/imgs/icon_32.png"),
-                    name:"发票管理",
-                    url:"/invoice"
-                },
-                {
-                    img:require("@/assets/imgs/icon_33.png"),
-                    name:"收藏",
-                    url:"/collect"
-                },
-                {
-                    img:require("@/assets/imgs/icon_34.png"),
-                    name:"资料修改",
-                    url:"/userInfo"
+                    url:"/manOrderList?sId=6"
                 }
             ]
         }
@@ -159,10 +93,10 @@ export default {
   },
   methods: {
     init() {
-      this.getUserInfoFn();
+      this.getManInfoFn();
     },
-    getUserInfoFn(){//获取个人中心数据
-        Api.getUserInfo().then(res=>{
+    getManInfoFn(){//获取个人中心数据
+        Api.getManInfo().then(res=>{
             this.datas = res.rows
         })
     },
@@ -184,7 +118,7 @@ export default {
 <style lang='less' scoped>
 @bor:15px solid #f4f8ff;
 .wrap{
-    background: url("./../../assets/imgs/bg/bg_02.jpg") no-repeat center top/100% auto; position: relative;
+    background: #2892fe; position: relative;
     .backLogin{
         position: absolute; right: 10px; top: 10px; color: #fff; font-size: 24px;
     }
@@ -194,7 +128,7 @@ export default {
             width: 60px;
         }
         div{
-            color: #fff; font-size: 24px; margin-left: 20px; height: 200px;
+            color: #fff; font-size: 24px; margin-left: 20px; height: 90px;
             p{
                 font-family: "黑体"; padding-bottom: 20px;
             }

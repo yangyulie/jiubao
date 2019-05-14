@@ -125,6 +125,78 @@ export default new Router({
       name: 'buyShopList',
       component: () => import('./views/user/buyShopList.vue'),
       meta: { title: '购买历史' },
+    },
+    {
+      path: '/userInfo',
+      name: 'userInfo',
+      component: () => import('./views/user/userInfo.vue'),
+      meta: { title: '资料更新' },
+    },
+    {
+      path: '/man',
+      name: 'man',
+      component: () => import('./views/man/man.vue'),
+      meta: { title: '业务员中心' },
+    },
+    {
+      path: '/surePay',
+      name: 'surePay',
+      component: () => import('./views/man/surePay.vue'),
+      meta: { title: '确认收款' },
+    },
+    {
+      path: '/manOrderList',
+      name: 'manOrderList',
+      component: () => import('./views/man/manOrderList.vue'),
+      meta: { title: '业务员订单列表' },
+    },
+    {
+      path: '/myUser',
+      name: 'myUser',
+      component: () => import('./views/man/myUser.vue'),
+      meta: { title: '我的客户' },
+    },
+    {
+      path: '/setOrderProList',
+      name: 'setOrderProList',
+      component: () => import('./views/man/setOrderProList.vue'),
+      meta: { title: '代理下单产品列表' },
+    },
+    {
+      path: '/myCar',
+      name: 'myCar',
+      component: () => import('./views/man/myCar.vue'),
+      meta: { title: '购物车' },
+    },
+    {
+      path: '/myCarList',
+      name: 'myCarList',
+      component: () => import('./views/man/myCarList.vue'),
+      meta: { title: '购物车商家列表' },
+    },
+    {
+      path: '/manOrder',
+      name: 'manOrder',
+      component: () => import('./views/man/manOrder.vue'),
+      meta: { title: '代理下单' },
+    },
+    {
+      path: '/manOrderDetail',
+      name: 'manOrderDetail',
+      component: () => import('./views/man/manOrderDetail.vue'),
+      meta: { title: '订单详情' },
+    },
+    {
+      path: '/manAddress',
+      name: 'manAddress',
+      component: () => import('./views/man/manAddress.vue'),
+      meta: { title: '地址列表' },
+    },
+    {
+      path: '/manInvoice',
+      name: 'manInvoice',
+      component: () => import('./views/man/manInvoice.vue'),
+      meta: { title: '发票列表' },
     }
   ],
 });

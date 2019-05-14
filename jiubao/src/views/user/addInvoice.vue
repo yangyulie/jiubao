@@ -98,17 +98,20 @@ export default {
         }
         Api.addInvoice(obj).then(res=>{
             Toast(res.msg);
-            if(this.cartIds=="undefined"){
-                this.$router.push({
-                    path:'/invoice',
-                    replace:true
-                })
-            }else{
-                this.$router.push({
-                    path:'/invoice?cartIds='+this.cartIds+'&addressId='+ this.addressId,
-                    replace:true
-                })
+            if(res.code==1){
+                this.$router.go(-1)
             }
+            // if(this.cartIds=="undefined"){
+            //     this.$router.push({
+            //         path:'/invoice',
+            //         replace:true
+            //     })
+            // }else{
+            //     this.$router.push({
+            //         path:'/invoice?cartIds='+this.cartIds+'&addressId='+ this.addressId,
+            //         replace:true
+            //     })
+            // }
             
         })
     },

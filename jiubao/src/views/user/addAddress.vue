@@ -40,6 +40,7 @@ import headed from "@/components/headed.vue";
 import districts from "@/assets/districts.json";
 import { Indicator ,Popup ,Toast } from 'mint-ui';
 import { mapActions, mapState } from "vuex";
+import { setTimeout } from 'timers';
 export default {
   components: {
     headed,
@@ -140,17 +141,22 @@ export default {
         }
         Api.addAddress(obj).then(res=>{
             Toast(res.msg);
-            if(this.cartIds=="undefined"){
-                this.$router.push({
-                    path:'/address',
-                    replace:true
-                })
-            }else{
-                this.$router.push({
-                    path:'/address?cartIds='+this.cartIds+'&invoiceId='+ this.invoiceId,
-                    replace:true
-                })
+            if(res.code==1){
+                setTimeout(()=>{
+                    this.$router.go(-1)
+                },1000)
             }
+            // if(this.cartIds=="undefined"){
+            //     this.$router.push({
+            //         path:'/address',
+            //         replace:true
+            //     })
+            // }else{
+            //     this.$router.push({
+            //         path:'/address?cartIds='+this.cartIds+'&invoiceId='+ this.invoiceId,
+            //         replace:true
+            //     })
+            // }
             
         })
     },

@@ -83,5 +83,19 @@ export default {
             method:"post",
             data
         })
+    },
+    getUserInfo(data={}){//获取商家信息
+        return request({
+            url:"/apis/order/MyEdit",
+            method:"post",
+            data
+        })
+    },
+    setUserInfo(data={}){//设置商家信息
+        return request({
+            url:"/apis/order/EndCompany",
+            method:"post",
+            data
+        })
     }
 }

@@ -4,10 +4,10 @@
     </headed>
     <div class="wrap" v-if="isShow">
         <div class="addressBox" v-if="addressInfo">
-            <router-link :to="'/address?cartIds='+submitData.cartIds+'&invoiceId='+submitData.invoiceId" class="notAddress address" v-if="!addressInfo">
+            <router-link :to="'/manAddress?cId='+submitData.cId+'&cartIds='+submitData.cartIds+'&invoiceId='+submitData.invoiceId" class="notAddress address" v-if="!addressInfo">
                 <span>请选择收货地址</span>
             </router-link>
-            <router-link :to="'/address?cartIds='+submitData.cartIds+'&invoiceId='+submitData.invoiceId" tag="div" class="address" v-else>
+            <router-link :to="'/manAddress?cId='+submitData.cId+'&cartIds='+submitData.cartIds+'&invoiceId='+submitData.invoiceId" tag="div" class="address" v-else>
                 <img src="@/assets/imgs/icon_36.png" alt="">
                 <dl>
                     <dt>{{addressInfo.linkName}} <span>{{addressInfo.Phone}}</span></dt>
@@ -16,7 +16,7 @@
             </router-link>
         </div>
         <div class="invoiceBox">
-            <router-link :to="'/invoice?cartIds='+submitData.cartIds+'&AddressId='+submitData.AddressId" class="notAddress address" v-if="isInvoice">
+            <router-link :to="'/manInvoice?cId='+submitData.cId+'&cartIds='+submitData.cartIds+'&AddressId='+submitData.AddressId" class="notAddress address" v-if="isInvoice">
                 <span>发票：</span>
                 <dl v-if="invoiceInfo">
                     <dt>{{invoiceInfo.CompanyName}}</dt>
@@ -24,7 +24,7 @@
                 </dl>
                 <span v-else>请设置开票信息</span>
             </router-link>
-            <router-link  :to="'/invoice?cartIds='+submitData.cartIds+'&AddressId='+submitData.AddressId" class="notAddress address" v-else>
+            <router-link  :to="'/manInvoice?cId='+submitData.cId+'&cartIds='+submitData.cartIds+'&AddressId='+submitData.AddressId" class="notAddress address" v-else>
                 <span>本次不开具发票</span>
             </router-link>
         </div>
@@ -96,15 +96,14 @@
             <button @click="submitOrder">提交订单</button>
         </div>
     </div>
-    <foot :is_now="2"></foot>
+    <foot :is_now="1"></foot>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import Api from "@/api/order.js";
-import ApiUser from "@/api/user.js";
-import foot from "@/components/foot.vue";
+import ApiMan from "@/api/man.js";
+import foot from "@/components/footMan.vue";
 import headed from "@/components/headed.vue";
 import { Indicator ,Toast } from 'mint-ui';
 import { mapActions, mapState } from "vuex";
@@ -145,7 +144,8 @@ export default {
             Remarks:'',
             oFsUser:'',
             ptck:0,
-            pyId:0
+            pyId:0,
+            cId:this.urlParam.cId
         }
         if(this.submitData.invoiceId!=0){
             this.isInvoice = true
@@ -160,12 +160,12 @@ export default {
             text: '提交中...',
             spinnerType: 'fading-circle'
         });
-        Api.submitOrder(this.submitData).then(res=>{
+        ApiMan.submitOrder(this.submitData).then(res=>{
             Indicator.close();
             Toast(res.msg)
             if(res.code==1){
                 this.$router.push({
-                    path:'/orderList',
+                    path:'/manOrderDetail?id='+res.row,
                     replace:true
                 })
             }
@@ -173,7 +173,7 @@ export default {
         })
     },
     getInvoiceListFn(){
-        ApiUser.getInvoiceList().then(res=>{
+        ApiMan.getInvoiceList({cId:this.submitData.cId}).then(res=>{
             if(res.rows&&res.rows.length>0){
                 if(this.submitData.invoiceId){
                     for(let i=0;i<res.rows.length;i++){
@@ -195,7 +195,7 @@ export default {
         })
     },
     getAddressListFn(){
-        ApiUser.getAddressList().then(res=>{
+        ApiMan.getAddressList({cId:this.submitData.cId}).then(res=>{
             if(res.rows&&res.rows.length>0){
                 if(this.submitData.AddressId){
                     for(let i=0;i<res.rows.length;i++){
@@ -223,7 +223,8 @@ export default {
             spinnerType: 'fading-circle'
         });
         questData.cartIds = this.urlParam.cartIds;
-        Api.submitCarList(questData).then(res=>{
+        questData.cId = this.urlParam.cId;
+        ApiMan.submitCarList(questData).then(res=>{
             console.log(2223,res)
             Indicator.close();
             if(res.code==1){
