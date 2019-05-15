@@ -21,10 +21,10 @@
         </div>
     </div>
     <div class="con">
-        <ul class="leftNav secreenHei">
+        <ul class="leftNav secreenHei" v-if="leftNavList&&leftNavList.length>0">
             <li v-for="(item,index) in leftNavList" :class="{now:typeId==item.Id}" :key="index" @click="getAllpro(item.Id,index,item.name)">{{item.name}}</li>
         </ul>
-        <ul class="rightList secreenHei" v-show="!isShowProList">
+        <ul class="rightList secreenHei" v-show="!isShowProList" v-if="rightSecClassList&&rightSecClassList.length>0">
             <li v-for="(item,index) in rightSecClassList" :key="index" @click="selectSecClass(item.bigId)">
                 <img :src="item.icon" alt="">
                 <p>{{item.name}}</p>
@@ -32,7 +32,8 @@
         </ul>
         <div class="rightList secreenHei" ref="proList"  v-show="isShowProList">
             <div ref="proListInner" class="proListInner">
-                <ul class="list" v-if="proList.length>0">
+                <div class="notData" v-if="proList.length==0">暂时没有此类商品</div>
+                <ul class="list" v-else>
                     <router-link tag="li" :to="'/detail?id='+item.Id" v-for="(item,index) in proList" :key="index">
                         <img class="listProPic" :src="item.purls" alt="">
                         <dl>
@@ -52,8 +53,7 @@
                             </dd>
                         </dl>
                     </router-link>
-                </ul>
-                <div class="notData" v-else>暂时没有此类商品</div>
+                </ul> 
             </div>
         </div>
         
@@ -220,7 +220,7 @@ export default {
         this.isShowSelectPop = !this.isShowSelectPop;
     },
     selectSecClass(id){//点击下拉分类，获取分类下产品列表
-        console.log(id)
+        console.log(12345,id)
         this.selectId = id;
         this.isSecClass = true;
         this.isShowProList = true;
@@ -233,22 +233,23 @@ export default {
     getProList(){
         console.log(32,this.questData)
         Api.getSecClass(this.questData).then(res=>{
-            if(res.page==0){
-                return;
-            }
-            if(res.page>=res.currentPage){
-                this.scrollData.isQuest = false;
-            }else{
-                this.scrollData.isQuest = true;
-            }
-            if(res.page==1){
-                this.proList = res.data;
-            }else{
-                this.proList = this.proList.concat(res.data);
+            if(res.code==1){
+                if(res.page==0){
+                    return;
+                }
+                if(res.page>=res.currentPage){
+                    this.scrollData.isQuest = false;
+                }else{
+                    this.scrollData.isQuest = true;
+                }
+                if(res.page==1){
+                    this.proList = res.data;
+                }else{
+                    this.proList = this.proList.concat(res.data);
+                }
+                this.isShowSelectPop = false;
             }
             this.tit = res.bigclass;
-            this.isShowSelectPop = false;
-            
         })
         
     },

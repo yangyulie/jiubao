@@ -54,7 +54,7 @@
         <dl class="orderInfo">
             <dt>开票信息</dt>
             <dd>
-                开票公司：{{datas.invoiceId==0?"不开票":datas.invoiceInfo}}
+                开票公司：{{datas.invoiceId==0?"不开票":datas.invoiceInfo.CompanyName}}
             </dd>
         </dl>
         <dl class="orderInfo">
@@ -63,6 +63,18 @@
                 <router-link tag="div" :to="'/orderLog?id='+datas.Id">查看订单日志：{{datas.logcount}}</router-link>
             </dd>
         </dl>
+    </div>
+    <div class="btns">
+        <p v-if="datas.states==1">
+            <router-link tag="button" :to="'/cancelOrder?id='+id+'&states=8'">取消订单</router-link>
+            <button @click="quick">催单审核</button>
+        </p>
+        <p v-if="datas.states==6">
+            <router-link tag="button" :to="'/cancelOrder?id='+id+'&states=7'">确认收货</router-link>
+        </p>
+        <p v-if="datas.states==3">
+            <router-link tag="button" :to="'/pay?id='+id+'&states=3'">支付订单</router-link>
+        </p>
     </div>
     <foot :is_now="2"></foot>
   </div>
@@ -74,7 +86,7 @@ import Api from "@/api/order.js";
 import ApiUser from "@/api/user.js";
 import foot from "@/components/foot.vue";
 import headed from "@/components/headed.vue";
-import { Indicator ,Toast } from 'mint-ui';
+import { Indicator ,Toast ,MessageBox} from 'mint-ui';
 import { mapActions, mapState } from "vuex";
 export default {
   components: {
@@ -85,6 +97,7 @@ export default {
     return {
       datas:{},
       isShow:false,
+      id:0
     };
   },
   mounted() {
@@ -102,6 +115,16 @@ export default {
     init() {
         this.id= this.$route.query.id;
         this.getOrderDetailFn();
+    },
+    quick(){
+        MessageBox.confirm("是否催单？").then(action=>{
+            Api.quick().then(res=>{
+                Toast(res.msg)
+            })
+        }).catch(cancel=>{
+
+        })
+        
     },
     getOrderDetailFn(){
         let questData={
@@ -132,6 +155,18 @@ export default {
 </script>
 <style lang='less' scoped>
 @bor:10px solid #f4f8ff;
+.btns{
+    padding: 25px;
+    p{
+        display: flex; justify-content: center; align-items: center;
+        button{
+            width: 200px; height: 60px; color: #fff; background-color: #929292; font-size: 24px; display: flex; justify-content: center;  align-items: center; border: 0; outline: none; border-radius: 10px; margin: 0 10px;
+        }
+        button:last-child{
+            background-color: #2892fe;
+        }
+    }
+}
 .address{
     padding: 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: @bor; font-size: 20px; color: #929292; background-color: #f4f8ff;
     dl{

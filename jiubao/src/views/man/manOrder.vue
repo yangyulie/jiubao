@@ -3,7 +3,7 @@
     <headed :tit="'提交订单'" :isShowRight="false" :isClose="false">
     </headed>
     <div class="wrap" v-if="isShow">
-        <div class="addressBox" v-if="addressInfo">
+        <div class="addressBox">
             <router-link :to="'/manAddress?cId='+submitData.cId+'&cartIds='+submitData.cartIds+'&invoiceId='+submitData.invoiceId" class="notAddress address" v-if="!addressInfo">
                 <span>请选择收货地址</span>
             </router-link>
@@ -45,7 +45,7 @@
             </div>
             
             <div class="prolistTotal">
-                <div class="disContBox" v-if="datas.DisCountList.length>0">
+                <div class="disContBox" v-if="datas.DisCountList&&datas.DisCountList.length>0">
                     <p>满减规则</p>
                     <div>
                         <span v-for="(item,index) in datas.DisCountList" :key="index">{{item.DiscountName}}</span>
@@ -54,7 +54,7 @@
                 <div>优惠后金额总计： <span>￥{{datas.DiscountAmount}}</span></div>
             </div>
         </div>
-        <div class="proListBox" v-if="datas.AcartList.length>0">
+        <div class="proListBox" v-if="datas.AcartList&&datas.AcartList.length>0">
             <dl class="prolist">
                 <dt>其他商品</dt>
                 <dd v-for="(item,index) in datas.AcartList" :key="index" :class="{allProTop:item.tcList&&item.tcList.length>0}">
@@ -92,6 +92,7 @@
             <p>添加订单备注</p>
             <textarea name="" id="" cols="30" rows="10" v-model="submitData.Remarks" placeholder="请您在此添加订单备注"></textarea>
         </div>
+        
         <div class="submitBox">
             <button @click="submitOrder">提交订单</button>
         </div>
@@ -120,7 +121,8 @@ export default {
       urlParam:{},
       submitData:{},
       invoiceInfo:false,
-      isInvoice:false
+      isInvoice:false,
+      payMode:'1'
     };
   },
   mounted() {
@@ -185,6 +187,7 @@ export default {
                     for(let i=0;i<res.rows.length;i++){
                         if(res.rows[i].states==1){
                             this.invoiceInfo = res.rows[i]
+                            this.submitData.invoiceId = this.invoiceInfo.Id
                         }
                     }
                 }
@@ -196,6 +199,7 @@ export default {
     },
     getAddressListFn(){
         ApiMan.getAddressList({cId:this.submitData.cId}).then(res=>{
+            console.log(123,res)
             if(res.rows&&res.rows.length>0){
                 if(this.submitData.AddressId){
                     for(let i=0;i<res.rows.length;i++){
@@ -207,6 +211,7 @@ export default {
                     for(let i=0;i<res.rows.length;i++){
                         if(res.rows[i].states==1){
                             this.addressInfo = res.rows[i]
+                            this.submitData.AddressId = this.addressInfo.Id
                         }
                     }
                 }
@@ -254,6 +259,7 @@ export default {
         }
     }
 }
+
 .notAddress{
     height: 80px; background-color: #fff;
 }

@@ -54,7 +54,7 @@
         <dl class="orderInfo">
             <dt>开票信息</dt>
             <dd>
-                开票公司：{{datas.invoiceId==0?"不开票":datas.invoiceInfo}}
+                开票公司：{{datas.invoiceId==0?"不开票":datas.invoiceInfo.CompanyName}}
             </dd>
         </dl>
         <dl class="orderInfo">

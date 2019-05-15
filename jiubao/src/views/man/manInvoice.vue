@@ -27,7 +27,7 @@
                 </p>
             </li>
         </ul>
-        <router-link class="addShoperBind" :to="'/addInvoice?cartIds='+cartIds+'&addressId='+ addressId">新建发票信息</router-link>
+        <router-link class="addShoperBind" :to="'/manAddInvoice?cId='+cId+'&cartIds='+cartIds+'&addressId='+ addressId">新建发票信息</router-link>
     </div>
   </div>
 </template>
@@ -35,6 +35,7 @@
 <script>
 // @ is an alias to /src
 import Api from "@/api/man.js";
+import ApiUser from "@/api/user.js";
 import headed from "@/components/headed.vue";
 import { Indicator ,Toast } from 'mint-ui';
 import { mapActions, mapState } from "vuex";
@@ -52,11 +53,11 @@ export default {
     };
   },
   mounted() {
-    this.init();
     this.cartIds = this.$route.query.cartIds;
     this.addressId = this.$route.query.AddressId;
     this.cId = this.$route.query.cId;
-    console.log(this.addressId)
+    console.log(this.cId)
+    this.init();
     // const {setData} = this;
     // console.log(this.data)
     // setData(this.app)
@@ -80,7 +81,7 @@ export default {
         Id:id,
         states:status
       }
-      Api.defaultInvoice(questData).then(res=>{
+      ApiUser.defaultInvoice(questData).then(res=>{
         Toast(res.msg)
         if(res.code==1){
           this.init();
@@ -90,7 +91,7 @@ export default {
     edtAddress(obj){
       console.log(obj)
       this.$router.push({
-          path:'/manAddInvoice?cartIds='+this.cartIds+'&obj='+ JSON.stringify(obj)+'&addressId='+ this.addressId,
+          path:'/manAddInvoice?cId='+this.cId+'&cartIds='+this.cartIds+'&obj='+ JSON.stringify(obj)+'&addressId='+ this.addressId,
           replace:true
       })
     },

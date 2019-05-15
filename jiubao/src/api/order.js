@@ -69,5 +69,40 @@ export default {
             method:"post",
             data
         })
+    },
+    getPay(data={}){//获取支付信息
+        return request({
+            url:"/apis/order/payInfo",
+            method:"post",
+            data
+        })
+    },
+    submitPay(data={}){//提交支付信息
+        return request({
+            url:"/apis/order/PayPost",
+            method:"post",
+            data
+        })
+    },
+    cancelOrder(data={}){//取消订单
+        return request({
+            url:"/apis/order/OrderStatus",
+            method:"post",
+            data
+        })
+    },
+    quick(data={}){//催单
+        return request({
+            url:"/apis/order/ReminderPost",
+            method:"post",
+            data
+        })
+    },
+    submitOrderStatus(data={}){//提交订单状态
+        return request({
+            url:"/apis/order/OrderStatusPost",
+            method:"post",
+            data
+        })
     }
 }

@@ -77,4 +77,18 @@ export default {
             data
         })
     },
+    addAddress(data={}){//修改添加收货地址
+        return request({
+            url:"/apis/Apiswork/MyAddessPost",
+            method:"post",
+            data
+        })
+    },
+    addInvoice(data={}){//修改添加发票信息
+        return request({
+            url:"/apis/Apiswork/MyinvoicePost",
+            method:"post",
+            data
+        })
+    },
 }

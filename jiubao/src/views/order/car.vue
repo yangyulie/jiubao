@@ -256,21 +256,6 @@ export default {
           width: 195px; height: 86px; background-color: #2892fe; color: #fff; font-size: 24px; text-align: center; line-height: 86px; border: 0;
         }
     }
-    .isChecked{
-       position: relative; display: flex; justify-content: flex-start; align-items: center; font-size: 24px; color: #6e6e6e; width: 148px;
-      span{
-        width: 32px; height: 32px; border-radius: 50%; border: 1px solid #ccc; overflow: hidden; display: block; margin-right: 20px;
-      }
-      img{
-        display: none;
-      }
-    }
-    input[type="checkbox"]{
-        border: 0; background: none; opacity: 0; position: absolute; left: 0; top: 0;
-    }
-    .isChecked.show img{
-      display: block;
-    }
     .totalBox{
       font-size: 18px; color: #6e6e6e; margin: 0 20px; flex: 1;
       span{

@@ -25,7 +25,7 @@
                 </p>
             </li>
         </ul>
-        <router-link class="addShoperBind" :to="'/addAddress?cartIds='+cartIds+'&invoiceId='+ this.invoiceId">新建收货地址</router-link>
+        <router-link class="addShoperBind" :to="'/manAddAddress?cId='+cId+'&cartIds='+cartIds+'&invoiceId='+ this.invoiceId">新建收货地址</router-link>
     </div>
   </div>
 </template>
@@ -46,7 +46,8 @@ export default {
       list:[],
       datas:{},
       cartIds:"",
-      invoiceId:""
+      invoiceId:"",
+      cId:0
     };
   },
   mounted() {
@@ -88,7 +89,7 @@ export default {
     edtAddress(obj){
       console.log(obj)
       this.$router.push({
-          path:'/addAddress?cartIds='+this.cartIds+'&obj='+ JSON.stringify(obj)+'&invoiceId='+ this.invoiceId,
+          path:'/manAddAddress?cId='+this.cId+'&cartIds='+this.cartIds+'&obj='+ JSON.stringify(obj)+'&invoiceId='+ this.invoiceId,
           replace:true
       })
     },

@@ -45,7 +45,7 @@
             </div>
             
             <div class="prolistTotal">
-                <div class="disContBox" v-if="datas.DisCountList.length>0">
+                <div class="disContBox" v-if="datas.DisCountList&&datas.DisCountList.length>0">
                     <p>满减规则</p>
                     <div>
                         <span v-for="(item,index) in datas.DisCountList" :key="index">{{item.DiscountName}}</span>
@@ -54,7 +54,7 @@
                 <div>优惠后金额总计： <span>￥{{datas.DiscountAmount}}</span></div>
             </div>
         </div>
-        <div class="proListBox" v-if="datas.AcartList.length>0">
+        <div class="proListBox" v-if="datas.AcartList&&datas.AcartList.length>0">
             <dl class="prolist">
                 <dt>其他商品</dt>
                 <dd v-for="(item,index) in datas.AcartList" :key="index" :class="{allProTop:item.tcList&&item.tcList.length>0}">
@@ -106,7 +106,7 @@ import Api from "@/api/order.js";
 import ApiUser from "@/api/user.js";
 import foot from "@/components/foot.vue";
 import headed from "@/components/headed.vue";
-import { Indicator ,Toast } from 'mint-ui';
+import { Indicator ,Toast ,MessageBox} from 'mint-ui';
 import { mapActions, mapState } from "vuex";
 export default {
   components: {
@@ -121,7 +121,8 @@ export default {
       urlParam:{},
       submitData:{},
       invoiceInfo:false,
-      isInvoice:false
+      isInvoice:false,
+      payMode:''
     };
   },
   mounted() {
@@ -164,9 +165,17 @@ export default {
             Indicator.close();
             Toast(res.msg)
             if(res.code==1){
-                this.$router.push({
-                    path:'/orderList',
-                    replace:true
+                MessageBox.confirm('是否立即支付?').then(action => {
+                    this.$router.push({
+                        path:'/pay?id='+res.row,
+                        replace:true
+                    })
+                }).catch(cancel=>{
+                    this.$router.push({
+                        path:'/orderDetail?id='+res.row,
+                        replace:true
+                    })
+                    
                 })
             }
             console.log(123456,res)
@@ -185,6 +194,7 @@ export default {
                     for(let i=0;i<res.rows.length;i++){
                         if(res.rows[i].states==1){
                             this.invoiceInfo = res.rows[i]
+                            this.submitData.invoiceId = this.invoiceInfo.Id
                         }
                     }
                 }
@@ -207,6 +217,7 @@ export default {
                     for(let i=0;i<res.rows.length;i++){
                         if(res.rows[i].states==1){
                             this.addressInfo = res.rows[i]
+                            this.submitData.AddressId = this.addressInfo.Id
                         }
                     }
                 }
@@ -226,6 +237,7 @@ export default {
         Api.submitCarList(questData).then(res=>{
             console.log(2223,res)
             Indicator.close();
+            
             if(res.code==1){
                 this.datas = res.rows;
                 this.isShow = true;
@@ -259,12 +271,7 @@ export default {
 .address::after{
     content: ''; border: 1px solid #444; border-left: 0; border-bottom: 0; transform: rotate(45deg); width: 10px; height: 10px;
 }
-.submitBox{
-    padding: 15px 65px; 
-    button{
-        display: flex; justify-content: center; align-items: center; font-size: 24px; color: #fff; border-radius: 10px; background-color: #2892fe; height: 80px; width: 100%; outline: none; border: 0;
-    }
-}
+
 .sumBox{
     font-size: 18px; color: #d81e06; padding-bottom: 5px; margin-top: 15px;
 }

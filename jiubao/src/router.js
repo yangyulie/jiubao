@@ -197,6 +197,30 @@ export default new Router({
       name: 'manInvoice',
       component: () => import('./views/man/manInvoice.vue'),
       meta: { title: '发票列表' },
+    },
+    {
+      path: '/manAddAddress',
+      name: 'manAddAddress',
+      component: () => import('./views/man/manAddAddress.vue'),
+      meta: { title: '新建修改地址' },
+    },
+    {
+      path: '/manAddInvoice',
+      name: 'manAddInvoice',
+      component: () => import('./views/man/manAddInvoice.vue'),
+      meta: { title: '新建修改发票信息' },
+    },
+    {
+      path: '/pay',
+      name: 'pay',
+      component: () => import('./views/order/pay.vue'),
+      meta: { title: '支付' },
+    },
+    {
+      path: '/cancelOrder',
+      name: 'cancelOrder',
+      component: () => import('./views/order/cancelOrder.vue'),
+      meta: { title: '取消订单' },
     }
   ],
 });
