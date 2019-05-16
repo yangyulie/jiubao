@@ -355,6 +355,7 @@ export default {
 .registerBox.show{
   transform: translateX(0);
   visibility: visible;
+  z-index: 100
 }
 .registerInner{
   padding: 15px;

@@ -39,6 +39,9 @@
                 订单编号：{{datas.orderId}}
             </dd>
             <dd>
+                {{datas.ptck}}
+            </dd>
+            <dd>
                 下单时间：{{datas.addtime}}
             </dd>
             <dd class="orderInfoPrice">
@@ -58,11 +61,23 @@
             </dd>
         </dl>
         <dl class="orderInfo">
-            <dt>订单日志</dt>
-            <dd>
-                <router-link tag="div" :to="'/orderLog?id='+datas.Id">查看订单日志：{{datas.logcount}}</router-link>
-            </dd>
+            <dt><span>订单日志</span><router-link tag="div" :to="'/orderLog?id='+datas.Id">查看订单日志：{{datas.logcount}}</router-link></dt>
         </dl>
+        <div class="btnsOrder">
+            <p v-if="datas.states==1">
+                <router-link tag="button" :to="'/pricing?id='+id">前往核价</router-link>
+            </p>
+            <p v-if="datas.states==2">
+                <router-link tag="button" :to="'/pricing?id='+id">财务核价</router-link>
+            </p>
+            <p v-if="datas.states==4">
+                <router-link tag="button" :to="'/manCancelOrder?id='+id">立即确认</router-link>
+            </p>
+            <p v-if="datas.states==5">
+                <router-link tag="button" :to="'/manBackOrder?id='+id">退单</router-link>
+                <button @click="confirmGoOrder">确认出库</button>
+            </p>
+        </div>
     </div>
     <foot :is_now="1"></foot>
   </div>
@@ -102,6 +117,16 @@ export default {
     init() {
         this.id= this.$route.query.id;
         this.getOrderDetailFn();
+    },
+    confirmGoOrder(){
+        Api.submitGoOrder({Id:this.id}).then(res=>{
+            console.log(res)
+            if(res.code==1){
+                this.$router.push({
+                    path:'/man'
+                })
+            }
+        })
     },
     getOrderDetailFn(){
         let questData={
@@ -147,7 +172,7 @@ export default {
 .orderInfo{
     padding: 30px 35px; font-size: 18px; color: #929292; border-bottom: @bor;
     dt{
-        margin-bottom: 10px; color: #313131;
+        margin-bottom: 10px; color: #313131; display: flex; justify-content: space-between; align-items: center;
     }
     dd{
         margin-bottom: 6px; padding-left: 20px;

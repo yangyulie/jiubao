@@ -41,7 +41,7 @@
                             <dd>
                                 <p class="listInfo">
                                     <span>{{item.jhl}} x {{item.guige}}</span>
-                                    <em>{{item.chandi}}</em>
+                                    <em v-if="item.chandi">{{item.chandi}}</em>
                                 </p>
                                 <div class="listPrice">
                                     <em>￥{{item.price}}</em>
@@ -460,7 +460,7 @@ export default {
     display: flex; 
     justify-content: flex-start; 
     align-items: center; 
-    font-size: 30px;
+    font-size: 24px;
     padding-left: 15px;
     .backArrow{ 
         width: auto; 

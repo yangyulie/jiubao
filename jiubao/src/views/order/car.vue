@@ -48,7 +48,7 @@
 import Api from "@/api/order.js";
 import foot from "@/components/foot.vue";
 import headed from "@/components/headed.vue";
-import { Indicator ,Toast } from 'mint-ui';
+import { Indicator ,Toast ,MessageBox} from 'mint-ui';
 import { mapActions, mapState } from "vuex";
 export default {
   components: {
@@ -122,21 +122,24 @@ export default {
       }
       questData.Id = ids.join(',');
       console.log(questData)
-      Api.delCarList(questData).then(res=>{
-        if(res.code==1){
-          Toast(res.msg)
-          let arr = this.list;
-          for(let i=0;i<arr.length;i++){
-            if(arr[i].checked){
-              console.log(i)
-              arr.splice(i,1)
-              i--
-              //this.$set(this.list, i, this.list[i]);
+      MessageBox.confirm("确定删除？").then(res=>{
+        Api.delCarList(questData).then(res=>{
+          if(res.code==1){
+            Toast(res.msg)
+            let arr = this.list;
+            for(let i=0;i<arr.length;i++){
+              if(arr[i].checked){
+                console.log(i)
+                arr.splice(i,1)
+                i--
+                //this.$set(this.list, i, this.list[i]);
+              }
             }
           }
-        }
-        console.log(res.msg)
-      })
+          console.log(res.msg)
+        })
+      }).catch(res=>{})
+      
     },
     allCheckedFn(){
       let arr = this.list;
@@ -265,19 +268,6 @@ export default {
         content: "￥"
       }
     }
-    .notData{
-      font-size: 30px; color: #6e6e6e; text-align: center;
-      div{
-        span{
-          width: 216px; height: 216px; border-radius: 50%; display: flex; justify-content: center; align-items: center; background-color: #f4f8ff; margin: 180px auto 35px;
-          img{
-            width: 134px;
-          }
-        }
-      }
-      a{
-        color: #2892fe; font-size: 24px; text-decoration: underline; margin-top: 25px; display: inline-block;
-      }
-    }
+    
 }
 </style>

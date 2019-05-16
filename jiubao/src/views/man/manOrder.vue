@@ -28,6 +28,7 @@
                 <span>本次不开具发票</span>
             </router-link>
         </div>
+        <label :class="{show:allChecked}" class="isChecked"><span><img src="@/assets/imgs/icon_15.png" alt=""></span><input type="checkbox" v-model="allChecked" @change="changeFn">一票通和酒类随附单</label>
         <div class="proListBox" v-if="datas.DiscartList">
             <dl class="prolist">
                 <dt>参与满减活动商品</dt>
@@ -106,7 +107,7 @@
 import ApiMan from "@/api/man.js";
 import foot from "@/components/footMan.vue";
 import headed from "@/components/headed.vue";
-import { Indicator ,Toast } from 'mint-ui';
+import { Indicator ,Toast ,MessageBox} from 'mint-ui';
 import { mapActions, mapState } from "vuex";
 export default {
   components: {
@@ -122,7 +123,8 @@ export default {
       submitData:{},
       invoiceInfo:false,
       isInvoice:false,
-      payMode:'1'
+      payMode:'1',
+      allChecked:0
     };
   },
   mounted() {
@@ -145,7 +147,7 @@ export default {
             invoiceId:this.urlParam.invoiceId?this.urlParam.invoiceId:0,
             Remarks:'',
             oFsUser:'',
-            ptck:0,
+            ptck:this.allChecked,
             pyId:0,
             cId:this.urlParam.cId
         }
@@ -155,6 +157,10 @@ export default {
         this.getOrder();
         this.getAddressListFn()
         this.getInvoiceListFn()
+    },
+    changeFn(){
+        this.submitData.ptck = this.allChecked*1
+        console.log()
     },
     submitOrder(){
         console.log(this.submitData)
@@ -259,7 +265,9 @@ export default {
         }
     }
 }
-
+.isChecked{
+    border-bottom: @bor; width: 100%; padding: 25px;
+}
 .notAddress{
     height: 80px; background-color: #fff;
 }

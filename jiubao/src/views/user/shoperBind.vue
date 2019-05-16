@@ -24,7 +24,7 @@
 // @ is an alias to /src
 import Api from "@/api/user.js";
 import headed from "@/components/headed.vue";
-import { Indicator ,Toast } from 'mint-ui';
+import { Indicator ,Toast ,MessageBox} from 'mint-ui';
 import { mapActions, mapState } from "vuex";
 export default {
   components: {
@@ -52,12 +52,15 @@ export default {
       this.getShoperBindFn();
     },
     deleteFn(id,index){
+      MessageBox.confirm("确定删除？").then(res=>{
         Api.delShoperBind({Id:id}).then(res=>{
             Toast(res.msg)
             if(res.code==1){
                 this.list.splice(index,1)
             }
         })
+      }).catch(res=>{})
+        
     },
     getShoperBindFn(){//获取个人中心数据
         Api.getShoperBind().then(res=>{

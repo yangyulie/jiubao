@@ -221,6 +221,30 @@ export default new Router({
       name: 'cancelOrder',
       component: () => import('./views/order/cancelOrder.vue'),
       meta: { title: '取消订单' },
+    },
+    {
+      path: '/pricing',
+      name: 'pricing',
+      component: () => import('./views/man/pricing.vue'),
+      meta: { title: '订单核价' },
+    },
+    {
+      path: '/manAdiOrder',
+      name: 'manAdiOrder',
+      component: () => import('./views/man/manAdiOrder.vue'),
+      meta: { title: '价格审核' },
+    },
+    {
+      path: '/manCancelOrder',
+      name: 'manCancelOrder',
+      component: () => import('./views/man/manCancelOrder.vue'),
+      meta: { title: '确认订单' },
+    },
+    {
+      path: '/manBackOrder',
+      name: 'manBackOrder',
+      component: () => import('./views/man/manBackOrder.vue'),
+      meta: { title: '退单' },
     }
   ],
 });

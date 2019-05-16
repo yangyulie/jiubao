@@ -12,8 +12,8 @@
                             <proTag :is_now="i.indexs" ></proTag>
                             <p class="name">{{i.name}}</p>
                             <div class="norms">
-                                <span>{{i.jhl}}x{{i.guige}}</span>
-                                <em>{{i.chandi}}</em>
+                                <!-- <span>{{i.jhl}}x{{i.guige}}</span> -->
+                                <em v-if="i.chandi">{{i.chandi}}</em>
                             </div>
                             <div class="price">
                                 <span>￥{{i.price}}</span>
@@ -145,7 +145,7 @@ export default {
   .price{
     .flex();
     justify-content: space-between;
-    font-size: 16px;
+    font-size: 20px;
     color: #d81e06;
 
   }

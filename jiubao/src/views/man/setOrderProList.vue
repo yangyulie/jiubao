@@ -40,7 +40,7 @@
                             <dd>
                                 <p class="listInfo">
                                     <span>{{item.jhl}} x {{item.guige}}</span>
-                                    <em>{{item.chandi}}</em>
+                                    <em v-if="item.chandi">{{item.chandi}}</em>
                                 </p>
                                 <div class="listPrice">
                                     <em>￥{{item.price}}</em>

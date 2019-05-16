@@ -11,12 +11,13 @@
                             <img src="@/assets/imgs/icon_38.png" alt="">
                             {{item.orderId}}
                         </p>
-                        <span>{{item.paystates}}</span>
+                        <span v-if="item.paystates">{{item.paystates}}</span>
+                        <span v-else>{{item.payId}}</span>
                     </dt>
                     <dd>
                         <div>
                             <p>商品数量：{{item.Number}}</p>
-                            支付金额：<span>{{item.payName}}</span>
+                            支付金额：<span>￥{{item.total}}</span>
                         </div>
                         <p>{{item.addtime}}</p>
                     </dd>
@@ -67,7 +68,7 @@ export default {
     goOrderDetail(id){
       console.log(123,id)
       this.$router.push({
-          path:'/orderDetail?id='+id
+          path:'/manOrderDetail?id='+id
       })
     },
     getOrderListFn(){
@@ -91,13 +92,13 @@ export default {
         li{
             border-bottom: @bor; padding: 30px 15px; font-size: 18px; color: #313131;
             dt{
-                display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #c1c1c1; padding-bottom: 10px;
+                display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #c1c1c1; padding:0 25px 10px;
                 span{
                     color: #fff; background-color: #e6593b; height: 26px; line-height: 26px; padding: 0 10px; font-size: 16px;
                 }
             }
             dd{
-                display: flex; justify-content: space-between; align-items: center; padding-top: 20px;
+                display: flex; justify-content: space-between; align-items: center; padding: 20px 25px 0;
                 div{
                     p{
                         padding-bottom: 8px;

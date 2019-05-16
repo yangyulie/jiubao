@@ -162,7 +162,7 @@ export default {
       this.getUserInfoFn();
     },
     getUserInfoFn(){//获取个人中心数据
-        Api.getUserInfo().then(res=>{
+        Api.getUserInfoCen().then(res=>{
             this.datas = res.rows
         })
     },

@@ -104,5 +104,12 @@ export default {
             method:"post",
             data
         })
+    },
+    submitGoOrder(data={}){//提交出库状态
+        return request({
+            url:"/apis/Apiswork/OutstockPost",
+            method:"post",
+            data
+        })
     }
 }

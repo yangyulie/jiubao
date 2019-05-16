@@ -91,4 +91,67 @@ export default {
             data
         })
     },
+    getOrderPricing(data={}){//订单核价商品列表
+        return request({
+            url:"/apis/Apiswork/ProductsAudit",
+            method:"post",
+            data
+        })
+    },
+    delete(data={}){//删除核价商品
+        return request({
+            url:"/apis/Apiswork/DelAuditPost",
+            method:"post",
+            data
+        })
+    },
+    getPricePro(data={}){//获取核价商品
+        return request({
+            url:"/apis/Apiswork/shopcartShowsPost",
+            method:"post",
+            data
+        })
+    },
+    setPricePro(data={}){//核价商品修改验证
+        return request({
+            url:"/apis/Apiswork/Audit",
+            method:"post",
+            data
+        })
+    },
+    setPricing(data={}){//提交核价
+        return request({
+            url:"/apis/Apiswork/AuditPost",
+            method:"post",
+            data
+        })
+    },
+    cancelOrder(data={}){//确认订单
+        return request({
+            url:"/apis/Apiswork/payEnd",
+            method:"post",
+            data
+        })
+    },
+    submitOrderStatus(data={}){//确认订单
+        return request({
+            url:"/apis/Apiswork/ConfirmPay",
+            method:"post",
+            data
+        })
+    },
+    backOrder(data={}){//退订单
+        return request({
+            url:"/apis/Apiswork/RetreatOrder",
+            method:"post",
+            data
+        })
+    },
+    setBackOrder(data={}){//提交退订单
+        return request({
+            url:"/apis/Apiswork/RetreatPost",
+            method:"post",
+            data
+        })
+    },
 }

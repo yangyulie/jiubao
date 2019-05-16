@@ -3,7 +3,7 @@
     <headed :tit="titleList[id]" :isShowRight="false" :isClose="false">
     </headed>
     <div class="wrap">
-        <ul class="lists">
+        <ul class="lists" v-if="list&&list.length>0">
             <li v-for="(item,index) in list" :key="index" @click="goOrderDetail(item.Id)">
                 <dl>
                     <dt>
@@ -23,6 +23,12 @@
                 </dl>
             </li>
         </ul>
+        <div class="list notData" v-else>
+          <div>
+            <span><img src="@/assets/imgs/icon_16.png" alt=""></span>
+            没有此类订单
+          </div>
+        </div>
     </div>
     <foot :is_now="2"></foot>
   </div>
@@ -91,13 +97,13 @@ export default {
         li{
             border-bottom: @bor; padding: 30px 15px; font-size: 18px; color: #313131;
             dt{
-                display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #c1c1c1; padding-bottom: 10px;
+                display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #c1c1c1; padding:0 25px 10px;
                 span{
                     color: #fff; background-color: #e6593b; height: 26px; line-height: 26px; padding: 0 10px; font-size: 16px;
                 }
             }
             dd{
-                display: flex; justify-content: space-between; align-items: center; padding-top: 20px;
+                display: flex; justify-content: space-between; align-items: center; padding: 20px 25px 0;
                 div{
                     p{
                         padding-bottom: 8px;

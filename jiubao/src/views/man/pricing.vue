@@ -1,90 +1,45 @@
 <template>
   <div class="home">
-    <headed :tit="'订单详情'" :isShowRight="false" :isClose="false">
+    <headed :tit="'订单核价'" :isShowRight="false" :isClose="false">
     </headed>
-    <div class="wrap" v-if="isShow">
-        <div class="addressBox">
-            <div class="address">
-                <dl>
-                    <dt>{{datas.address.linkName}} <span>{{datas.address.Phone}}</span></dt>
-                    <dd>{{datas.address.address}}</dd>
-                </dl>
-            </div>
-        </div>
-        <div class="proListBox" v-if="datas.shopcart">
+    <div class="wrap secreenHei" v-if="isShow">
+        <div class="proListBox">
             <dl class="prolist">
-                <dt>
-                    <p>
-                        <img src="@/assets/imgs/icon_38.png" alt="">
-                        {{datas.orderId}}
-                    </p>
-                    <span>{{datas.orderactionName}}</span>
-                </dt>
-                <dd v-for="(item,index) in datas.shopcart.shopList" :key="index">
-                    <img :src="item.picurls" alt="">
+                <dd v-for="(item,index) in datas" :key="index">
+                    <img :src="item.purls" alt="">
                     <dl>
                         <dt>{{item.name}}</dt>
                         <dd class="gray">{{item.jhl}} x {{item.guige}}</dd>
                         <dd class="price"><span>￥{{item.price}}</span><span> x {{item.Number}}</span></dd>
+                        <dd class="totalS">小计：<span>￥{{item.total}}</span></dd>
                     </dl>
+                    <div class="consoleBtns">
+                        <button @click="ediFn(item.Id)" v-if="item.tcId==0">
+                            <img src="@/assets/imgs/icon_40.png" alt=""> 编辑
+                        </button>
+                        <button @click="deleteFn(item.Id)">
+                            <img src="@/assets/imgs/icon_41.png" alt=""> 删除
+                        </button>
+                    </div>
                 </dd>
             </dl>
         </div>
-        <dl class="orderInfo">
-            <dt>订单信息</dt>
-            <dd>
-                商家名称：{{datas.companyName}}
-            </dd>
-            <dd>
-                订单编号：{{datas.orderId}}
-            </dd>
-            <dd>
-                {{datas.ptck}}
-            </dd>
-            <dd>
-                下单时间：{{datas.addtime}}
-            </dd>
-            <dd class="orderInfoPrice">
-                实付：￥{{datas.Total}}
-            </dd>
-        </dl>
-        <dl class="orderInfo">
-            <dt>付款信息</dt>
-            <dd>
-                付款方式：{{datas.payType.payment}} <span class="red">{{datas.payType.Paystates}}</span>
-            </dd>
-        </dl>
-        <dl class="orderInfo">
-            <dt>开票信息</dt>
-            <dd>
-                开票公司：{{datas.invoiceId==0?"不开票":datas.invoiceInfo.CompanyName}}
-            </dd>
-        </dl>
-        <dl class="orderInfo">
-            <dt><span>订单日志</span><router-link tag="div" :to="'/orderLog?id='+datas.Id">查看订单日志：{{datas.logcount}}</router-link></dt>
-        </dl>
+        <div class="total">
+            <div class="totalBox">
+            总计：￥<span>{{total}}</span>
+            </div>
+            <button @click="goOrder">审核通过</button>
+        </div>
     </div>
-    <div class="btnsOrder">
-        <p v-if="datas.states==1">
-            <router-link tag="button" :to="'/cancelOrder?id='+id+'&states=8'">取消订单</router-link>
-            <button @click="quick">催单审核</button>
-        </p>
-        <p v-if="datas.states==6">
-            <router-link tag="button" :to="'/cancelOrder?id='+id+'&states=7'">确认收货</router-link>
-        </p>
-        <p v-if="datas.states==3">
-            <router-link tag="button" :to="'/pay?id='+id+'&states=3'">支付订单</router-link>
-        </p>
-    </div>
-    <foot :is_now="2"></foot>
+    
+    <foot :is_now="1"></foot>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import Api from "@/api/order.js";
-import ApiUser from "@/api/user.js";
-import foot from "@/components/foot.vue";
+import Api from "@/api/man.js";
+import foot from "@/components/footMan.vue";
 import headed from "@/components/headed.vue";
 import { Indicator ,Toast ,MessageBox} from 'mint-ui';
 import { mapActions, mapState } from "vuex";
@@ -97,7 +52,6 @@ export default {
     return {
       datas:{},
       isShow:false,
-      id:0
     };
   },
   mounted() {
@@ -114,19 +68,29 @@ export default {
   methods: {
     init() {
         this.id= this.$route.query.id;
-        this.getOrderDetailFn();
+        this.getOrderPricingFn();
     },
-    quick(){
-        MessageBox.confirm("是否催单？").then(action=>{
-            Api.quick().then(res=>{
+    ediFn(id){
+        this.$router.push({
+            path:'/manAdiOrder?orderId='+this.id+'&id='+id
+        })
+    },
+    goOrder(){
+        console.log("审核通过")
+    },
+    deleteFn(id){
+        console.log(id)
+        MessageBox.confirm("确认删除？").then(res=>{
+            Api.delete({Id:id}).then(res=>{
                 Toast(res.msg)
-            })
-        }).catch(cancel=>{
-
+                this.init();
+            });
+        }).catch(res=>{
+            
         })
         
     },
-    getOrderDetailFn(){
+    getOrderPricingFn(){
         let questData={
             Id:this.id
         };
@@ -134,7 +98,7 @@ export default {
             text: '加载中...',
             spinnerType: 'fading-circle'
         });
-        Api.getOrderDetail(questData).then(res=>{
+        Api.getOrderPricing(questData).then(res=>{
             console.log(2223,res)
             Indicator.close();
             if(res.code==1){
@@ -149,13 +113,20 @@ export default {
   },
   computed: {
     // ...mapState(['app','app2',"data"])
-    
+    total(){
+        return this.datas.reduce((item,index)=>{
+            console.log(item,index,item+index.total)
+            return item+index.total
+        },0)
+    }
   }
 };
 </script>
 <style lang='less' scoped>
 @bor:10px solid #f4f8ff;
-
+.wrap{
+    display: flex; flex-direction: column;
+}
 .address{
     padding: 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: @bor; font-size: 20px; color: #929292; background-color: #f4f8ff;
     dl{
@@ -171,7 +142,7 @@ export default {
 .orderInfo{
     padding: 30px 35px; font-size: 18px; color: #929292; border-bottom: @bor;
     dt{
-        margin-bottom: 10px; color: #313131; display: flex; justify-content: space-between; align-items: center;
+        margin-bottom: 10px; color: #313131;
     }
     dd{
         margin-bottom: 6px; padding-left: 20px;
@@ -202,7 +173,7 @@ export default {
     }
 }
 .proListBox{
-    padding: 20px 20px 0; border-bottom: @bor;
+    flex: 1; overflow-y: auto; position: relative; z-index: 1;
     >dl{
         >dt{
             display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #c1c1c1; padding-bottom: 10px;
@@ -211,12 +182,12 @@ export default {
             }
         }
         >dd{
-            display: flex; justify-content: flex-start; align-items: flex-start; font-size: 18px; color: #313131; padding: 25px 20px 0; flex-wrap: wrap;
+            display: flex; justify-content: flex-start; align-items: flex-start; font-size: 18px; color: #313131; padding: 25px 20px 0; flex-wrap: wrap; border-bottom: @bor;
             img{
                 width: 132px; margin-right: 27px;
             }
             dl{ 
-                width: 400px; padding-top: 20px;
+                width: 400px; padding-top: 20px; padding-bottom: 25px;
                 dd{
                     margin-top: 5px;
                 }
@@ -234,6 +205,15 @@ export default {
                             display: flex; align-items: flex-start;
                         }
                         
+                    }
+                }
+            }
+            >div{
+                width: 100%; border-top:1px solid #929292; display: flex; justify-content: flex-end; align-items: center; padding: 25px 0;
+                button{
+                    border: 1px solid #929292; width: 110px; height: 50px; display: flex; justify-content: center; align-items: center; margin-left: 25px; background-color: #fff; outline: none; font-size: 20px; color: #929292;
+                    img{
+                        margin-right: 10px; width:32px;
                     }
                 }
             }
@@ -279,5 +259,10 @@ export default {
 }
 .price{ 
     display: flex; justify-content: space-between; align-items: center;
+}
+.totalS{
+    span{
+        font-weight: bold; color: #d81e06;
+    }
 }
 </style>

@@ -49,7 +49,7 @@ import Api from "@/api/man.js";
 import ApiOrder from "@/api/order.js";
 import foot from "@/components/footMan.vue";
 import headed from "@/components/headed.vue";
-import { Indicator ,Toast } from 'mint-ui';
+import { Indicator ,Toast ,MessageBox} from 'mint-ui';
 import { mapActions, mapState } from "vuex";
 export default {
   components: {
@@ -125,21 +125,24 @@ export default {
       }
       questData.Id = ids.join(',');
       console.log(questData)
-      ApiOrder.delCarList(questData).then(res=>{
-        if(res.code==1){
-          Toast(res.msg)
-          let arr = this.list;
-          for(let i=0;i<arr.length;i++){
-            if(arr[i].checked){
-              console.log(i)
-              arr.splice(i,1)
-              i--
-              //this.$set(this.list, i, this.list[i]);
+      MessageBox.confirm("确定删除？").then(res=>{
+        ApiOrder.delCarList(questData).then(res=>{
+          if(res.code==1){
+            Toast(res.msg)
+            let arr = this.list;
+            for(let i=0;i<arr.length;i++){
+              if(arr[i].checked){
+                console.log(i)
+                arr.splice(i,1)
+                i--
+                //this.$set(this.list, i, this.list[i]);
+              }
             }
           }
-        }
-        console.log(res.msg)
-      })
+          console.log(res.msg)
+        })
+      }).catch(res=>{})
+      
     },
     allCheckedFn(){
       let arr = this.list;
@@ -253,22 +256,7 @@ export default {
           border: 0;
         }
     }
-    .total{
-        background-color: #fff; border-top: 1px solid #c1c1c1; height: 85px; display: flex; justify-content: space-between; align-items: center; padding-left: 20px; z-index: 9999; position: relative;
-        button{
-          width: 195px; height: 86px; background-color: #2892fe; color: #fff; font-size: 24px; text-align: center; line-height: 86px; border: 0;
-        }
-    }
     
-    .totalBox{
-      font-size: 18px; color: #6e6e6e; margin: 0 20px; flex: 1;
-      span{
-        color: #d81e06; font-size: 24px; font-weight: bold;
-      }
-      span:before{
-        content: "￥"
-      }
-    }
     .notData{
       font-size: 30px; color: #6e6e6e; text-align: center;
       div{
