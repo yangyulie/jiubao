@@ -4,7 +4,7 @@
         <div class="headInner" v-if="!isSecClass">
             <div class="back" @click="backPage">
                 <div class="backArrow"><span></span></div>
-                <span>{{questData.skey}}</span>
+                <span>{{tit}}</span>
             </div>
             <div class="search">
                 <img src="@/assets/imgs/icon_02.png" @click="goSearch" alt="">
@@ -14,7 +14,7 @@
         <div class="headInner" v-else>
             <div class="backArrow" @click="backPage"><span></span></div>
             <div class="tit">
-                <span>{{questData.skey}}</span>
+                <span>{{tit}}</span>
             </div>
             <img @click="backPop" src="@/assets/imgs/icon_12.png" alt="">
             <img @click="goCar" src="@/assets/imgs/icon_13.png" alt="">
@@ -74,6 +74,7 @@ export default {
       shearchText:"",
       isSecClass:true,
       typeId:'',
+      tit:"",
       rightSecClassList:[],
       isShowProList:false,
       isType:false,
@@ -119,7 +120,7 @@ export default {
     init() {
         let storage=window.localStorage;
         this.token = storage.getItem("token");
-        this.questData["skey"] = this.$route.query.skey
+        this.questData = this.$route.query
         this.getProList();
       
     },
@@ -201,6 +202,7 @@ export default {
                     this.proList = this.proList.concat(res.data);
                 }
                 this.isShowSelectPop = false;
+                this.tit = res.title
             }else{
               Toast(res.msg)
             }

@@ -76,5 +76,12 @@ export default {
             method:"post",
             data
         })
+    },
+    filterPro(data={}){//筛选列表
+        return request({
+            url:"/apis/ApisDefault/porductsAttribute",
+            method:"post",
+            data
+        })
     }
 }
