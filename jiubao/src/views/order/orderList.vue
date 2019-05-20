@@ -3,6 +3,9 @@
     <headed :tit="titleList[id]" :isShowRight="false" :isClose="false">
     </headed>
     <div class="wrap">
+        <ol class="tabList">
+          <li v-for="(item,index) in tabList" :key="index" :class="{now:id==item.id}" @click="orderTab(item.id)"><span>{{item.name}}</span></li>
+        </ol>
         <ul class="lists" v-if="list&&list.length>0">
             <li v-for="(item,index) in list" :key="index" @click="goOrderDetail(item.Id)">
                 <dl>
@@ -25,8 +28,8 @@
         </ul>
         <div class="list notData" v-else>
           <div>
-            <span><img src="@/assets/imgs/icon_16.png" alt=""></span>
-            没有此类订单
+            <span><img src="@/assets/imgs/icon_45.png" alt=""></span>
+            暂无订单
           </div>
         </div>
     </div>
@@ -49,14 +52,42 @@ export default {
   data() {
     return {
       titleList:[
-          "全部订单","待核价订单","财务核价订单","待支付订单","待确认订单","待出库订单","待收货订单","已完成订单","作废订单","待退货订单","取消订单"
+          "我的订单","待核价订单","财务核价订单","待支付订单","待确认订单","待出库订单","待收货订单","已完成订单","作废订单","待退货订单","取消订单"
+      ],
+      tabList:[
+        {
+          name:"全部",
+          id:0
+        },
+        {
+          name:"待付款",
+          id:3
+        },
+        {
+          name:"待确认",
+          id:4
+        },
+        {
+          name:"待出库",
+          id:5
+        },
+        {
+          name:"待收货",
+          id:6
+        }
       ],
       id:0,
-      list:[]
+      list:[],
+      isQuest:true,
+      questData:{
+        page:1,
+        id:0
+      }
     };
   },
   mounted() {
     this.id = this.$route.query.id
+    this.questData.id = this.id
     this.init();
     // const {setData} = this;
     // console.log(this.data)
@@ -69,6 +100,7 @@ export default {
   methods: {
     init() {
       this.getOrderListFn();
+      window.addEventListener('scroll',this.pageFn,false)
     },
     goOrderDetail(id){
       console.log(123,id)
@@ -76,10 +108,66 @@ export default {
           path:'/orderDetail?id='+id
       })
     },
+    orderTab(id){
+      this.questData.page = 1;
+      this.questData.id = id;
+      this.id = id;
+      this.getOrderListFn();
+    },
+    pageFn(){
+      let sTop = this.getScrollTop();
+      let clientHeight = this.getClientHeight();
+      let getScrollHeight = this.getScrollHeight();
+      let questHeight = getScrollHeight-clientHeight-100;
+      if(sTop>=questHeight&&this.isQuest){
+        this.questData.page = this.questData.page*1+1
+        this.isQuest = false;
+        this.getOrderListFn();
+      }
+    },
+    getScrollHeight(){  //获取文档内容实际高度
+        return Math.max(document.body.scrollHeight,document.documentElement.scrollHeight);  
+    },
+    getClientHeight(){  //获取窗口可视范围的高度
+        var clientHeight=0;  
+        if(document.body.clientHeight&&document.documentElement.clientHeight){  
+            var clientHeight=(document.body.clientHeight<document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
+        }else{  
+            var clientHeight=(document.body.clientHeight>document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
+        }  
+        return clientHeight;  
+    },
+    getScrollTop(){  //获取窗口滚动条高度
+        var scrollTop=0;  
+        if(document.documentElement&&document.documentElement.scrollTop){  
+            scrollTop=document.documentElement.scrollTop;  
+        }else if(document.body){  
+            scrollTop=document.body.scrollTop;  
+        }
+        return scrollTop;  
+    },
     getOrderListFn(){
     console.log(this.id)
-        Api.getOrderList({Id:this.id}).then(res=>{
-            this.list = res.rows
+        Api.getOrderList(this.questData).then(res=>{
+          Toast(res.msg)
+          if(res.code==1){
+            if(res.page==0){
+                return;
+            }
+            if(res.page>=res.currentPage){
+                this.isQuest = false;
+            }else{
+                this.isQuest = true;
+            }
+            if(this.questData.page==1){
+              this.list = res.rows
+            }else{
+              this.list = this.list.concat(res.rows)
+            }
+            
+          }else{
+            this.list = []
+          }
         })
     },
     //...mapActions(["setData"])
@@ -93,6 +181,26 @@ export default {
 <style lang='less' scoped>
 @bor:15px solid #f4f8ff;
 .wrap{
+  .notData{
+    img{
+      width: 114px;
+    }
+  }
+  .tabList{
+    display: flex; justify-content: space-between; align-items: center; border-bottom: @bor; font-size: 24px; color: #313131;
+    li{
+      flex: 1; display: flex; justify-content: center; align-items: center;
+      span{
+        margin: 10px 15px 0; padding: 0 0 10px; text-align: center;
+      } 
+    }
+    li.now{
+      span{
+        color: #2892fe; border-bottom: 4px solid #2892fe;
+      }
+      
+    }
+  }
     .lists{
         li{
             border-bottom: @bor; padding: 30px 15px; font-size: 18px; color: #313131;

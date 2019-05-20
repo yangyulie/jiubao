@@ -44,7 +44,7 @@
                         <img src="@/assets/imgs/icon_44.png" alt="">
                     </p>
                 </div>
-                <div class="notData" v-if="proList.length==0">暂时没有此类商品</div>
+                <div class="notData" v-if="proList.length==0"><img src="@/assets/imgs/not.png" alt=""></div>
                 <ul class="list" v-else>
                     <router-link tag="li" :to="'/detail?id='+item.Id" v-for="(item,index) in proList" :key="index">
                         <img class="listProPic" :src="item.purls" alt="">
@@ -428,7 +428,7 @@ export default {
     .filterInner{
         background-color: #fff; width: 100%; height: 100%; display: flex; flex-direction: column; font-size: 20px; color: #313131;
         .filterList{
-            flex: 1; padding: 20px;
+            flex: 1; padding: 20px; overflow-y: auto;
             dt{
                 font-size: 24px; padding-bottom: 20px; margin-top: 10px;
             }
@@ -531,6 +531,9 @@ export default {
 .notData{
     font-size: 26px;
     text-align: center; color: #929292; font-weight: bold; padding-top: 50px; width: 100%;
+    img{
+        width: 156px;
+    }
 }
 .proListInner{
     width: 100%; padding-top: 20px;

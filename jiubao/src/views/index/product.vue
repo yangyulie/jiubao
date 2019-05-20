@@ -23,7 +23,7 @@
     <div class="con">
         <div class="rightList secreenHei" ref="proList">
             <div ref="proListInner" class="proListInner">
-                <div class="notData" v-if="proList.length==0">暂时没有此类商品</div>
+                <div class="notData" v-if="proList.length==0"><img src="@/assets/imgs/not.png" alt=""></div>
                 <ul class="list" v-else>
                     <router-link tag="li" :to="'/detail?id='+item.Id" v-for="(item,index) in proList" :key="index">
                         <img class="listProPic" :src="item.purls" alt="">
@@ -317,6 +317,9 @@ export default {
 .notData{
     font-size: 26px;
     text-align: center; color: #929292; font-weight: bold; padding-top: 50px; width: 100%;
+    img{
+        width: 216px;
+    }
 }
 .proListInner{
     width: 100%;

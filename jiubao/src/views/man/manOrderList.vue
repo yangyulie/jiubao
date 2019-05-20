@@ -3,7 +3,7 @@
     <headed :tit="titleList[id]" :isShowRight="false" :isClose="false">
     </headed>
     <div class="wrap">
-        <ul class="lists">
+        <ul class="lists" v-if="list&&list.length>0">
             <li v-for="(item,index) in list" :key="index" @click="goOrderDetail(item.Id)">
                 <dl>
                     <dt>
@@ -24,6 +24,12 @@
                 </dl>
             </li>
         </ul>
+        <div class="list notData" v-else>
+          <div>
+            <span><img src="@/assets/imgs/icon_45.png" alt=""></span>
+            暂无订单
+          </div>
+        </div>
     </div>
     <foot :is_now="2"></foot>
   </div>
@@ -47,11 +53,17 @@ export default {
           "全部订单","业务待审核","财务核价订单","待支付订单","待确认订单","待出库订单","待收货订单","已完成订单","作废订单","待退货订单","取消订单"
       ],
       id:0,
-      list:[]
+      list:[],
+      isQuest:true,
+      questData:{
+        page:1,
+        sId:0
+      }
     };
   },
   mounted() {
     this.id = this.$route.query.sId
+    this.questData.sId = this.id
     this.init();
     // const {setData} = this;
     // console.log(this.data)
@@ -64,6 +76,7 @@ export default {
   methods: {
     init() {
       this.getOrderListFn();
+      window.addEventListener('scroll',this.pageFn,false)
     },
     goOrderDetail(id){
       console.log(123,id)
@@ -71,10 +84,58 @@ export default {
           path:'/manOrderDetail?id='+id
       })
     },
+    pageFn(){
+      let sTop = this.getScrollTop();
+      let clientHeight = this.getClientHeight();
+      let getScrollHeight = this.getScrollHeight();
+      let questHeight = getScrollHeight-clientHeight-100;
+      if(sTop>=questHeight&&this.isQuest){
+        this.questData.page = this.questData.page*1+1
+        this.isQuest = false;
+        this.getOrderListFn();
+      }
+    },
+    getScrollHeight(){  //获取文档内容实际高度
+        return Math.max(document.body.scrollHeight,document.documentElement.scrollHeight);  
+    },
+    getClientHeight(){  //获取窗口可视范围的高度
+        var clientHeight=0;  
+        if(document.body.clientHeight&&document.documentElement.clientHeight){  
+            var clientHeight=(document.body.clientHeight<document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
+        }else{  
+            var clientHeight=(document.body.clientHeight>document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
+        }  
+        return clientHeight;  
+    },
+    getScrollTop(){  //获取窗口滚动条高度
+        var scrollTop=0;  
+        if(document.documentElement&&document.documentElement.scrollTop){  
+            scrollTop=document.documentElement.scrollTop;  
+        }else if(document.body){  
+            scrollTop=document.body.scrollTop;  
+        }
+        return scrollTop;  
+    },
     getOrderListFn(){
     console.log(this.id)
-        Api.getManOrderList({sId:this.id}).then(res=>{
-            this.list = res.rows
+        Api.getManOrderList(this.questData).then(res=>{
+          Toast(res.msg)
+          if(res.code==1){
+            if(res.page==0){
+                return;
+            }
+            if(res.page>=res.currentPage){
+                this.isQuest = false;
+            }else{
+                this.isQuest = true;
+            }
+            if(this.questData.page==1){
+              this.list = res.rows
+            }else{
+              this.list = this.list.concat(res.rows)
+            }
+            
+          }
         })
     },
     //...mapActions(["setData"])
