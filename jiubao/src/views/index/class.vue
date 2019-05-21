@@ -92,27 +92,27 @@
                         <span 
                         v-for="(item,index) in filterData.brand" 
                         :key="index"
-                        :class="{now:questData.brand==item}"
+                        :class="{now:questData.brand==keepTextStyle(item)}"
                         @click="filter('brand',item)"
-                        >{{item}}</span>
+                        >{{keepTextStyle(item)}}</span>
                     </dd>
                     <dt v-if="filterData.Netcontent&&filterData.Netcontent.length>0">净含量</dt>
                     <dd v-if="filterData.Netcontent&&filterData.Netcontent.length>0">
                         <span 
                         v-for="(item,index) in filterData.Netcontent" 
                         :key="index"
-                        :class="{now:questData.jhl==item}"
+                        :class="{now:questData.jhl==keepTextStyle(item)}"
                         @click="filter('jhl',item)"
-                        >{{item}}</span>
+                        >{{keepTextStyle(item)}}</span>
                     </dd>
                     <dt v-if="filterData.Origin&&filterData.Origin.length>0">产地</dt>
                     <dd v-if="filterData.Origin&&filterData.Origin.length>0">
                         <span 
                         v-for="(item,index) in filterData.Origin" 
                         :key="index"
-                        :class="{now:questData.chandi==item}"
+                        :class="{now:questData.chandi==keepTextStyle(item)}"
                         @click="filter('chandi',item)"
-                        >{{item}}</span>
+                        >{{keepTextStyle(item)}}</span>
                     </dd>
                 </dl>
             </div>
@@ -207,6 +207,9 @@ export default {
         this.getAllClass();
       
     },
+    keepTextStyle(val){
+        return  (val + '').replace(/\n/g,"")
+    },
     resetFilter(){
         this.questData.begprice = "";
         this.questData.endPrice = "";
@@ -228,11 +231,14 @@ export default {
         console.log(this.questData)
     },
     filter(name,tag){
+        tag = this.keepTextStyle(tag)
+        console.log(this.questData[name]==tag,this.questData[name],tag)
         if(this.questData[name]==tag){
             this.questData[name]='';
             return;
         }
         this.questData[name] = tag
+        console.log(this.questData[name]==tag,this.questData[name],tag)
     },
     filterOther(){
         this.isShowFilterPop = !this.isShowFilterPop;
