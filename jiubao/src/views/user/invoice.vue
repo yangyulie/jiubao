@@ -17,7 +17,9 @@
                 </div>
                 <p>
                   <span class="defaultTag" v-if="item.states==1">默认</span>
+                  <span v-else> </span>
                   <span class="useAddress" v-if="cartIds" @click="goUseAddress(item.Id)">使用发票信息</span>
+                  <span v-else> </span>
                   <em>
                     <span @click="defaultAddress(item.states==1?0:1,item.Id)">{{item.states==1?"取消默认":"设为默认"}}</span>
                     <img src="@/assets/imgs/icon_37.png" @click="edtAddress(item)" alt="">

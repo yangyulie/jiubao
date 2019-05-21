@@ -96,7 +96,7 @@ export default {
                     flex: 1; text-align: left; font-style: normal;
                 }
                 img{
-                    width: 46px;
+                    width: 40px;
                 }
             }
         }
