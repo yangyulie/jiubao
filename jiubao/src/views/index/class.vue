@@ -232,13 +232,12 @@ export default {
     },
     filter(name,tag){
         tag = this.keepTextStyle(tag)
-        console.log(this.questData[name]==tag,this.questData[name],tag)
         if(this.questData[name]==tag){
             this.questData[name]='';
             return;
         }
+        this.questData.sig = '';
         this.questData[name] = tag
-        console.log(this.questData[name]==tag,this.questData[name],tag)
     },
     filterOther(){
         this.isShowFilterPop = !this.isShowFilterPop;
@@ -314,9 +313,10 @@ export default {
                     chandi:"",
                     brand:"",
                     begprice:"",
-                    endPrice:""
+                    endPrice:"",
+                    sig:'',
+                    big:this.typeId
                 },
-                this.questData["big"]=this.typeId
                 this.proList=[];
                 this.isShowProList = true;
                 this.isSecClass = true;
@@ -354,9 +354,10 @@ export default {
           chandi:"",
           brand:"",
           begprice:"",
-          endPrice:""
+          endPrice:"",
+          sig:id,
+            big:''
       },
-        this.questData["sig"] = id;
         this.proList=[];
         this.getProList();
         this.isShowSelectPop = false;
