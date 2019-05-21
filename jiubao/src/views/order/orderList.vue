@@ -64,6 +64,14 @@ export default {
           id:0
         },
         {
+          name:"业务核价",
+          id:1
+        },
+        {
+          name:"财务核价",
+          id:2
+        },
+        {
           name:"待付款",
           id:3
         },
@@ -78,6 +86,18 @@ export default {
         {
           name:"待收货",
           id:6
+        },
+        {
+          name:"已完成",
+          id:7
+        },
+        {
+          name:"已作废",
+          id:8
+        },
+        {
+          name:"待退货",
+          id:9
         }
       ],
       id:0,
@@ -195,9 +215,9 @@ export default {
     height: 70px; border-bottom: @bor;
   }
   .tabList{
-    display: flex; justify-content: space-between; align-items: center; font-size: 24px; color: #313131; position: fixed; z-index: 9; left: 0; top: 70px; width: 100%; background-color: #fff;
+    display: flex; justify-content: space-between; align-items: center; font-size: 24px; color: #313131; position: fixed; z-index: 9; left: 0; top: 70px; width: 100%; background-color: #fff; overflow-x: scroll;
     li{
-      flex: 1; display: flex; justify-content: center; align-items: center;
+      flex: 1; display: flex; justify-content: center; align-items: center; white-space: nowrap;
       span{
         margin: 10px 15px 0; padding: 0 0 10px; text-align: center;
       } 
