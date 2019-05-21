@@ -22,7 +22,8 @@
                     <dd>
                         <div>
                             <p>商品数量：{{item.Number}}</p>
-                            支付金额：<span>{{item.payName}}</span>
+                            <p v-if="item.payName!=''">支付方式：{{item.payName}}</p>
+                            支付金额：<span>￥{{item.total}}</span>
                         </div>
                         <p>{{item.addtime}}</p>
                     </dd>
