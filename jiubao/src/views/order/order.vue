@@ -3,17 +3,6 @@
     <headed :tit="'提交订单'" :isShowRight="false" :isClose="false">
     </headed>
     <div class="wrap" v-if="isShow">
-<<<<<<< HEAD
-        <div class="addressBox" v-if="datas.addessinfo">
-            <router-link to="/address" class="notAddress address" v-if="datas.addessinfo.address.length==0">
-                <span>请选择收货地址</span>
-            </router-link>
-            <router-link to="/address" tag="div" class="address" v-else>
-                <img src="@/assets/imgs/icon_36.png" alt="">
-                <dl>
-                    <dt>{{datas.addessinfo.linkName}} <span>{{datas.addessinfo.Phone}}</span></dt>
-                    <dd>{{datas.addessinfo.address}}</dd>
-=======
         <div class="addressBox" v-if="addressInfo">
             <router-link :to="'/address?cartIds='+submitData.cartIds+'&invoiceId='+submitData.invoiceId" class="notAddress address" v-if="!addressInfo">
                 <span>请选择收货地址</span>
@@ -23,20 +12,10 @@
                 <dl>
                     <dt>{{addressInfo.linkName}} <span>{{addressInfo.Phone}}</span></dt>
                     <dd>{{addressInfo.address}}</dd>
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
                 </dl>
             </router-link>
         </div>
         <div class="invoiceBox">
-<<<<<<< HEAD
-            <router-link to="/invoice" class="notAddress address" v-if="!datas.invoiceinfo">
-                <span>请设置开票信息</span>
-            </router-link>
-            <div class="notAddress address" v-else>
-                <span>本次不开具发票</span>
-            </div>
-        </div>
-=======
             <router-link :to="'/invoice?cartIds='+submitData.cartIds+'&AddressId='+submitData.AddressId" class="notAddress address" v-if="isInvoice">
                 <span>发票：</span>
                 <dl v-if="invoiceInfo">
@@ -50,7 +29,6 @@
             </router-link>
         </div>
         <label :class="{show:allChecked}" class="isChecked"><span><img src="@/assets/imgs/icon_15.png" alt=""></span><input type="checkbox" v-model="allChecked" @change="changeFn">一票通和酒类随附单</label>
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
         <div class="proListBox" v-if="datas.DiscartList">
             <dl class="prolist">
                 <dt>参与满减活动商品</dt>
@@ -63,13 +41,6 @@
                     </dl>
                 </dd>
             </dl>
-<<<<<<< HEAD
-            <div class="prolistTotal">
-                <div>满减活动商品总计： <span>{{datas.DiscartListSum}}</span></div>
-            </div>
-        </div>
-        <div class="proListBox" v-if="datas.AcartList.length>0">
-=======
             <div class="sumBox">
                 <div>满减活动商品总计： <span>￥{{datas.DiscartListSum}}</span></div>
             </div>
@@ -85,7 +56,6 @@
             </div>
         </div>
         <div class="proListBox" v-if="datas.AcartList&&datas.AcartList.length>0">
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
             <dl class="prolist">
                 <dt>其他商品</dt>
                 <dd v-for="(item,index) in datas.AcartList" :key="index" :class="{allProTop:item.tcList&&item.tcList.length>0}">
@@ -117,9 +87,6 @@
             </div>
         </div>
         <div class="totalPriceBox">
-<<<<<<< HEAD
-            订单金额总计： <span>{{}}</span>
-=======
             订单金额总计： <span>￥{{datas.total}}</span>
         </div>
         <div class="markBox">
@@ -128,7 +95,6 @@
         </div>
         <div class="submitBox">
             <button @click="submitOrder">提交订单</button>
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
         </div>
     </div>
     <foot :is_now="2"></foot>
@@ -138,16 +104,10 @@
 <script>
 // @ is an alias to /src
 import Api from "@/api/order.js";
-<<<<<<< HEAD
-import foot from "@/components/foot.vue";
-import headed from "@/components/headed.vue";
-import { Indicator ,Toast } from 'mint-ui';
-=======
 import ApiUser from "@/api/user.js";
 import foot from "@/components/foot.vue";
 import headed from "@/components/headed.vue";
 import { Indicator ,Toast ,MessageBox} from 'mint-ui';
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
 import { mapActions, mapState } from "vuex";
 export default {
   components: {
@@ -158,15 +118,12 @@ export default {
     return {
       datas:{},
       isShow:false,
-<<<<<<< HEAD
-=======
       addressInfo:"",
       urlParam:{},
       submitData:{},
       invoiceInfo:false,
       isInvoice:false,
       payMode:''
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
     };
   },
   mounted() {
@@ -182,9 +139,6 @@ export default {
   },
   methods: {
     init() {
-<<<<<<< HEAD
-      this.getOrder()
-=======
         this.urlParam = this.$route.query;
         this.submitData={
             cartIds:this.urlParam.cartIds,
@@ -277,7 +231,6 @@ export default {
             }
             console.log(1111,res)
         })
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
     },
     getOrder(){
         let questData={};
@@ -285,18 +238,11 @@ export default {
             text: '加载中...',
             spinnerType: 'fading-circle'
         });
-<<<<<<< HEAD
-        questData.cartIds = this.$route.query.cartIds;
-        Api.submitCarList(questData).then(res=>{
-            console.log(2223,res)
-            Indicator.close();
-=======
         questData.cartIds = this.urlParam.cartIds;
         Api.submitCarList(questData).then(res=>{
             console.log(2223,res)
             Indicator.close();
             
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
             if(res.code==1){
                 this.datas = res.rows;
                 this.isShow = true;
@@ -330,10 +276,6 @@ export default {
 .address::after{
     content: ''; border: 1px solid #444; border-left: 0; border-bottom: 0; transform: rotate(45deg); width: 10px; height: 10px;
 }
-<<<<<<< HEAD
-.proListBox{
-    padding: 20px; border-bottom: @bor;
-=======
 
 .sumBox{
     font-size: 18px; color: #d81e06; padding-bottom: 5px; margin-top: 15px;
@@ -349,7 +291,6 @@ export default {
 }
 .proListBox{
     padding: 20px 20px 0; border-bottom: @bor;
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
     >dl{
         >dt{
             font-size: 18px; color: #ff4344; height: 50px; border-bottom: 1px solid #c1c1c1; line-height: 50px;
@@ -400,11 +341,6 @@ export default {
         }
     }
 }
-<<<<<<< HEAD
-
-.prolistTotal{
-    height: 65px; line-height: 65px; border-top: 1px solid #c1c1c1; color: #d81e06; font-size: 18px; text-align: right; padding-right: 40px; margin-top: 20px;
-=======
 .totalPriceBox{
     border-bottom: @bor; height: 75px; padding: 0 35px; display: flex; justify-content: flex-start; align-items: center; font-size: 24px;
     span{
@@ -425,7 +361,6 @@ export default {
 }
 .prolistTotal{
     line-height: 65px; border-top: 1px solid #c1c1c1; color: #d81e06; font-size: 18px; text-align: right; padding-right: 40px; margin-top: 20px;
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
 }
 .price{ 
     display: flex; justify-content: space-between; align-items: center;

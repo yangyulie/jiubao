@@ -193,11 +193,6 @@ export default {
         Api.loginFn(questData).then(res=>{
             this.toastObj = Toast(res.msg);
             let storage=window.localStorage;
-<<<<<<< HEAD
-            if(res.token=='undefined') return;
-            let token = storage.setItem("token",res.token);
-           this.$router.go(-1);
-=======
             console.log(res.token)
             if(!res.token||res.token=='undefined') return;
             storage.setItem("token",res.token);
@@ -210,7 +205,6 @@ export default {
               this.$router.go(-1);
             }
             
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
         })
     },
     closeToast(){//关闭已有提示层

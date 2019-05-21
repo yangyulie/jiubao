@@ -207,9 +207,6 @@ export default {
         this.getAllClass();
       
     },
-<<<<<<< HEAD
-    //TODO:搜索功能，筛选功能待完成
-=======
     resetFilter(){
         this.questData.begprice = "";
         this.questData.endPrice = "";
@@ -255,7 +252,6 @@ export default {
         this.questData.page = 1;
         this.getProList();
     },
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
     goCar(){//前往购物车列表
         let storage=window.localStorage;
         if(!storage.getItem("token")){

@@ -1,10 +1,6 @@
 import request from "@/utils/request.js";
 export default {
-<<<<<<< HEAD
-    getUserInfo(data={}){//获取个人中心数据
-=======
     getUserInfoCen(data={}){//获取个人中心数据
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
         return request({
             url:"/apis/order/MyUser",
             method:"post",
@@ -31,8 +27,6 @@ export default {
             method:"post",
             data
         })
-<<<<<<< HEAD
-=======
     },
     getAddressList(data={}){//收货地址列表
         return request({
@@ -103,6 +97,5 @@ export default {
             method:"post",
             data
         })
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
     }
 }

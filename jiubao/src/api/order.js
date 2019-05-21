@@ -41,8 +41,6 @@ export default {
             method:"post",
             data
         })
-<<<<<<< HEAD
-=======
     },
     submitOrder(data={}){//提交订单
         return request({
@@ -113,6 +111,5 @@ export default {
             method:"post",
             data
         })
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
     }
 }

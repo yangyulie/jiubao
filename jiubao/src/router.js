@@ -83,8 +83,6 @@ export default new Router({
       name: 'invoice',
       component: () => import('./views/user/invoice.vue'),
       meta: { title: '发票信息' },
-<<<<<<< HEAD
-=======
     },
     {
       path: '/addAddress',
@@ -247,7 +245,6 @@ export default new Router({
       name: 'manBackOrder',
       component: () => import('./views/man/manBackOrder.vue'),
       meta: { title: '退单' },
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
     }
   ],
 });
