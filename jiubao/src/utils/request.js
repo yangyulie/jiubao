@@ -13,7 +13,8 @@ service.interceptors.request.use(
         config.headers['Accept'] = 'application/json;charset=utf-8'
         config.headers['Authorization'] = window.localStorage.getItem('token')
         config.headers['Content-Type'] = 'application/json'
-        config.data["token"]=window.localStorage.getItem('token');
+        let token = window.localStorage.getItem('token')=='undefined'?null:window.localStorage.getItem('token')
+        config.data["token"]=token
         return config
     },
     error => {

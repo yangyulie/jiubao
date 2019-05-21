@@ -44,7 +44,7 @@ export default {
 @borderColor: #c1c1c1;
 @hei:70px;
 .head,.inner{
-  height: @hei;
+  height: @hei; z-index: 9;
 }
 .inner {
   display: flex;

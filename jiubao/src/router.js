@@ -41,6 +41,48 @@ export default new Router({
       name: 'car',
       component: () => import('./views/order/car.vue'),
       meta: { title: '购物车' },
+    },
+    {
+      path: '/user',
+      name: 'user',
+      component: () => import('./views/user/user.vue'),
+      meta: { title: '会员中心' },
+    },
+    {
+      path: '/shoperBind',
+      name: 'shoperBind',
+      component: () => import('./views/user/shoperBind.vue'),
+      meta: { title: '商户绑定' },
+    },
+    {
+      path: '/addShoperBind',
+      name: 'addShoperBind',
+      component: () => import('./views/user/addShoperBind.vue'),
+      meta: { title: '新增商户绑定' },
+    },
+    {
+      path: '/shoppingList',
+      name: 'shoppingList',
+      component: () => import('./views/order/shoppingList.vue'),
+      meta: { title: '商品清单' },
+    },
+    {
+      path: '/order',
+      name: 'order',
+      component: () => import('./views/order/order.vue'),
+      meta: { title: '提交订单' },
+    },
+    {
+      path: '/address',
+      name: 'address',
+      component: () => import('./views/user/address.vue'),
+      meta: { title: '收货地址' },
+    },
+    {
+      path: '/invoice',
+      name: 'invoice',
+      component: () => import('./views/user/invoice.vue'),
+      meta: { title: '发票信息' },
     }
   ],
 });

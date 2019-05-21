@@ -193,6 +193,7 @@ export default {
         Api.loginFn(questData).then(res=>{
             this.toastObj = Toast(res.msg);
             let storage=window.localStorage;
+            if(res.token=='undefined') return;
             let token = storage.setItem("token",res.token);
            this.$router.go(-1);
         })
@@ -215,7 +216,7 @@ export default {
         }
         Api.getTestCode(questData).then(res=>{
             this.toastObj = Toast(res.msg);
-            if(res.code==0){
+            if(res.code==1){
               this.count = this.countdown;
               this.timer=setInterval(()=>{
                   this.count = this.count-1;

@@ -68,7 +68,7 @@ export default {
         },
         {
           name: "会员中心",
-          url: "/",
+          url: "/user",
           img: require("@/assets/imgs/navbar/my.png"),
           actImg: require("@/assets/imgs/navbar/my_1.png"),
           isLogin:true
