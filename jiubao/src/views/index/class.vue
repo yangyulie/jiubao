@@ -301,8 +301,16 @@ export default {
         Api.getAllClass().then(res=>{
             this.leftNavList = res.rows;
             if(!this.isType){
+                this.questData={
+                    page:1,
+                    sort:"price",
+                    jhl:"",
+                    chandi:"",
+                    brand:"",
+                    begprice:"",
+                    endPrice:""
+                },
                 this.questData["big"]=this.typeId
-                this.questData.page = 1;
                 this.proList=[];
                 this.isShowProList = true;
                 this.isSecClass = true;
@@ -333,8 +341,16 @@ export default {
         this.selectId = id;
         this.isSecClass = true;
         this.isShowProList = true;
+        this.questData={
+          page:1,
+          sort:"price",
+          jhl:"",
+          chandi:"",
+          brand:"",
+          begprice:"",
+          endPrice:""
+      },
         this.questData["sig"] = id;
-        this.questData.page = 1;
         this.proList=[];
         this.getProList();
         this.isShowSelectPop = false;
@@ -342,7 +358,6 @@ export default {
     getProList(){
         console.log(32,this.questData)
         Api.getSecClass(this.questData).then(res=>{
-            Toast(res.msg)
             if(res.code==1){
                 this.picUrls = res.picUrls
                 if(res.page==0){

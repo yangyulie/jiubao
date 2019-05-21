@@ -1,11 +1,14 @@
 <template>
   <div class="home">
-    <headed :tit="titleList[id]" :isShowRight="false" :isClose="false">
+    <headed :tit="'我的订单'" :isShowRight="false" :isClose="false">
     </headed>
     <div class="wrap">
-        <ol class="tabList">
+      <div class="tabListBox">
+        <ol class="tabList">  
           <li v-for="(item,index) in tabList" :key="index" :class="{now:id==item.id}" @click="orderTab(item.id)"><span>{{item.name}}</span></li>
         </ol>
+      </div>
+        
         <ul class="lists" v-if="list&&list.length>0">
             <li v-for="(item,index) in list" :key="index" @click="goOrderDetail(item.Id)">
                 <dl>
@@ -112,6 +115,7 @@ export default {
       this.questData.page = 1;
       this.questData.id = id;
       this.id = id;
+      window.scrollTop = 0;
       this.getOrderListFn();
     },
     pageFn(){
@@ -149,7 +153,7 @@ export default {
     getOrderListFn(){
     console.log(this.id)
         Api.getOrderList(this.questData).then(res=>{
-          Toast(res.msg)
+          //Toast(res.msg)
           if(res.code==1){
             if(res.page==0){
                 return;
@@ -186,8 +190,11 @@ export default {
       width: 114px;
     }
   }
+  .tabListBox{
+    height: 70px; border-bottom: @bor;
+  }
   .tabList{
-    display: flex; justify-content: space-between; align-items: center; border-bottom: @bor; font-size: 24px; color: #313131;
+    display: flex; justify-content: space-between; align-items: center; font-size: 24px; color: #313131; position: fixed; z-index: 9; left: 0; top: 70px; width: 100%; background-color: #fff;
     li{
       flex: 1; display: flex; justify-content: center; align-items: center;
       span{
