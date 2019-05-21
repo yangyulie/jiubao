@@ -56,7 +56,7 @@
             </div>
         </div>
         <div class="proListBox" v-if="datas.AcartList&&datas.AcartList.length>0">
-            <dl class="prolist">
+            <dl class="prolist otherProlist">
                 <dt>其他商品</dt>
                 <dd v-for="(item,index) in datas.AcartList" :key="index" :class="{allProTop:item.tcList&&item.tcList.length>0}">
                     <img :src="item.picurls" alt="">
@@ -123,7 +123,8 @@ export default {
       submitData:{},
       invoiceInfo:false,
       isInvoice:false,
-      payMode:''
+      payMode:'',
+      allChecked:""
     };
   },
   mounted() {
@@ -276,7 +277,9 @@ export default {
 .address::after{
     content: ''; border: 1px solid #444; border-left: 0; border-bottom: 0; transform: rotate(45deg); width: 10px; height: 10px;
 }
-
+.isChecked{
+    width: 100%; padding: 25px; border-bottom: @bor;
+}
 .sumBox{
     font-size: 18px; color: #d81e06; padding-bottom: 5px; margin-top: 15px;
 }
@@ -291,6 +294,11 @@ export default {
 }
 .proListBox{
     padding: 20px 20px 0; border-bottom: @bor;
+    .otherProlist{
+        >dt{
+            color: #313131; font-weight: bold;
+        }
+    }
     >dl{
         >dt{
             font-size: 18px; color: #ff4344; height: 50px; border-bottom: 1px solid #c1c1c1; line-height: 50px;
