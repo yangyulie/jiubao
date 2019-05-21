@@ -21,10 +21,10 @@
         </div>
     </div>
     <div class="con">
-        <ul class="leftNav secreenHei">
+        <ul class="leftNav secreenHei" v-if="leftNavList&&leftNavList.length>0">
             <li v-for="(item,index) in leftNavList" :class="{now:typeId==item.Id}" :key="index" @click="getAllpro(item.Id,index,item.name)">{{item.name}}</li>
         </ul>
-        <ul class="rightList secreenHei" v-show="!isShowProList">
+        <ul class="rightList secreenHei" v-show="!isShowProList" v-if="rightSecClassList&&rightSecClassList.length>0">
             <li v-for="(item,index) in rightSecClassList" :key="index" @click="selectSecClass(item.bigId)">
                 <img :src="item.icon" alt="">
                 <p>{{item.name}}</p>
@@ -32,7 +32,20 @@
         </ul>
         <div class="rightList secreenHei" ref="proList"  v-show="isShowProList">
             <div ref="proListInner" class="proListInner">
-                <ul class="list" v-if="proList.length>0">
+                <img :src="picUrls" alt="">
+                <div class="filterProBox">
+                    <p @click="filterPrice">
+                        价格 
+                        <img src="@/assets/imgs/icon_42.png" alt="" v-if="questData.sort=='price'">
+                        <img src="@/assets/imgs/icon_43.png" alt="" v-else>
+                    </p>
+                    <p @click="filterOther">
+                        筛选
+                        <img src="@/assets/imgs/icon_44.png" alt="">
+                    </p>
+                </div>
+                <div class="notData" v-if="proList.length==0"><img src="@/assets/imgs/not.png" alt=""></div>
+                <ul class="list" v-else>
                     <router-link tag="li" :to="'/detail?id='+item.Id" v-for="(item,index) in proList" :key="index">
                         <img class="listProPic" :src="item.purls" alt="">
                         <dl>
@@ -40,7 +53,7 @@
                             <dd>
                                 <p class="listInfo">
                                     <span>{{item.jhl}} x {{item.guige}}</span>
-                                    <em>{{item.chandi}}</em>
+                                    <em v-if="item.chandi">{{item.chandi}}</em>
                                 </p>
                                 <div class="listPrice">
                                     <em>￥{{item.price}}</em>
@@ -53,7 +66,6 @@
                         </dl>
                     </router-link>
                 </ul>
-                <div class="notData" v-else>暂时没有此类商品</div>
             </div>
         </div>
         
@@ -65,6 +77,50 @@
                 <img src="@/assets/imgs/icon_14.png" />
             </li>
         </ul>
+    </div>
+    <div class="filterPop" :class="{show:isShowFilterPop}">
+        <div class="filterInner">
+            <div class="filterList">
+                <dl>
+                    <dt>价格区间</dt>
+                    <dd class="priceInp">
+                        <input type="number" v-model="questData.begprice" placeholder="最低价">--
+                        <input type="number" v-model="questData.endPrice" placeholder="最高价">
+                    </dd>
+                    <dt v-if="filterData.brand&&filterData.brand.length>0">品牌</dt>
+                    <dd v-if="filterData.brand&&filterData.brand.length>0">
+                        <span 
+                        v-for="(item,index) in filterData.brand" 
+                        :key="index"
+                        :class="{now:questData.brand==item}"
+                        @click="filter('brand',item)"
+                        >{{item}}</span>
+                    </dd>
+                    <dt v-if="filterData.Netcontent&&filterData.Netcontent.length>0">净含量</dt>
+                    <dd v-if="filterData.Netcontent&&filterData.Netcontent.length>0">
+                        <span 
+                        v-for="(item,index) in filterData.Netcontent" 
+                        :key="index"
+                        :class="{now:questData.jhl==item}"
+                        @click="filter('jhl',item)"
+                        >{{item}}</span>
+                    </dd>
+                    <dt v-if="filterData.Origin&&filterData.Origin.length>0">产地</dt>
+                    <dd v-if="filterData.Origin&&filterData.Origin.length>0">
+                        <span 
+                        v-for="(item,index) in filterData.Origin" 
+                        :key="index"
+                        :class="{now:questData.chandi==item}"
+                        @click="filter('chandi',item)"
+                        >{{item}}</span>
+                    </dd>
+                </dl>
+            </div>
+            <div class="filterBtns">
+                <button @click="resetFilter">重置</button>
+                <button @click="confirmFilter">确定</button>
+            </div>
+        </div>
     </div>
     <foot :is_now="1"></foot>
   </div>
@@ -97,19 +153,28 @@ export default {
       isShowProList:false,
       isType:false,
       questData:{
-          page:1
+          page:1,
+          sort:"price",
+          jhl:"",
+          chandi:"",
+          brand:"",
+          begprice:"",
+          endPrice:""
       },
       scrollData:{
           isQuest:true,
           scrollBottom:100,
       },
       proList:[],
+      picUrls:"",
       token:"",
       addCarData:{
         Id:"",
         tcId:0,
         Number:1,
-      }
+      },
+      isShowFilterPop:false,
+      filterData:{}
     };
   },
   mounted() {
@@ -142,7 +207,55 @@ export default {
         this.getAllClass();
       
     },
+<<<<<<< HEAD
     //TODO:搜索功能，筛选功能待完成
+=======
+    resetFilter(){
+        this.questData.begprice = "";
+        this.questData.endPrice = "";
+        this.questData.chandi = "";
+        this.questData.jhl = "";
+        this.questData.brand = "";
+    },
+    confirmFilter(){
+        this.changePrice();
+        this.getProList();
+        this.filterOther();
+    },
+    changePrice(){
+        let price = this.questData.begprice
+        if(price>this.questData.endPrice){
+            this.questData.begprice = this.questData.endPrice
+            this.questData.endPrice = price;
+        }
+        console.log(this.questData)
+    },
+    filter(name,tag){
+        if(this.questData[name]==tag){
+            this.questData[name]='';
+            return;
+        }
+        this.questData[name] = tag
+    },
+    filterOther(){
+        this.isShowFilterPop = !this.isShowFilterPop;
+        if(this.isShowFilterPop){
+            Api.filterPro({typeId:this.typeId}).then(res=>{
+                this.filterData = res;
+            })
+        }
+        
+    },
+    filterPrice(){
+        if(this.questData["sort"]=="price"){
+            this.questData["sort"]='pricedesc'
+        }else{
+            this.questData["sort"]="price"
+        }
+        this.questData.page = 1;
+        this.getProList();
+    },
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
     goCar(){//前往购物车列表
         let storage=window.localStorage;
         if(!storage.getItem("token")){
@@ -192,8 +305,16 @@ export default {
         Api.getAllClass().then(res=>{
             this.leftNavList = res.rows;
             if(!this.isType){
+                this.questData={
+                    page:1,
+                    sort:"price",
+                    jhl:"",
+                    chandi:"",
+                    brand:"",
+                    begprice:"",
+                    endPrice:""
+                },
                 this.questData["big"]=this.typeId
-                this.questData.page = 1;
                 this.proList=[];
                 this.isShowProList = true;
                 this.isSecClass = true;
@@ -220,12 +341,20 @@ export default {
         this.isShowSelectPop = !this.isShowSelectPop;
     },
     selectSecClass(id){//点击下拉分类，获取分类下产品列表
-        console.log(id)
+        console.log(12345,id)
         this.selectId = id;
         this.isSecClass = true;
         this.isShowProList = true;
+        this.questData={
+          page:1,
+          sort:"price",
+          jhl:"",
+          chandi:"",
+          brand:"",
+          begprice:"",
+          endPrice:""
+      },
         this.questData["sig"] = id;
-        this.questData.page = 1;
         this.proList=[];
         this.getProList();
         this.isShowSelectPop = false;
@@ -233,22 +362,26 @@ export default {
     getProList(){
         console.log(32,this.questData)
         Api.getSecClass(this.questData).then(res=>{
-            if(res.page==0){
-                return;
-            }
-            if(res.page>=res.currentPage){
-                this.scrollData.isQuest = false;
+            if(res.code==1){
+                this.picUrls = res.picUrls
+                if(res.page==0){
+                    return;
+                }
+                if(res.page>=res.currentPage){
+                    this.scrollData.isQuest = false;
+                }else{
+                    this.scrollData.isQuest = true;
+                }
+                if(res.page==1){
+                    this.proList = res.data;
+                }else{
+                    this.proList = this.proList.concat(res.data);
+                }
+                this.isShowSelectPop = false;
             }else{
-                this.scrollData.isQuest = true;
-            }
-            if(res.page==1){
-                this.proList = res.data;
-            }else{
-                this.proList = this.proList.concat(res.data);
+                this.proList=[];
             }
             this.tit = res.bigclass;
-            this.isShowSelectPop = false;
-            
         })
         
     },
@@ -293,6 +426,54 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+}
+.filterProBox{
+    display: flex; justify-content: space-between; align-items: center; font-size: 24px; border-bottom: 1px solid #c1c1c1; padding: 20px 0 10px;
+    p{
+        flex: 1; display: flex; justify-content: center; align-items: center; height: 36px;
+        img{
+            width: 22px; margin-left: 10px;
+        }
+    }
+}
+.priceInp{
+    display: flex; justify-content: flex-start; align-items: center;
+    input{
+        border: 1px solid #929292; margin: 0 10px; width: 204px; height: 50px; text-align: center; line-height: 50px; font-size: 24px; color: #313131;
+    }
+}
+.filterPop{
+    position: fixed; left: 0; top: 0; z-index: 999; background-color: rgba(0, 0, 0, .5); display: none; justify-content: flex-end; align-items: flex-start; width: 100%; height: 100%; padding-left: 125px;
+    .filterInner{
+        background-color: #fff; width: 100%; height: 100%; display: flex; flex-direction: column; font-size: 20px; color: #313131;
+        .filterList{
+            flex: 1; padding: 20px; overflow-y: auto;
+            dt{
+                font-size: 24px; padding-bottom: 20px; margin-top: 10px;
+            }
+            dd{
+                display: flex; justify-content: flex-start; align-items: center; flex-wrap: wrap;
+                span{
+                    margin-bottom: 10px; margin-right: 10px; width: 147px; height: 50px; display: flex; justify-content: center; align-items: center; border: 1px solid #929292;
+                }
+                .now{
+                    border-color: #2892fe; color: #2892fe;
+                }
+            }
+        }
+        .filterBtns{
+            display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #c1c1c1; height: 84px; background-color: #fff;
+            button{
+                display: flex; flex: 1; height: 84px; justify-content: center; align-items: center; font-size: 24px; color: #929292; background: none; border: 0;
+            }
+            button:last-child{
+                background-color: #2892fe; color: #fff;
+            }
+        }
+    }
+}
+.filterPop.show{
+    display: flex;
 }
 .rightList{
     width: 435px;
@@ -369,9 +550,12 @@ export default {
 .notData{
     font-size: 26px;
     text-align: center; color: #929292; font-weight: bold; padding-top: 50px; width: 100%;
+    img{
+        width: 156px;
+    }
 }
 .proListInner{
-    width: 100%;
+    width: 100%; padding-top: 20px;
 }
 .secClassPop{
     position: fixed;
@@ -459,7 +643,7 @@ export default {
     display: flex; 
     justify-content: flex-start; 
     align-items: center; 
-    font-size: 30px;
+    font-size: 24px;
     padding-left: 15px;
     .backArrow{ 
         width: auto; 

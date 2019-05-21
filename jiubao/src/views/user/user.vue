@@ -6,7 +6,18 @@
             <img src="@/assets/imgs/icon_19.png" alt="">
             <div>
                 <p>{{datas.companyName}}</p>
+<<<<<<< HEAD
                 <span>{{datas.userphone}}</span>
+=======
+                <p>{{datas.userphone}}</p>
+                <p>
+                    储值余额：{{datas.mychuzhi}}
+                </p>
+                <p>
+                    积分余额：{{datas.myjifen}}
+                </p>
+                <router-link tag="p" to="buyShopList">购买历史</router-link>
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
             </div>
         </div>
         <div class="salesmanInfo">
@@ -21,6 +32,15 @@
             <dt>{{item.name}}</dt>
             <dd>
                 <router-link :to="i.url" v-for="(i,idx) in item.listData" :key="idx">
+<<<<<<< HEAD
+=======
+                    <span class="tagNum" v-if="index==0&&idx==0&&datas.ywpricecount>0">{{datas.ywpricecount}}</span>
+                    <span class="tagNum" v-if="index==0&&idx==1&&datas.cwpricecount>0">{{datas.cwpricecount}}</span>
+                    <span class="tagNum" v-if="index==0&&idx==2&&datas.paycount>0">{{datas.paycount}}</span>
+                    <span class="tagNum" v-if="index==0&&idx==3&&datas.qrcount>0">{{datas.qrcount}}</span>
+                    <span class="tagNum" v-if="index==0&&idx==4&&datas.ckcount>0">{{datas.ckcount}}</span>
+                    <span class="tagNum" v-if="index==0&&idx==5&&datas.shcount>0">{{datas.shcount}}</span>
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
                     <img :src="i.img" alt="">
                     <p>{{i.name}}</p>
                 </router-link>
@@ -50,52 +70,92 @@ export default {
                 {
                     img:require("@/assets/imgs/icon_20.png"),
                     name:"业务核价",
+<<<<<<< HEAD
                     url:"/"
+=======
+                    url:"/orderList?id=1"
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
                 },
                 {
                     img:require("@/assets/imgs/icon_21.png"),
                     name:"财务核价",
+<<<<<<< HEAD
                     url:"/"
+=======
+                    url:"/orderList?id=2"
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
                 },
                 {
                     img:require("@/assets/imgs/icon_22.png"),
                     name:"待付款",
+<<<<<<< HEAD
                     url:"/"
+=======
+                    url:"/orderList?id=3"
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
                 },
                 {
                     img:require("@/assets/imgs/icon_23.png"),
                     name:"待确认",
+<<<<<<< HEAD
                     url:"/"
+=======
+                    url:"/orderList?id=4"
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
                 },
                 {
                     img:require("@/assets/imgs/icon_24.png"),
                     name:"待出库",
+<<<<<<< HEAD
                     url:"/"
+=======
+                    url:"/orderList?id=5"
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
                 },
                 {
                     img:require("@/assets/imgs/icon_25.png"),
                     name:"待收货",
+<<<<<<< HEAD
                     url:"/"
+=======
+                    url:"/orderList?id=6"
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
                 },
                 {
                     img:require("@/assets/imgs/icon_26.png"),
                     name:"已完成",
+<<<<<<< HEAD
                     url:"/"
+=======
+                    url:"/orderList?id=7"
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
                 },
                 {
                     img:require("@/assets/imgs/icon_27.png"),
                     name:"作废订单",
+<<<<<<< HEAD
                     url:"/"
+=======
+                    url:"/orderList?id=8"
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
                 },
                 {
                     img:require("@/assets/imgs/icon_28.png"),
                     name:"待退货",
+<<<<<<< HEAD
                     url:"/"
+=======
+                    url:"/orderList?id=9"
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
                 },
                 {
                     img:require("@/assets/imgs/icon_29.png"),
                     name:"全部",
+<<<<<<< HEAD
                     url:"/"
+=======
+                    url:"/orderList?id=0"
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
                 }
             ]
         },
@@ -110,22 +170,38 @@ export default {
                 {
                     img:require("@/assets/imgs/icon_31.png"),
                     name:"地址管理",
+<<<<<<< HEAD
                     url:"/"
+=======
+                    url:"/address"
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
                 },
                 {
                     img:require("@/assets/imgs/icon_32.png"),
                     name:"发票管理",
+<<<<<<< HEAD
                     url:"/"
+=======
+                    url:"/invoice"
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
                 },
                 {
                     img:require("@/assets/imgs/icon_33.png"),
                     name:"收藏",
+<<<<<<< HEAD
                     url:"/"
+=======
+                    url:"/collect"
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
                 },
                 {
                     img:require("@/assets/imgs/icon_34.png"),
                     name:"资料修改",
+<<<<<<< HEAD
                     url:"/"
+=======
+                    url:"/userInfo"
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
                 }
             ]
         }
@@ -149,14 +225,23 @@ export default {
       this.getUserInfoFn();
     },
     getUserInfoFn(){//获取个人中心数据
+<<<<<<< HEAD
         Api.getUserInfo().then(res=>{
+=======
+        Api.getUserInfoCen().then(res=>{
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
             this.datas = res.rows
         })
     },
     backLogin(){
         window.localStorage.clear();
         this.$router.push({
+<<<<<<< HEAD
           path: '/'
+=======
+          path: '/',
+          replace:true
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
         });
     },
     //...mapActions(["setData"])
@@ -175,12 +260,20 @@ export default {
         position: absolute; right: 10px; top: 10px; color: #fff; font-size: 24px;
     }
     .topInfo{
+<<<<<<< HEAD
         padding: 70px 25px; display: flex; justify-content: flex-start; align-items: flex-start;
+=======
+        padding: 70px 25px 0; display: flex; justify-content: flex-start; align-items: flex-start;
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
         img{
             width: 60px;
         }
         div{
+<<<<<<< HEAD
             color: #fff; font-size: 24px; margin-left: 20px;
+=======
+            color: #fff; font-size: 24px; margin-left: 20px; height: 200px;
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
             p{
                 font-family: "黑体"; padding-bottom: 20px;
             }
@@ -201,7 +294,14 @@ export default {
     dd{
         display: flex; justify-content: flex-start; align-items: flex-start; text-align: center; flex-wrap: wrap;
         a{
+<<<<<<< HEAD
             width: 20%; margin-top: 30px; padding-bottom: 20px;
+=======
+            width: 20%; margin-top: 30px; padding-bottom: 20px; position: relative;
+            span{
+                width: 20px; height: 20px; border-radius: 50%; color: #fff; background-color: #f00; position: absolute; right: 15px; top: 0; display: flex; justify-content: center; align-items: center; font-size: 15px;
+            }
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
             p{
                 margin-top: 10px;
             }

@@ -1,27 +1,11 @@
 <template>
   <div class="home">
-<<<<<<< HEAD
-    <headed :tit="'商户绑定'" :isShowRight="false" :isClose="false">
-=======
     <headed :tit="'开票信息'" :isShowRight="false" :isClose="false">
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
     </headed>
     <div class="wrap">
         <ul class="lists">
             <li v-for="(item,index) in list" :key="index">
                 <div>
-<<<<<<< HEAD
-                    <p>
-                        {{item.fullName}}
-                        <span v-if="item.indexs==1">默认</span>
-                    </p>
-                    <em>{{item.userbinding}}</em>
-                    <img src="@/assets/imgs/icon_35.png" @click="deleteFn(item.Id,index)" alt="">
-                </div>
-            </li>
-        </ul>
-        <router-link class="addShoperBind" to="/addShoperBind">新建用户绑定</router-link>
-=======
                   <div>
                     <p>单位名称：{{item.CompanyName}}</p>
                     <p>纳税人识别号：{{item.CompanyNo}}</p>
@@ -43,15 +27,15 @@
                 </p>
             </li>
         </ul>
-        <router-link class="addShoperBind" :to="'/addInvoice?cartIds='+cartIds+'&addressId='+ addressId">新建发票信息</router-link>
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
+        <router-link class="addShoperBind" :to="'/manAddInvoice?cId='+cId+'&cartIds='+cartIds+'&addressId='+ addressId">新建发票信息</router-link>
     </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import Api from "@/api/user.js";
+import Api from "@/api/man.js";
+import ApiUser from "@/api/user.js";
 import headed from "@/components/headed.vue";
 import { Indicator ,Toast } from 'mint-ui';
 import { mapActions, mapState } from "vuex";
@@ -63,22 +47,17 @@ export default {
     return {
       list:[],
       datas:{},
-<<<<<<< HEAD
-=======
       cartIds:"",
-      addressId:""
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
+      addressId:"",
+      cId:""
     };
   },
   mounted() {
-    this.init();
-<<<<<<< HEAD
-    
-=======
     this.cartIds = this.$route.query.cartIds;
     this.addressId = this.$route.query.AddressId;
-    console.log(this.addressId)
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
+    this.cId = this.$route.query.cId;
+    console.log(this.cId)
+    this.init();
     // const {setData} = this;
     // console.log(this.data)
     // setData(this.app)
@@ -89,25 +68,11 @@ export default {
   },
   methods: {
     init() {
-<<<<<<< HEAD
-      this.getShoperBindFn();
-    },
-    deleteFn(id,index){
-        Api.delShoperBind({Id:id}).then(res=>{
-            Toast(res.msg)
-            if(res.code==1){
-                this.list.splice(index,1)
-            }
-        })
-    },
-    getShoperBindFn(){//获取个人中心数据
-        Api.getShoperBind().then(res=>{
-=======
       this.getInvoiceListFn();
     },
     goUseAddress(id){
       this.$router.push({
-          path:'/order?cartIds='+this.cartIds+'&invoiceId='+ id+'&addressId='+ this.addressId,
+          path:'/manOrder?cId='+this.cId+'&cartIds='+this.cartIds+'&invoiceId='+ id+'&addressId='+ this.addressId,
           replace:true
       })
     },
@@ -116,7 +81,7 @@ export default {
         Id:id,
         states:status
       }
-      Api.defaultInvoice(questData).then(res=>{
+      ApiUser.defaultInvoice(questData).then(res=>{
         Toast(res.msg)
         if(res.code==1){
           this.init();
@@ -126,13 +91,12 @@ export default {
     edtAddress(obj){
       console.log(obj)
       this.$router.push({
-          path:'/addInvoice?cartIds='+this.cartIds+'&obj='+ JSON.stringify(obj)+'&addressId='+ this.addressId,
+          path:'/manAddInvoice?cId='+this.cId+'&cartIds='+this.cartIds+'&obj='+ JSON.stringify(obj)+'&addressId='+ this.addressId,
           replace:true
       })
     },
-    getInvoiceListFn(){//获取个人中心数据
-        Api.getInvoiceList().then(res=>{
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
+    getInvoiceListFn(){//获取商户发票列表数据
+        Api.getInvoiceList({cId:this.cId}).then(res=>{
             this.list= res.rows;
             this.datas = res;
         })
@@ -152,25 +116,6 @@ export default {
     .lists{
         font-size: 24px; color: #313131;
         li{
-<<<<<<< HEAD
-            border-left: 4px solid #2892fe; margin-top: 4px; padding: 26px 18px 0 10px;
-            div{
-                display: flex; justify-content: space-between; align-items: flex-start; padding: 0 16px 20px 12px; border-bottom: 1px solid #c1c1c1;
-                p{
-                    width: 150px;
-                    span{
-                        display: block; border: 1px solid #2892fe; color: #2892fe; font-size: 18px; width: 52px; height: 33px; text-align: center; line-height: 33px; margin-top: 5px;
-                    }
-                }
-                em{
-                    flex: 1; text-align: left; font-style: normal;
-                }
-                img{
-                    width: 46px;
-                }
-            }
-        }
-=======
              margin-top: 4px; margin-bottom: 6px; border-bottom: @bor; padding: 0 20px 20px 0;
             >div{
               border-left: 4px solid #2892fe; padding: 26px 0 0 10px;
@@ -215,7 +160,6 @@ export default {
         li:last-child{
           border-bottom: 0;
         }
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
     }
     .addShoperBind{
       width: 582px; height: 72px; display: flex; justify-content: center; align-items: center; color: #fff; font-size: 24px; background-color: #2892fe; border-radius: 10px; margin: 70px auto;

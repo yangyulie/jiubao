@@ -29,7 +29,7 @@
             <span><img src="@/assets/imgs/icon_16.png" alt=""></span>
             购物车还是空的
           </div>
-          <router-link to="/class?typeId=17&isType=true">马上去选购</router-link>
+          <router-link :to="'/setOrderProList?typeId=17&isType=true&cId='+cId">马上去选购</router-link>
         </div>
         <div class="total">
           <label :class="{show:allChecked}" class="isChecked"><span><img src="@/assets/imgs/icon_15.png" alt=""></span><input type="checkbox" v-model="allChecked" @change="allCheckedFn">{{allChecked?"取消全选":"全选"}}</label>
@@ -39,14 +39,15 @@
           <button @click="goOrder">去结算</button>
         </div>
     </div>
-    <foot :is_now="3"></foot>
+    <foot :is_now="1"></foot>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import Api from "@/api/order.js";
-import foot from "@/components/foot.vue";
+import Api from "@/api/man.js";
+import ApiOrder from "@/api/order.js";
+import foot from "@/components/footMan.vue";
 import headed from "@/components/headed.vue";
 import { Indicator ,Toast ,MessageBox} from 'mint-ui';
 import { mapActions, mapState } from "vuex";
@@ -61,10 +62,12 @@ export default {
       submitData:[],
       allChecked:false,
       list:[],
-      handleData:[]
+      handleData:[],
+      cId:''
     };
   },
   mounted() {
+    this.cId = this.$route.query.cId;
     this.init();
     
     // const {setData} = this;
@@ -95,7 +98,6 @@ export default {
       let storage=window.localStorage;
       this.token = storage.getItem("token");
       this.getCarListFn()
-<<<<<<< HEAD
     },
     goOrder(){
       
@@ -108,90 +110,7 @@ export default {
         ids.push(this.handleData[j].id)
       }
       this.$router.push({
-        path: '/order?cartIds='+ids.join(',')
-      });
-      
-    },
-    delate(){
-      console.log(this.handleData)
-      let ids = [];
-      let questData={
-        Id:''
-=======
-    },
-    goOrder(){
-      
-      let ids = [];
-      if(this.handleData.length==0){
-        Toast("请选择需要购买的商品")
-        return
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
-      }
-      for(let j=0;j<this.handleData.length;j++){
-        ids.push(this.handleData[j].id)
-      }
-<<<<<<< HEAD
-      questData.Id = ids.join(',');
-      console.log(questData)
-      Api.delCarList(questData).then(res=>{
-        if(res.code==1){
-          Toast(res.msg)
-          let arr = this.list;
-          for(let i=0;i<arr.length;i++){
-            if(arr[i].checked){
-              console.log(i)
-              arr.splice(i,1)
-              i--
-              //this.$set(this.list, i, this.list[i]);
-            }
-          }
-        }
-        console.log(res.msg)
-      })
-    },
-    allCheckedFn(){
-      let arr = this.list;
-      for(let i=0;i<arr.length;i++){
-        arr[i].checked = this.allChecked
-        this.$set(this.list, i, this.list[i]);
-      }
-    },
-    changeNumFn(obj,num,index){
-      Indicator.open({
-        text: '加载中...',
-        spinnerType: 'fading-circle'
-      });
-      let questData = {
-        Id:obj.id,
-        tcId:obj.tcId,
-        Number:num
-      }
-      Api.carListNumUpdate(questData).then(res=>{
-        Indicator.close();
-        if(res.code==1){
-          obj.number = num;
-          obj.checked = true;
-          this.$set(this.list, index, obj);
-        }else{
-          Toast(res.msg)
-        }
-      })
-    },
-    changeFn(index){
-      let obj = this.list[index];
-      let num = obj.number*1;
-      this.changeNumFn(obj,num,index)
-    },
-    checkedFn(index){
-      this.list[index].checked = !this.list[index].checked;
-      if(!this.list[index].checked){
-        this.allChecked=false
-      }
-      this.$set(this.list, index, this.list[index]);
-    },
-=======
-      this.$router.push({
-        path: '/order?cartIds='+ids.join(',')
+        path: '/manOrder?cId='+this.cId+'&cartIds='+ids.join(',')
       });
       
     },
@@ -207,7 +126,7 @@ export default {
       questData.Id = ids.join(',');
       console.log(questData)
       MessageBox.confirm("确定删除？").then(res=>{
-        Api.delCarList(questData).then(res=>{
+        ApiOrder.delCarList(questData).then(res=>{
           if(res.code==1){
             Toast(res.msg)
             let arr = this.list;
@@ -242,7 +161,7 @@ export default {
         tcId:obj.tcId,
         Number:num
       }
-      Api.carListNumUpdate(questData).then(res=>{
+      ApiOrder.carListNumUpdate(questData).then(res=>{
         Indicator.close();
         if(res.code==1){
           obj.number = num;
@@ -265,7 +184,6 @@ export default {
       }
       this.$set(this.list, index, this.list[index]);
     },
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
     addFn(index){
       let obj = this.list[index];
       let num = obj.number*1+1;
@@ -291,7 +209,7 @@ export default {
       console.log(2,this.handleData)
     },
     getCarListFn(){
-        Api.getCarList().then(res=>{
+        Api.getCarList({cId:this.cId}).then(res=>{
           this.datas = res;
           if(res.code==1){
             this.list = res.rows;
@@ -338,40 +256,7 @@ export default {
           border: 0;
         }
     }
-    .total{
-        background-color: #fff; border-top: 1px solid #c1c1c1; height: 85px; display: flex; justify-content: space-between; align-items: center; padding-left: 20px; z-index: 9999; position: relative;
-        button{
-          width: 195px; height: 86px; background-color: #2892fe; color: #fff; font-size: 24px; text-align: center; line-height: 86px; border: 0;
-        }
-<<<<<<< HEAD
-    }
-    .isChecked{
-       position: relative; display: flex; justify-content: flex-start; align-items: center; font-size: 24px; color: #6e6e6e; width: 148px;
-      span{
-        width: 32px; height: 32px; border-radius: 50%; border: 1px solid #ccc; overflow: hidden; display: block; margin-right: 20px;
-      }
-      img{
-        display: none;
-      }
-    }
-    input[type="checkbox"]{
-        border: 0; background: none; opacity: 0; position: absolute; left: 0; top: 0;
-    }
-    .isChecked.show img{
-      display: block;
-=======
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
-    }
-    .totalBox{
-      font-size: 18px; color: #6e6e6e; margin: 0 20px; flex: 1;
-      span{
-        color: #d81e06; font-size: 24px; font-weight: bold;
-      }
-      span:before{
-        content: "￥"
-      }
-<<<<<<< HEAD
-    }
+    
     .notData{
       font-size: 30px; color: #6e6e6e; text-align: center;
       div{
@@ -385,9 +270,6 @@ export default {
       a{
         color: #2892fe; font-size: 24px; text-decoration: underline; margin-top: 25px; display: inline-block;
       }
-=======
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
     }
-    
 }
 </style>

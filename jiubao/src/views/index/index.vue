@@ -71,7 +71,7 @@
               <p class="name">{{i.name}}</p>
               <div class="norms">
                 <span>{{i.jhl}}x{{i.guige}}</span>
-                <em>{{i.chandi}}</em>
+                <em v-if="i.chandi">{{i.chandi}}</em>
               </div>
               <div class="price">
                 <span>￥{{i.price}}</span>
@@ -100,7 +100,7 @@
               <p class="name">{{i.name}}</p>
               <div class="norms">
                 <span>{{i.jhl}}x{{i.guige}}</span>
-                <em>{{i.chandi}}</em>
+                <em v-if="i.chandi">{{i.chandi}}</em>
               </div>
               <div class="price">
                 <span>￥{{i.price}}</span>
@@ -239,7 +239,6 @@ export default {
   display: flex;
   align-items: center;
 }
-
 .adBox {
   height: 355px;
 }

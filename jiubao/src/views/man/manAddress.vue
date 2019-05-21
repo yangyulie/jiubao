@@ -1,27 +1,11 @@
 <template>
   <div class="home">
-<<<<<<< HEAD
-    <headed :tit="'商户绑定'" :isShowRight="false" :isClose="false">
-=======
     <headed :tit="'地址管理'" :isShowRight="false" :isClose="false">
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
     </headed>
     <div class="wrap">
         <ul class="lists">
             <li v-for="(item,index) in list" :key="index">
                 <div>
-<<<<<<< HEAD
-                    <p>
-                        {{item.fullName}}
-                        <span v-if="item.indexs==1">默认</span>
-                    </p>
-                    <em>{{item.userbinding}}</em>
-                    <img src="@/assets/imgs/icon_35.png" @click="deleteFn(item.Id,index)" alt="">
-                </div>
-            </li>
-        </ul>
-        <router-link class="addShoperBind" to="/addShoperBind">新建用户绑定</router-link>
-=======
                   <div>
                       <p>
                           {{item.linkName}}
@@ -41,15 +25,15 @@
                 </p>
             </li>
         </ul>
-        <router-link class="addShoperBind" :to="'/addAddress?cartIds='+cartIds+'&invoiceId='+ this.invoiceId">新建收货地址</router-link>
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
+        <router-link class="addShoperBind" :to="'/manAddAddress?cId='+cId+'&cartIds='+cartIds+'&invoiceId='+ this.invoiceId">新建收货地址</router-link>
     </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import Api from "@/api/user.js";
+import Api from "@/api/man.js";
+import ApiUser from "@/api/user.js";
 import headed from "@/components/headed.vue";
 import { Indicator ,Toast } from 'mint-ui';
 import { mapActions, mapState } from "vuex";
@@ -61,21 +45,16 @@ export default {
     return {
       list:[],
       datas:{},
-<<<<<<< HEAD
-=======
       cartIds:"",
-      invoiceId:""
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
+      invoiceId:"",
+      cId:0
     };
   },
   mounted() {
-    this.init();
-<<<<<<< HEAD
-    
-=======
     this.cartIds = this.$route.query.cartIds;
     this.invoiceId = this.$route.query.invoiceId;
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
+    this.cId = this.$route.query.cId;
+    this.init();
     // const {setData} = this;
     // console.log(this.data)
     // setData(this.app)
@@ -86,34 +65,21 @@ export default {
   },
   methods: {
     init() {
-<<<<<<< HEAD
-      this.getShoperBindFn();
-    },
-    deleteFn(id,index){
-        Api.delShoperBind({Id:id}).then(res=>{
-            Toast(res.msg)
-            if(res.code==1){
-                this.list.splice(index,1)
-            }
-        })
-    },
-    getShoperBindFn(){//获取个人中心数据
-        Api.getShoperBind().then(res=>{
-=======
       this.getAddressFn();
     },
     goUseAddress(id){
       this.$router.push({
-          path:'/order?cartIds='+this.cartIds+'&addressId='+ id+'&invoiceId='+ this.invoiceId,
+          path:'/manOrder?cId='+this.cId+'&cartIds='+this.cartIds+'&addressId='+ id+'&invoiceId='+ this.invoiceId,
           replace:true
       })
     },
     defaultAddress(status,id){
       let questData={
         Id:id,
-        states:status
+        states:status,
+        cId:this.cId
       }
-      Api.defaultAddress(questData).then(res=>{
+      ApiUser.defaultAddress(questData).then(res=>{
         Toast(res.msg)
         if(res.code==1){
           this.init();
@@ -123,13 +89,12 @@ export default {
     edtAddress(obj){
       console.log(obj)
       this.$router.push({
-          path:'/addAddress?cartIds='+this.cartIds+'&obj='+ JSON.stringify(obj)+'&invoiceId='+ this.invoiceId,
+          path:'/manAddAddress?cId='+this.cId+'&cartIds='+this.cartIds+'&obj='+ JSON.stringify(obj)+'&invoiceId='+ this.invoiceId,
           replace:true
       })
     },
     getAddressFn(){//获取地址列表
-        Api.getAddressList().then(res=>{
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
+        Api.getAddressList({cId:this.cId}).then(res=>{
             this.list= res.rows;
             this.datas = res;
         })
@@ -149,24 +114,6 @@ export default {
     .lists{
         font-size: 24px; color: #313131;
         li{
-<<<<<<< HEAD
-            border-left: 4px solid #2892fe; margin-top: 4px; padding: 26px 18px 0 10px;
-            div{
-                display: flex; justify-content: space-between; align-items: flex-start; padding: 0 16px 20px 12px; border-bottom: 1px solid #c1c1c1;
-                p{
-                    width: 150px;
-                    span{
-                        display: block; border: 1px solid #2892fe; color: #2892fe; font-size: 18px; width: 52px; height: 33px; text-align: center; line-height: 33px; margin-top: 5px;
-                    }
-                }
-                em{
-                    flex: 1; text-align: left; font-style: normal;
-                }
-                img{
-                    width: 46px;
-                }
-            }
-=======
              margin-top: 4px; margin-bottom: 6px; border-bottom: @bor; padding: 0 20px 20px 0;
             >div{
               border-left: 4px solid #2892fe; padding: 26px 0 0 10px;
@@ -204,7 +151,6 @@ export default {
         }
         li:last-child{
           border-bottom: 0;
->>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
         }
     }
     .addShoperBind{

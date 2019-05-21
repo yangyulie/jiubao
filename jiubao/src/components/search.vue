@@ -63,7 +63,7 @@ export default {
   z-index: 9;
   .flex();
   justify-content: space-between;
-  .scan{ width: 48px;}
+  .scan{ width: 35px;}
   div{
     width: 472px;
     height: 49px;

@@ -16,7 +16,11 @@
           <p>{{datas.jhl}} x {{datas.guige}}</p>
       </dt>
       <dd>
+<<<<<<< HEAD
           <span>￥{{datas.price}}</span>
+=======
+          <span>{{datas.price}}</span>
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
           <div>
               <span class="reduce" @click="reduceFn"></span>
               <input type="number" v-model="number" @input="changeFn">
@@ -27,7 +31,11 @@
     <ul class="proInfoList">
       <li>规格/单位：{{datas.guige}}</li>
       <li>品牌：{{datas.brand}}</li>
+<<<<<<< HEAD
       <li>国家：{{datas.chandi}}</li>
+=======
+      <li v-if="datas.chandi">国家：{{datas.chandi}}</li>
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
       <li>净含量：{{datas.jhl}}</li>
       <li>酒精度：{{datas.VOL}}</li>
       <li>价格区间：{{datas.priceQj}}</li>
@@ -50,8 +58,22 @@
     </dl>
     <div class="footer">
       <div class="footerInner">
+<<<<<<< HEAD
         <span @click="handleCollectFn(datas.collectionState)"><img src="@/assets/imgs/icon_17.png" alt="" v-if="datas.collectionState==0"><img src="@/assets/imgs/icon_18.png" alt="" v-else></span>
         <div></div>
+=======
+        <span @click="handleCollectFn(datas.collectionState)">
+          <img src="@/assets/imgs/icon_17.png" alt="" v-if="datas.collectionState==0">
+          <img src="@/assets/imgs/icon_18.png" alt="" v-else>
+        </span>
+        <div @click="goCar" class="goCar">
+          <div>
+            <img src="@/assets/imgs/car_1.png" alt="">
+            <span>购物车</span>
+          </div>
+          
+        </div>
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
         <p @click="addCar">加入购物车</p>
       </div>
     </div>
@@ -91,6 +113,11 @@ export default {
     init() {
       let storage=window.localStorage;
       this.token = storage.getItem("token");
+<<<<<<< HEAD
+=======
+      console.log(window)
+      window.scrollTo(0,0)
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
       this.getDetail();
     },
     //TODO：套餐功能未完善
@@ -109,7 +136,11 @@ export default {
       }
       ApiOrder.handleCollect(questData).then(res=>{
         Toast(res.msg)
+<<<<<<< HEAD
         if(res.code==0){
+=======
+        if(res.code==1){
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
           if(state==1){
             this.datas.collectionState = 0
           }else{
@@ -233,6 +264,15 @@ export default {
 .adBox {
   height: 500px; text-align: center;
 }
+<<<<<<< HEAD
+=======
+.goCar{
+  display: flex; justify-content: flex-end; align-items: center; padding-right: 20px; text-align: center;
+  img{
+    width: 40px;
+  }
+}
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
 .balePop{
   display: flex; visibility: hidden; justify-content: flex-start; align-items: flex-end; position: fixed; width: 100%; height: 100%; left: 0; bottom: 0; z-index: 10; background-color: rgba(0, 0, 0, .5); transform: translateY(100%); transition: all .2s;
   dl{
@@ -294,7 +334,11 @@ export default {
     width: 105px; height: 100%; display: flex; justify-content: center; align-items: center;
     img{ width: 42px;}
   }
+<<<<<<< HEAD
   div{
+=======
+  >div{
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
     flex: 1;
   }
   p{

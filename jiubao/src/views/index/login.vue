@@ -193,9 +193,24 @@ export default {
         Api.loginFn(questData).then(res=>{
             this.toastObj = Toast(res.msg);
             let storage=window.localStorage;
+<<<<<<< HEAD
             if(res.token=='undefined') return;
             let token = storage.setItem("token",res.token);
            this.$router.go(-1);
+=======
+            console.log(res.token)
+            if(!res.token||res.token=='undefined') return;
+            storage.setItem("token",res.token);
+            storage.setItem("loginType",this.loginType);
+            if(this.loginType==2){
+              this.$router.push({
+                path:"/man"
+              });
+            }else{
+              this.$router.go(-1);
+            }
+            
+>>>>>>> 4d549404c8e3bfa2b846cd4c6d3bcf221b17a91f
         })
     },
     closeToast(){//关闭已有提示层
@@ -346,6 +361,7 @@ export default {
 .registerBox.show{
   transform: translateX(0);
   visibility: visible;
+  z-index: 100
 }
 .registerInner{
   padding: 15px;

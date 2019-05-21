@@ -39,36 +39,22 @@ export default {
     return {
       list: [
         {
-          name: "首页",
-          url: "/",
-          img: require("@/assets/imgs/navbar/index.png"),
-          actImg: require("@/assets/imgs/navbar/index_1.png"),
+          name: "我的客户",
+          url: "/myUser",
+          img: require("@/assets/imgs/navbar/user.png"),
+          actImg: require("@/assets/imgs/navbar/user_1.png"),
           isLogin:false
-        },
-        {
-          name: "商品分类",
-          url: "/class?typeId=17&isType=true",
-          img: require("@/assets/imgs/navbar/class.png"),
-          actImg: require("@/assets/imgs/navbar/class_1.png"),
-          isLogin:false
-        },
-        {
-          name: "我的订单",
-          url: "/orderList?id=0",
-          img: require("@/assets/imgs/navbar/order.png"),
-          actImg: require("@/assets/imgs/navbar/order_1.png"),
-          isLogin:true
         },
         {
           name: "购物车",
-          url: "/car",
+          url: "/myCarList",
           img: require("@/assets/imgs/navbar/car.png"),
           actImg: require("@/assets/imgs/navbar/car_1.png"),
           isLogin:true
         },
         {
           name: "会员中心",
-          url: "/user",
+          url: "/man",
           img: require("@/assets/imgs/navbar/my.png"),
           actImg: require("@/assets/imgs/navbar/my_1.png"),
           isLogin:true
@@ -86,12 +72,9 @@ export default {
           path: '/login'
         });
       }else{
-        if(storage.getItem("loginType")==2){
-          this.list[4].url = '/man';
-        }
         this.$router.push({
-            path: data.url
-          });
+          path: data.url
+        });
       }
     },
   },
