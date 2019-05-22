@@ -7,14 +7,16 @@
             <div>
                 <p>{{datas.companyName}}</p>
                 <p>{{datas.userphone}}</p>
-                <p>
-                    储值余额：{{datas.mychuzhi}}
-                </p>
-                <p>
-                    积分余额：{{datas.myjifen}}
-                </p>
-                <router-link tag="p" to="buyShopList">购买历史</router-link>
             </div>
+        </div>
+        <div class="dataInfo">
+            <p>
+                储值余额：<span>{{datas.mychuzhi}}</span>
+            </p>
+            <p>
+                积分余额：<span>{{datas.myjifen}}</span>
+            </p>
+            <router-link tag="p" to="buyShopList">购买历史</router-link>
         </div>
         <div class="salesmanInfo">
             <div>
@@ -184,7 +186,9 @@ export default {
 <style lang='less' scoped>
 @bor:15px solid #f4f8ff;
 .wrap{
-    background: url("./../../assets/imgs/bg/bg_02.jpg") no-repeat center top/100% auto; position: relative;
+    // background: url("./../../assets/imgs/bg/bg_02.jpg") no-repeat center top/100% auto; 
+    background-color: #2892fe;
+    position: relative;
     .backLogin{
         position: absolute; right: 10px; top: 10px; color: #fff; font-size: 24px;
     }
@@ -194,10 +198,22 @@ export default {
             width: 60px;
         }
         div{
-            color: #fff; font-size: 24px; margin-left: 20px; height: 200px;
+            color: #fff; font-size: 24px; margin-left: 20px;
             p{
-                font-family: "黑体"; padding-bottom: 20px;
+                font-family: "黑体"; padding-bottom: 10px;
             }
+        }
+    }
+    .dataInfo{
+        display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; background-color: #2075cb; margin-bottom: 20px;
+        p{
+            color: #ebebeb; font-size: 18px; width: 200px;
+            span{
+                color: #fff; font-size: 28px; display: block; margin-top: 5px;
+            }
+        }
+        p:last-child{
+            border-left: 1px solid #ebebeb; text-align: right; width: 130px;
         }
     }
     .salesmanInfo{
