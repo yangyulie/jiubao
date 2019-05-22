@@ -205,9 +205,9 @@ export default {
         }
     }
     .dataInfo{
-        display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; background-color: #2075cb; margin-bottom: 20px;
+        display: flex; justify-content: space-between; align-items: center; padding: 15px 55px; background-color: #2075cb; margin-bottom: 15px;
         p{
-            color: #ebebeb; font-size: 18px; width: 200px;
+            color: #ebebeb; font-size: 16px; width: 200px;
             span{
                 color: #fff; font-size: 28px; display: block; margin-top: 5px;
             }
