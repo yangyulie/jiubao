@@ -19,6 +19,17 @@
                         </p>
                         <span>{{item.orderactionName}}</span>
                     </dt>
+                    <dd class="proPicList">
+                      <div>
+                        <div class="proPicListBox" v-for="(i,idx) in item.shopList" :key="idx" v-show="idx<2||item.isShowMore">
+                          <img :src="i.picurls" alt="">
+                          <p>{{i.name}}</p>
+                        </div>
+                        <div class="proPicListBtn" v-if="item.shopList.length>=2" @click.stop="showMorePro(index)">
+                          <p :class="{roate:item.isShowMore}">{{item.isShowMore?"收起":"查看"}}全部（商品共 {{item.shopList.length}}）</p>
+                        </div>
+                      </div>
+                    </dd>
                     <dd>
                         <div>
                             <p>商品数量：{{item.Number}}</p>
@@ -126,6 +137,9 @@ export default {
       this.getOrderListFn();
       window.addEventListener('scroll',this.pageFn,false)
     },
+    showMorePro(idx){
+      this.$set(this.list[idx],'isShowMore',!this.list[idx].isShowMore);
+    },
     goOrderDetail(id){
       console.log(123,id)
       this.$router.push({
@@ -206,6 +220,30 @@ export default {
 <style lang='less' scoped>
 @bor:15px solid #f4f8ff;
 .wrap{
+  .proPicList{
+    border-bottom: 1px solid #eee;
+    >div{
+      width: 100%;
+      .proPicListBox{
+        display: flex; justify-content: flex-start; align-items: flex-start; padding-bottom: 20px;
+        img{
+          width: 120px; margin-right: 20px;
+        }
+        p{
+          font-size: 22px; flex: 1; margin-top: 30px;
+        }
+      }
+      .proPicListBtn{
+        text-align: center; font-size: 20px; color: #313131;
+        p::after{
+          content: ''; width: 10px; height: 10px; border: 1px solid #313131; border-left: 0; border-top: 0; margin: 15px auto; display: block; transform: rotate(45deg);
+        }
+        .roate::after{
+          transform: rotate(-135deg)
+        }
+      }
+    }
+  }
   .notData{
     img{
       width: 114px;

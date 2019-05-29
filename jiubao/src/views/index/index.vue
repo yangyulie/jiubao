@@ -57,7 +57,7 @@
     <div class="recommend" v-if="recommendList.data&&recommendList.data.length>0">
       <dl>
         <dt class="tit">
-          <div>{{recommendList.name}}</div>
+          <div><router-link to="/class?typeId=0">{{recommendList.name}} <span></span> </router-link></div>
           <router-link :to="recommendList.urls">
             <img :src="recommendList.urls" v-if="recommendList.urls!='#'" alt>
             <img src="@/assets/imgs/pic/pic_01.jpg" v-else alt>
@@ -274,7 +274,7 @@ export default {
       margin-bottom: 25px;
     }
     .proImg{
-      margin-bottom: 45px;
+      margin-bottom: 0px;
     }
   }
 }
@@ -303,7 +303,7 @@ export default {
     padding: 30px 10px 0;
     box-sizing: border-box;
     a{
-      font-size: 18px;
+      font-size: 22px;
       color: #232323;
       img{ width: 96px; margin-bottom: 10px;}
     }
@@ -318,6 +318,23 @@ export default {
     .flex();
     justify-content: flex-start;
     padding-bottom: 25px;
+    a{
+      .flex();
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      color: #ff6600;
+      span{
+        border: 1px solid #ff6600;
+        border-left: 0;
+        border-bottom: 0;
+        transform: rotate(45deg);
+        width: 15px;
+        height: 15px;
+      }
+    
+    }
   }
   div::before{
     content: '';
@@ -375,24 +392,12 @@ export default {
   dl{
     margin-bottom: 20px;
     .tit{
-      
       div{
         a{
-          .flex();
-          justify-content: space-between;
-          align-items: center;
-          width: 100%;
-          height: 100%;
           color: @colorBlue;
           span{
-            border: 1px solid @colorBlue;
-            border-left: 0;
-            border-bottom: 0;
-            transform: rotate(45deg);
-            width: 15px;
-            height: 15px;
+            border-color: @colorBlue;
           }
-        
         }
       }
       div::before{

@@ -22,6 +22,7 @@
     </div>
     <div class="con">
         <ul class="leftNav secreenHei" v-if="leftNavList&&leftNavList.length>0">
+            <li :class="{now:typeId==0}" @click="getTC">套餐搭赠</li>
             <li v-for="(item,index) in leftNavList" :class="{now:typeId==item.Id}" :key="index" @click="getAllpro(item.Id,index,item.name)">{{item.name}}</li>
         </ul>
         <ul class="rightList secreenHei" v-show="!isShowProList" v-if="rightSecClassList&&rightSecClassList.length>0">
@@ -70,7 +71,7 @@
         </div>
         
     </div>
-    <div class="secClassPop" v-show="isShowSelectPop">
+    <div class="secClassPop" v-show="isShowSelectPop&&rightSecClassList.length>0">
         <ul>
             <li :class="{now:selectId==item.bigId}" v-for="(item,index) in rightSecClassList" :key="index" @click="selectSecClass(item.bigId)">
                 <span>{{item.name}}</span>
@@ -178,9 +179,13 @@ export default {
     };
   },
   mounted() {
-    this.init();
-    this.typeId = this.$route.query.typeId;
+    
+    this.typeId = this.$route.query.typeId*1;
     this.isType = this.$route.query.isType;
+    console.log(!this.typeId,this.typeId)
+    
+    this.init();
+    
     let storage=window.localStorage;
     this.token = storage.getItem("token");
     // const {setData} = this;
@@ -305,22 +310,26 @@ export default {
     getAllClass(){//获取全部分类
         Api.getAllClass().then(res=>{
             this.leftNavList = res.rows;
-            if(!this.isType){
-                this.questData={
-                    page:1,
-                    sort:"price",
-                    jhl:"",
-                    chandi:"",
-                    brand:"",
-                    begprice:"",
-                    endPrice:"",
-                    sig:'',
-                    big:this.typeId
-                },
-                this.proList=[];
-                this.isShowProList = true;
-                this.isSecClass = true;
-                this.getProList();
+            if(!this.typeId){
+                this.getTC();
+            }else{
+                if(!this.isType){
+                    this.questData={
+                        page:1,
+                        sort:"price",
+                        jhl:"",
+                        chandi:"",
+                        brand:"",
+                        begprice:"",
+                        endPrice:"",
+                        sig:'',
+                        big:this.typeId
+                    },
+                    this.proList=[];
+                    this.isShowProList = true;
+                    this.isSecClass = true;
+                    this.getProList();
+                }
             }
             for(var i=0;i<this.leftNavList.length;i++){
                 if(this.leftNavList[i].Id == this.typeId){
@@ -328,6 +337,7 @@ export default {
                     return;
                 }
             }
+            
         })
     },
     goSearch(){
@@ -340,6 +350,7 @@ export default {
 
     },
     showSelectPop(){//显示下拉分类
+        if(this.rightSecClassList.length==0) return;
         this.isShowSelectPop = !this.isShowSelectPop;
     },
     selectSecClass(id){//点击下拉分类，获取分类下产品列表
@@ -402,6 +413,19 @@ export default {
             this.scrollData.isQuest = false;
             this.getProList();
         }
+    },
+    getTC(){
+        this.questData = {
+            tcId:1
+        }
+        this.isSecClass = true;
+        this.isShowProList = true;
+        this.typeId = 0;
+        this.isType = false;
+        this.proList=[];
+        this.rightSecClassList=[];
+        this.getProList();
+        this.isShowSelectPop = false;
     },
     getAllpro(typeId,index,name){//点击左侧分类获取分类下相应子分类
         console.log(22,typeId,index,name)
