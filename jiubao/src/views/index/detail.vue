@@ -16,7 +16,8 @@
           <p>{{datas.jhl}} x {{datas.guige}}</p>
       </dt>
       <dd>
-          <span>{{datas.price}}</span>
+          <span v-if="!datas.setmealBool">{{datas.price}}</span>
+          <span v-else>{{fanwei}}</span>
           <div>
               <span class="reduce" @click="reduceFn"></span>
               <input type="number" v-model="number" @input="changeFn">
@@ -30,17 +31,21 @@
       <li v-if="datas.chandi">国家：{{datas.chandi}}</li>
       <li>净含量：{{datas.jhl}}</li>
       <li>酒精度：{{datas.VOL}}</li>
-      <li>价格区间：{{datas.priceQj}}</li>
+      <li v-if="!datas.setmealBool">价格：{{datas.price}}</li>
+      <li v-else>价格区间：{{fanwei}}</li>
       <li>保质期：{{datas.baozhiqi}}</li>
     </ul>
     <div class="selectBale" @click="selectBale" v-if="datas.setmealBool">
-      <span>请选择套餐</span>
+      <span>{{tcText==''?'请选择套餐':tcText}}</span>
     </div>
     <div class="balePop" @click="selectBale" :class="{show:isShowBalePop}">
       <dl>
-        <dt><img :src="adList[0]" alt=""></dt>
-        <dd v-for="(item,index) in datas.stmList" :key="index">
-          <span>{{item}}</span>
+        <dt>
+          <img :src="adList[0]" alt="">
+          <span v-show="tcId!=-1">￥{{datas.price}}</span>
+        </dt>
+        <dd v-for="(item,index) in datas.stmList" :key="index" @click.stop="getTC(item)">
+          <span :class="{now:tcId==item.Id}">{{item.name}}</span>
         </dd>
       </dl>
     </div>
@@ -85,7 +90,10 @@ export default {
       token:"",
       number:1,
       id:'',
-      isShowBalePop:false
+      isShowBalePop:false,
+      tcText:'',
+      fanwei:'',
+      tcId:''
     };
   },
   mounted() {
@@ -103,6 +111,11 @@ export default {
       console.log(window)
       window.scrollTo(0,0)
       this.getDetail();
+    },
+    getTC(item){
+      this.tcId = item.Id;
+      this.tcText = item.name;
+      this.datas.price = item.price
     },
     //TODO：套餐功能未完善
     handleCollectFn(state){//添加或取消收藏
@@ -204,6 +217,11 @@ export default {
     addCar(){//加入购物车
       let isLogin = this.isLogin();
       if(!isLogin) return;
+      
+      if(this.tcId==-1){
+        this.selectBale();
+        return;
+      }
       Indicator.open({
         text: '加载中...',
         spinnerType: 'fading-circle'
@@ -224,7 +242,25 @@ export default {
         //res.data.stmList=["百威330x12套餐买5送2加赠苏打水1件","百威330x12套餐买5送2加赠苏打水1件"]
         this.datas = res.data;
         if(res.data.setmealBool){
-          this.tcId = -1
+          this.tcId = -1;
+          let min = res.data.stmList[0].price;
+          let max = res.data.stmList[0].price;
+          for(let i=0;i<res.data.stmList.length;i++){
+            console.log(i)
+            if(res.data.stmList[i].price*1<min){
+              min=res.data.stmList[i].price
+            }
+            if(res.data.stmList[i].price*1>max){
+              max=res.data.stmList[i].price
+            }
+            console.log(min,max)
+          }
+          if(min==max){
+            this.fanwei = ' ￥'+min;
+          }else{
+            this.fanwei = ' ￥'+min +' - ￥'+ max
+          }
+          console.log(this.fanwei)
         }else{
           this.tcId = 0
         }
@@ -250,14 +286,18 @@ export default {
     width: 40px;
   }
 }
+
 .balePop{
   display: flex; visibility: hidden; justify-content: flex-start; align-items: flex-end; position: fixed; width: 100%; height: 100%; left: 0; bottom: 0; z-index: 10; background-color: rgba(0, 0, 0, .5); transform: translateY(100%); transition: all .2s;
   dl{
-    background-color: #fff; width: 100%; min-height: 400px; padding-bottom: 50px;
+    background-color: #fff; width: 100%; min-height: 400px; padding-bottom: 100px;
     dt{
        padding: 20px; border-bottom: 1px solid #c1c1c1;
        img{
          border: 1px solid #c1c1c1; margin-top: -60px; width: 210px;
+       }
+       span{
+         color: #d81e06; padding: 25px; font-size: 24px;
        }
     }
     dd{
@@ -265,11 +305,14 @@ export default {
       span{
         padding: 15px 10px 10px; border: 1px solid #313131; color: #000000; line-height: 18px; font-size: 18px;
       }
+      .now{
+        border-color: #2892fe; color: #2892fe;
+      }
     }
   }
 }
 .balePop.show{
-  visibility: visible; transform: translateY(0)
+  visibility: visible; transform: translateY(0);
 }
 .selectBale{
   display: flex; justify-content: space-between; align-items: center; font-size: 24px; color: #929292; padding: 25px; border-bottom: @bor;;
@@ -306,7 +349,7 @@ export default {
   background-color: #fff;
 }
 .footerInner{
-  position: fixed; width: 100%; z-index: 2; left: 0; bottom: 0; border-top: 1px solid #c1c1c1; display: flex; justify-content: space-between;
+  position: fixed; width: 100%; z-index: 10; left: 0; bottom: 0; border-top: 1px solid #c1c1c1; display: flex; justify-content: space-between;
   span{
     width: 105px; height: 100%; display: flex; justify-content: center; align-items: center;
     img{ width: 42px;}

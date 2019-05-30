@@ -74,7 +74,7 @@
                                     <dl>
                                         <dt>{{i.name}}</dt>
                                         <dd class="gray">{{item.jhl}} x {{i.guige}}</dd>
-                                        <dd class="price"><span>￥{{item.price}}</span><span> x {{item.Number}}</span></dd>
+                                        <dd class="price"><span>￥{{i.price}}</span><span> x {{i.number}}</span></dd>
                                     </dl>
                                 </div>
                             </dd>
