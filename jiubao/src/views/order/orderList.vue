@@ -4,7 +4,7 @@
     </headed>
     <div class="wrap">
       <div class="tabListBox">
-        <ol class="tabList">  
+        <ol class="tabList" ref="tabList">  
           <li v-for="(item,index) in tabList" :key="index" :class="{now:id==item.id}" @click="orderTab(item.id)"><span>{{item.name}}</span></li>
         </ol>
       </div>
@@ -136,6 +136,9 @@ export default {
     init() {
       this.getOrderListFn();
       window.addEventListener('scroll',this.pageFn,false)
+      if(this.id>5){
+        this.$refs.tabList.scrollLeft = 500
+      }
     },
     showMorePro(idx){
       this.$set(this.list[idx],'isShowMore',!this.list[idx].isShowMore);

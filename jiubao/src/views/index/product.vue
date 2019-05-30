@@ -99,6 +99,7 @@ export default {
     this.init();
     this.typeId = this.$route.query.typeId;
     this.isType = this.$route.query.isType;
+    this.tit = this.$route.query.skey;
     // const {setData} = this;
     // console.log(this.data)
     // setData(this.app)
@@ -179,6 +180,7 @@ export default {
         this.questData.page = 1;
         this.isSecClass = true;
         this.isShowProList = true;
+        this.tit = shearchText;
         this.getProList();
       }
 
@@ -202,9 +204,10 @@ export default {
                     this.proList = this.proList.concat(res.data);
                 }
                 this.isShowSelectPop = false;
-                this.tit = res.title
+                if(res.title) this.tit = res.title;
             }else{
               Toast(res.msg)
+              this.proList=[];
             }
         })
         
