@@ -245,6 +245,12 @@ export default new Router({
       name: 'manBackOrder',
       component: () => import('./views/man/manBackOrder.vue'),
       meta: { title: '退单' },
+    },
+    {
+      path: '/paySuc',
+      name: 'paySuc',
+      component: () => import('./views/order/paySuc.vue'),
+      meta: { title: '支付' },
     }
   ],
 });

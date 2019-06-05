@@ -16,7 +16,7 @@
             支付金额： ￥{{datas.total}}元
         </div>
         <div class="submitBox">
-            <button @click="submitPay">提交订单</button>
+            <button @click="submitPay">立即支付</button>
         </div>
     </div>
     <foot :is_now="2"></foot>
@@ -77,7 +77,13 @@ export default {
             payId:this.payMode
         }
         Api.submitPay(questData).then(res=>{
-
+          if(res.code==1){
+            this.$router.replace({
+              path:'/paySuc'
+            })
+          }else{
+            Toast(res.msg)
+          }
         })
     },
     //...mapActions(["setData"])
