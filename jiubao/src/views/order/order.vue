@@ -171,16 +171,26 @@ export default {
             Indicator.close();
             Toast(res.msg)
             if(res.code==1){
-                MessageBox.confirm('是否立即支付?').then(action => {
-                    this.$router.push({
-                        path:'/pay?id='+res.row,
-                        replace:true
-                    })
-                }).catch(cancel=>{
-                    this.$router.push({
-                        path:'/orderDetail?id='+res.row,
-                        replace:true
-                    })
+                MessageBox({
+                    title:'提示',
+                    message:'订单创建成功，是否立即支付？',
+                    confirmButtonText:'立即支付',
+                    cancelButtonText:'提交核价',
+                    showCancelButton:true
+                }).then(action => {
+                    if(action == 'confirm'){
+
+                        this.$router.replace({
+                            path:'/pay?id='+res.row
+                        })
+
+                    }else{
+
+                        this.$router.replace({
+                            path:'/orderDetail?id='+res.row
+                        })
+
+                    }
                     
                 })
             }

@@ -195,6 +195,7 @@ export default {
       this.list[index].number = num;
       this.list[index].checked = true;
       this.$set(this.list, index, this.list[index]);
+      this.changeNumFn(this.list[index],num,index)
     },
     handleDataFn(data){
       let idx = this.handleData.indexOf(data.id);

@@ -76,7 +76,13 @@ export default {
         })
     },
     goOrder(){
-        console.log("审核通过")
+        Api.setPricing({Id:this.id}).then(res=>{
+            if(res.code==1){
+                this.$router.go(-1)
+            }else{
+                Toast(res.msg)
+            }
+        })
     },
     deleteFn(id){
         console.log(id)
