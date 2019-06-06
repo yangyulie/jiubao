@@ -173,7 +173,7 @@ export default {
         .proPicListBox{
           display: flex; justify-content: flex-start; align-items: flex-start; padding-bottom: 20px;
           img{
-            width: 120px; margin-right: 20px;
+            width: 70px; margin-right: 20px;
           }
           p{
             font-size: 22px; flex: 1; margin-top: 30px;
