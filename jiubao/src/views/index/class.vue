@@ -47,7 +47,7 @@
                 </div>
                 <div class="notData" v-if="proList.length==0"><img src="@/assets/imgs/not.png" alt=""></div>
                 <ul class="list" v-else>
-                    <router-link tag="li" :to="'/detail?id='+item.Id" v-for="(item,index) in proList" :key="index">
+                    <router-link tag="li" :to="'/detail?id='+item.Id+'&tcId='+item.tcId" v-for="(item,index) in proList" :key="index">
                         <img class="listProPic" :src="item.purls" alt="">
                         <dl>
                             <dt>{{item.name}}</dt>

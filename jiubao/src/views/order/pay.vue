@@ -9,6 +9,7 @@
                 <label :class="{show:payMode==item.Id}" class="isChecked" v-for="(item,index) in datas.rows" :key="index">
                     <span><img src="@/assets/imgs/icon_15.png" alt=""></span>
                     <input type="radio" v-model="payMode" :value="item.Id">{{item.payName}}
+                    <div v-show="payMode==5" v-html="item.remark"></div>
                 </label>
             </dd>
         </dl>
@@ -64,6 +65,7 @@ export default {
           console.log(1234,res)
           if(res.code==1){
             this.datas = res;
+            this.datas.rows[2]['remark'] = '账号：123456785996565565'
           }
         })
     },
@@ -72,12 +74,14 @@ export default {
             Toast("请选择支付方式")
             return;
         }
+        Indicator.open();
         let questData={
             Id:this.Id,
             payId:this.payMode
         }
         Api.submitPay(questData).then(res=>{
           if(res.code==1){
+            Indicator.close();
             this.$router.replace({
               path:'/paySuc'
             })
@@ -107,7 +111,10 @@ export default {
         }
     }
     .isChecked{
-        width: 210px;
+        width: 100%; flex-wrap: wrap;
+        div{
+          width: 100%; padding-left: 50px;
+        }
     }
     .payTotal{
         text-align: right; padding: 25px 50px 0 0; font-size: 24px; color: #313131;

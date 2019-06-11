@@ -64,10 +64,10 @@ export default {
         })
     },
     submitPay(){
-        if(!this.value){
-            Toast("请填写备注")
-            return;
-        }
+        // if(!this.value){
+        //     Toast("请填写备注")
+        //     return;
+        // }
         let questData=this.questData;
         questData["Remarks"] = this.value;
         Api.submitOrderStatus(questData).then(res=>{

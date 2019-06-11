@@ -52,7 +52,7 @@
                         <span v-for="(item,index) in datas.DisCountList" :key="index">{{item.DiscountName}}</span>
                     </div>
                 </div>
-                <div>优惠后金额总计： <span>￥{{datas.DiscountAmount}}</span></div>
+                <div>优惠金额总计： <span>￥{{datas.DiscountAmount}}</span></div>
             </div>
         </div>
         <div class="proListBox" v-if="datas.AcartList&&datas.AcartList.length>0">

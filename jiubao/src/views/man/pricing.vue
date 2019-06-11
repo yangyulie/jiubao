@@ -76,12 +76,16 @@ export default {
         })
     },
     goOrder(){
-        Api.setPricing({Id:this.id}).then(res=>{
-            if(res.code==1){
-                this.$router.go(-1)
-            }else{
-                Toast(res.msg)
-            }
+        MessageBox.confirm("确认核价通过？").then(res=>{
+            Api.setPricing({Id:this.id}).then(res=>{
+                if(res.code==1){
+                    this.$router.go(-1)
+                }else{
+                    Toast(res.msg)
+                }
+            })
+        }).catch(res=>{
+            
         })
     },
     deleteFn(id){

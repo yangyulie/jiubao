@@ -4,11 +4,12 @@
         <div @click="goCar"><img src="@/assets/imgs/icon_13.png" alt=""></div>
     </headed>
     <div class="adBox">
-      <mt-swipe v-if="adList.length>0" :auto="4000" continuous>
+      <!-- <mt-swipe v-if="adList.length>0" :auto="4000" continuous>
         <mt-swipe-item v-for="(item,index) in adList" :key="index">
           <img :src="item" alt>
         </mt-swipe-item>
-      </mt-swipe>
+      </mt-swipe> -->
+      <img :src="datas.purls" alt>
     </div>
     <dl class="proInfoBox">
       <dt>
@@ -16,8 +17,8 @@
           <p>{{datas.jhl}} x {{datas.guige}}</p>
       </dt>
       <dd>
-          <span v-if="!datas.setmealBool">{{datas.price}}</span>
-          <span v-else>{{fanwei}}</span>
+          <span >￥{{datas.price}}</span>
+          <!-- <span v-else>{{fanwei}}</span> -->
           <div>
               <span class="reduce" @click="reduceFn"></span>
               <input type="number" v-model="number" @input="changeFn">
@@ -41,7 +42,7 @@
     <div class="balePop" @click="selectBale" :class="{show:isShowBalePop}">
       <dl>
         <dt>
-          <img :src="adList[0]" alt="">
+          <img :src="datas.purls" alt="">
           <span v-show="tcId!=-1">￥{{datas.price}}</span>
         </dt>
         <dd v-for="(item,index) in datas.stmList" :key="index" @click.stop="getTC(item)">
@@ -97,7 +98,12 @@ export default {
     };
   },
   mounted() {
-    this.id = this.$route.query.id
+    this.id = this.$route.query.id;
+    if(this.$route.query.tcId*1){
+
+      this.tcId = this.$route.query.tcId*1;
+    }
+    console.log(555,this.tcId)
     this.init();
     // const {setData} = this;
     // console.log(this.data)
@@ -115,7 +121,11 @@ export default {
     getTC(item){
       this.tcId = item.Id;
       this.tcText = item.name;
-      this.datas.price = item.price
+      this.datas.price = item.price;
+      this.datas.name = item.name;
+      this.datas.contents = item.contents;
+      this.datas.purls = item.picurls;
+      this.isShowBalePop = false;
     },
     //TODO：套餐功能未完善
     handleCollectFn(state){//添加或取消收藏
@@ -242,11 +252,14 @@ export default {
         //res.data.stmList=["百威330x12套餐买5送2加赠苏打水1件","百威330x12套餐买5送2加赠苏打水1件"]
         this.datas = res.data;
         if(res.data.setmealBool){
-          this.tcId = -1;
+          // this.tcId = -1;
           let min = res.data.stmList[0].price;
           let max = res.data.stmList[0].price;
           for(let i=0;i<res.data.stmList.length;i++){
             console.log(i)
+            if(res.data.stmList[i].Id==this.tcId){
+              this.getTC(res.data.stmList[i])
+            }
             if(res.data.stmList[i].price*1<min){
               min=res.data.stmList[i].price
             }
@@ -278,7 +291,7 @@ export default {
 <style lang='less' scoped>
 @bor:20px solid #f4f8ff;
 .adBox {
-  height: 500px; text-align: center;
+   text-align: center;
 }
 .goCar{
   display: flex; justify-content: flex-end; align-items: center; padding-right: 20px; text-align: center;

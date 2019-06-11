@@ -32,16 +32,16 @@
                 <span>默认价格</span><input type="text" v-model="submitData.oldprice" disabled>
             </li>
             <li>
-                <span>审核价格</span><input type="text" v-model="submitData.newprice" @blur="setPriceProFn" class="red">
+                <span>审核价格</span><input type="text" v-model="submitData.newprice" class="red">
             </li>
             <li>
-                <span>订购数量</span><input type="text" v-model="submitData.number"  @blur="setPriceProFn" class="red">
+                <span>订购数量</span><input type="text" v-model="submitData.number" class="red">
             </li>
         </ul>
         <div class="total">
             <div class="totalBox">
             </div>
-            <button @click="confirm">确认</button>
+            <button @click="setPriceProFn">确认</button>
         </div>
     </div>
     <foot :is_now="1"></foot>
@@ -96,12 +96,6 @@ export default {
         }
         Api.setPricePro(questData).then(res=>{
             console.log(res)
-            Toast(res.msg)
-        })
-    },
-    confirm(){
-        console.log(this.submitData)
-        Api.setPricing({Id:this.orderId}).then(res=>{
             Toast(res.msg)
             if(res.code==1){
                 this.$router.go(-1)
