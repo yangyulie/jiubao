@@ -183,7 +183,7 @@ export default {
     // },
     changeFn(){//手动输入购买数量
       let num = this.number*1;
-      if(this.tcId==-1){
+      if(this.datas.setmealBool&&!this.tcId){
         Toast("选完套餐才可以更改数量~")
         return;
       }
@@ -192,7 +192,7 @@ export default {
     },
     addFn(){//增加购买数量
       let num = this.number*1+1;
-      if(this.datas.setmealBool){
+      if(this.datas.setmealBool&&!this.tcId){
         Toast("选完套餐才可以更改数量~")
         return;
       }
@@ -228,7 +228,7 @@ export default {
       let isLogin = this.isLogin();
       if(!isLogin) return;
       
-      if(this.datas.setmealBool){
+      if(this.datas.setmealBool&&!this.tcId){
         this.selectBale();
         return;
       }
