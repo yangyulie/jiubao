@@ -210,6 +210,9 @@ export default {
         Api.getCarList().then(res=>{
           this.datas = res;
           if(res.code==1){
+            for(let i=0;i<res.rows.length;i++){
+              res.rows[i]['checked']=true;
+            }
             this.list = res.rows;
           }
         })
