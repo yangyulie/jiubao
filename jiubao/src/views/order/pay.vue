@@ -9,7 +9,7 @@
                 <label :class="{show:payMode==item.Id}" class="isChecked" v-for="(item,index) in datas.rows" :key="index">
                     <span><img src="@/assets/imgs/icon_15.png" alt=""></span>
                     <input type="radio" v-model="payMode" :value="item.Id">{{item.payName}}
-                    <div v-show="payMode==5" v-html="item.remark"></div>
+                    <div v-show="payMode==5&&item.Id==5" v-html="item.remarks"></div>
                 </label>
             </dd>
         </dl>
@@ -20,20 +20,17 @@
             <button @click="submitPay">立即支付</button>
         </div>
     </div>
-    <foot :is_now="2"></foot>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 import Api from "@/api/order.js";
-import foot from "@/components/foot.vue";
 import headed from "@/components/headed.vue";
 import { Indicator ,Toast } from 'mint-ui';
 import { mapActions, mapState } from "vuex";
 export default {
   components: {
-    foot,
     headed
   },
   data() {
@@ -62,33 +59,81 @@ export default {
     getPayFn(){
         Api.getPay({Id:this.Id}).then(res=>{
           this.datas = res;
-          console.log(1234,res)
           if(res.code==1){
             this.datas = res;
-            this.datas.rows[2]['remark'] = '账号：123456785996565565'
           }
         })
+    },
+    ali_pay(){
+      Toast("支付宝支付暂未开放")
+    },
+    wx_pay(){
+      Toast("微信支付暂未开放")
+    },
+    bank_pay(){
+      this.$router.push({
+        path:'/banks?id='+this.Id+'&totalPrice='+this.datas.total
+      })
     },
     submitPay(){
         if(!this.payMode){
             Toast("请选择支付方式")
             return;
         }
-        Indicator.open();
-        let questData={
-            Id:this.Id,
-            payId:this.payMode
+        switch(this.payMode){
+          case 1:
+            console.log("支付宝支付");
+            this.ali_pay();
+            break;
+          case 2:
+            console.log("微信支付");
+            this.wx_pay();
+            break;
+          case 3:
+            console.log("网银支付");
+            this.bank_pay();
+            break;
+          case 4:
+            console.log("储值支付")
+            this.submitPayFn();
+            break;
+          case 5:
+            console.log("线下转账支付")
+            this.submitPayFn();
+            break;
+          case 6:
+            console.log("货到付款")
+            this.submitPayFn();
+            break;
+          case 7:
+            console.log("滚结")
+            this.submitPayFn();
+            break;
+          case 8:
+            console.log("按合同协议结款")
+            this.submitPayFn();
+            break;
+          default:
+            console.error('未知支付方式')
         }
-        Api.submitPay(questData).then(res=>{
-          if(res.code==1){
-            Indicator.close();
-            this.$router.replace({
-              path:'/paySuc'
-            })
-          }else{
-            Toast(res.msg)
-          }
-        })
+        
+    },
+    submitPayFn(){//内部支付方式
+      Indicator.open();
+      let questData={
+          Id:this.Id,
+          payId:this.payMode
+      }
+      Api.submitPay(questData).then(res=>{
+        if(res.code==1){
+          Indicator.close();
+          this.$router.replace({
+            path:'/paySuc'
+          })
+        }else{
+          Toast(res.msg)
+        }
+      })
     },
     //...mapActions(["setData"])
   },

@@ -111,5 +111,40 @@ export default {
             method:"post",
             data
         })
+    },
+    getMyBanks(data={}){//获取我的银行卡列表
+        return request({
+            url:"/apis/mypay/geilistBanks",
+            method:"post",
+            data
+        })
+    },
+    getMyBankPay(data={}){//使用银行卡支付
+        return request({
+            url:"/apis/mypay/postBanks",
+            method:"post",
+            data
+        })
+    },
+    setMyBankSubmit(data={}){//提交银行卡支付确认
+        return request({
+            url:"/apis/mypay/postBanksEnd",
+            method:"post",
+            data
+        })
+    },
+    getBankInfo(data={}){//获取编辑银行卡信息
+        return request({
+            url:"/apis/mypay/getBankModel",
+            method:"post",
+            data
+        })
+    },
+    getBanks(data={}){//获取银行列表
+        return request({
+            url:"/apis/mypay/getBanks",
+            method:"post",
+            data
+        })
     }
 }

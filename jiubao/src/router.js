@@ -251,6 +251,18 @@ export default new Router({
       name: 'paySuc',
       component: () => import('./views/order/paySuc.vue'),
       meta: { title: '支付' },
+    },
+    {
+      path: '/banks',
+      name: 'banks',
+      component: () => import('./views/order/banks.vue'),
+      meta: { title: '银行卡' },
+    },
+    {
+      path: '/addBank',
+      name: 'addBank',
+      component: () => import('./views/order/addBank.vue'),
+      meta: { title: '绑定银行卡' },
     }
   ],
 });
