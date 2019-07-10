@@ -146,5 +146,19 @@ export default {
             method:"post",
             data
         })
+    },
+    addBank(data={}){//添加银行卡
+        return request({
+            url:"/apis/mypay/addbank",
+            method:"post",
+            data
+        })
+    },
+    setBindBankSubmit(data={}){//绑定银行卡
+        return request({
+            url:"/apis/mypay/postBanksEnd",
+            method:"post",
+            data
+        })
     }
 }

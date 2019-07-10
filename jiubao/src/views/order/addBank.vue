@@ -6,18 +6,40 @@
     <div class="wrap">
         <ul class="lists">
             <li class="selectBox">
-                <input type="text" placeholder="选择银行" v-model="bank.acctname" @focus="onShowPopup">
+                <span>选择银行</span><input type="text" placeholder="选择银行" v-model="bank.acctname" @focus="onShowPopup">
             </li>
             <li class="selectBox">
-                <input type="text" v-model="submitData.accttype" placeholder="卡类型" @focus="onShowPopupCard">
+                <span>选择卡类型</span><input type="text" v-model="banktype" placeholder="卡类型" @focus="onShowPopupCard">
             </li>
             <li>
-                <input type="text" v-model="submitData.linkName" placeholder="姓名">
+                <span>银行卡号</span><input type="number" v-model="submitData.acctno" placeholder="请输入银行卡号">
+            </li>
+            <li v-if="submitData.accttype=='02'">
+                <span>cvv2码</span><input type="number" v-model="submitData.cvv2" placeholder="请输入信用卡背后三位数">
+            </li>
+            <li v-if="submitData.accttype=='02'">
+                <span>有效期</span><input type="text" v-model="submitData.validdate" placeholder="请输入有效期月/年">
             </li>
             <li>
-                <input type="number" v-model="submitData.Phone" placeholder="手机号码">
+                <span>证件号</span><input type="text" v-model="submitData.idno" placeholder="请输入身份证号">
+            </li>
+            <li>
+                <span>户名</span><input type="text" v-model="submitData.acctname" placeholder="请输入银行开户名">
+            </li>
+            <li>
+                <span>手机号码</span><input type="number" v-model="submitData.mobile" placeholder="请输入银行预留手机号码">
             </li>
         </ul>
+    </div>
+    <div class="pop" v-show="isShowPop" @click="closePop">
+        <dl class="popInner">
+            <dt>验证电话号码</dt>
+            <dd>我们已将验证码发送至“{{submitData.mobile}}”,请输入验证码进行验证，验证码{{endTime}}秒内有效。</dd>
+            <dd class="testCode">验证码：<input @click.stop type="number" v-model="testCode"></dd>
+            <dd class="btns">
+                <span @click.stop="testCodeFn">确认</span>
+            </dd>
+        </dl>
     </div>
     <mt-popup
         v-model="popupVisible"
@@ -72,23 +94,29 @@ export default {
             textAlign: 'center'
             }
         ],
+        testCode:'',
         isShowCard:false,
         popupVisible:false,
         banksList:[],
+        payInfo:{},
         bank:{
             Id:0,
             acctname:'',
             acctno:0
         },
+        banktype:'',
         submitData:{
+            acctcode:'',
             accttype:'',
-            districts:"",
-            address:"",
-            linkName:"",
-            Phone:"",
-            states:0,
-            Id:0
+            acctno:"",
+            cvv2:"",
+            validdate:"",
+            mobile:"",
+            idno:'',
+            acctname:''
         },
+        endTime:120,
+        timer:null,
         cardList:[
             {
                 accttype:'00',
@@ -98,12 +126,12 @@ export default {
                 accttype:'02',
                 name:'信用卡'
             }
-        ]
+        ],
+        isShowPop:false
     };
   },
   mounted() {
     this.init();
-    this.id = this.$route.query.id;
     
     // const {setData} = this;
     // console.log(this.data)
@@ -115,15 +143,31 @@ export default {
   },
   methods: {
     init() {
-        this.getBanksList();
-        if(this.id){
-            this.getBankInfo();
-        }
-        
+        this.getBanks();
     },
-    getBanksList(){
+    closePop(){
+        this.isShowPop = false;
+    },
+    testCodeFn(){//提交绑定银行卡验证
+        Indicator.open();
+        let questData={
+            codes:this.testCode,
+            orderNumber:this.payInfo.orderNumber,
+            payId:this.payInfo.payId
+        }
+        Api.setBindBankSubmit(questData).then(res=>{
+            Indicator.close();
+            if(res.code==1){
+                Toast(res.msg)
+                
+            }else{
+                Toast(res.msg)
+            }
+        })
+    },
+    getBanks(){
         Api.getBanks().then(res=>{
-            this.banksList = res.rows;
+            this.banksList=res.rows
         })
     },
     onShowPopup() {
@@ -134,68 +178,82 @@ export default {
         this.cancleCard();
         this.cardSlots[0].values = this.cardList;
     },
-    getBankInfo(){
-        Api.getBankInfo({Id:this.id}).then(res=>{
-            this.submitData=res.rows
-            this.submitData.bank={
-                Id:res.rows.Id,
-                acctname:res.rows.acctname,
-                acctno:res.rows.acctno
-            }
-        })
-    },
     save(){
-        this.allChecked?this.submitData.states=1:this.submitData.states=0;
         let obj = this.submitData;
         let str=""
         for(let i in obj){
-            if(i=='Id'||i=="states") {
-
-            }else{
-                console.log(i)
-                if(obj[i]==""){
-                    if(i=="districts"){
-                        str = "请选择省市区"
-                    }
-                    if(i=="address"){
-                        str = "请填写详细地址"
-                    }
-                    if(i=="linkName"){
-                        str = "请填写收货人姓名"
-                    }
-                    if(i=="Phone"){
-                        str = "请填写收货人联系电话"
-                    }
+            if(obj[i]==""){
+                
+                if(i=="cvv2"&&this.submitData.accttype=='02'){
+                    str = "请填写信用卡背后三位数"
                     Toast(str)
                     return;
                 }
-                if(i=="Phone"){
-                    let reg = /1\d{10}/;
-                    if(!reg.test(obj[i])){
-                        Toast('收货人联系电话格式错误');
-                        return;
-                    }
+                if(i=="validdate"&&this.submitData.accttype=='02'){
+                    str = "请输入信用卡有效期"
+                    Toast(str)
+                    return;
                 }
-            };
-        }
-        Api.addAddress(obj).then(res=>{
-            Toast(res.msg);
-            if(res.code==1){
-                setTimeout(()=>{
-                    this.$router.go(-1)
-                },1000)
+                
+                if(i=="acctcode"){
+                    str = "请选择银行"
+                    Toast(str)
+                    return;
+                }
+                if(i=="accttype"){
+                    str = "请选择银行卡类型"
+                    Toast(str)
+                    return;
+                }
+                if(i=="acctno"){
+                    str = "请填写银行卡卡号"
+                    Toast(str)
+                    return;
+                }
+                if(i=="idno"){
+                    str = "请填写证件号码"
+                    Toast(str)
+                    return;
+                }
+                if(i=="acctname"){
+                    str = "请填写开户名称"
+                    Toast(str)
+                    return;
+                }
+                if(i=="mobile"){
+                    str = "请填写银行预留手机号码"
+                    Toast(str)
+                    return;
+                }
+                
             }
-            // if(this.cartIds=="undefined"){
-            //     this.$router.push({
-            //         path:'/address',
-            //         replace:true
-            //     })
-            // }else{
-            //     this.$router.push({
-            //         path:'/address?cartIds='+this.cartIds+'&invoiceId='+ this.invoiceId,
-            //         replace:true
-            //     })
-            // }
+            if(i=="mobile"){
+                let reg = /1\d{10}/;
+                if(!reg.test(obj[i])){
+                    Toast('收货人联系电话格式错误');
+                    return;
+                }
+            }
+        }
+        Indicator.open();
+        clearInterval(this.timer);
+        this.endTime = 120;
+        Api.addBank(obj).then(res=>{
+            Indicator.close();
+            if(res.code==1){
+                this.isShowPop = true;
+                this.payInfo = res.row;
+                this.timer=setInterval(()=>{
+                    this.endTime = this.endTime-1;
+                    if(this.endTime<=0){
+                        clearInterval(this.timer)
+                        this.closePop();
+                    }
+                },1000)
+            }else{
+                Toast(res.msg);
+            }
+            
             
         })
     },
@@ -219,7 +277,12 @@ export default {
         if(!!values[0]){
             picker.setSlotValues(values[0]);
             this.card = values[0];
-            this.submitData.accttype = values[0].name;
+            this.submitData.accttype = values[0].accttype;
+            this.banktype = values[0].name;
+            if(values[0].accttype=='00'){
+                this.submitData.cvv2="";
+                this.submitData.validdate="";
+            }
         }
     },
     //...mapActions(["setData"])
@@ -236,9 +299,12 @@ export default {
     .lists{
         padding: 10px; border-bottom: @bor; font-size: 24px;
         li{
-            border-bottom: 1px solid #c1c1c1; padding: 10px;
+            border-bottom: 1px solid #c1c1c1; padding: 10px; display: flex; justify-content: flex-start; align-items: center;
             input{
-                width: 100%; height: 50px; line-height: 50px; font-size: 24px;
+                width: 100%; height: 50px; line-height: 50px; font-size: 24px; flex: 1;
+            }
+            span{
+                width: 150px;
             }
         }
         li.selectBox{
@@ -266,6 +332,30 @@ export default {
     }
     .isChecked.show img{
       display: block;
+    }
+}
+.pop{
+    position: fixed; background-color: rgba(0, 0, 0, .75); display: flex; justify-content: flex-start; align-items: flex-end; top: 0; left: 0; width: 100%; height: 100%;
+    .popInner{
+        background-color: #fff; padding: 35px 30px 280px; color: #929292; font-size: 24px; line-height: 36px;
+        dt{
+            color: #313131; line-height: 26px; margin-bottom: 35px;
+        }
+        .testCode{
+            padding-top: 70px; display: flex; justify-content: center; align-items: center; font-size: 30px; color: #2892fe;
+            input{
+                border: 1px solid #2892fe; height: 56px; width: 162px; margin-left: 20px; font-size: 26px; text-indent: 1em; color: #2892fe;
+            }
+        }
+        .btns{
+            display: flex; justify-content: flex-end; align-items: center; padding-top: 120px;
+            span{
+                background-color: #dcdcdc; height: 71px; border-radius: 10px; color: #fff; margin-right: 10px; width: 201px; display: flex; justify-content: center; align-items: center;
+            }
+            span:last-child{
+                background-color: #2892fe;
+            }
+        }
     }
 }
 .mint-popup{

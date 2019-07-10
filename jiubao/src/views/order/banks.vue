@@ -4,7 +4,7 @@
     </headed>
     <div class="wrap">
         <ul v-if="banksList.length>0">
-            <li v-for="(item,index) in banksList" :key="index" @click="goBindBank(item.Id)">
+            <li v-for="(item,index) in banksList" :key="index">
                 <dl>
                     <dt>
                         <img v-if="item.picurls" :src="item.picurls" alt="">
@@ -20,7 +20,7 @@
                 </dl>
                 <div class="btns">
                     <span @click.stop="tipsUsed(item.Id,item.acctno)" v-if="id!=0">使用</span>
-                    <span>编辑</span>
+                    <!-- <span @click="goBindBank(item.Id)">编辑</span> -->
                     <span @click.stop="deleteBank(item.Id)">删除</span>
                 </div>
             </li>
