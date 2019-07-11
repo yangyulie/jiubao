@@ -35,7 +35,7 @@
             <dl class="popInner">
                 <dt>验证支付密码</dt>
                 <dd>请输入支付密码</dd>
-                <dd class="testCode">支付密码：<input @click.stop type="number" v-model="testCode"></dd>
+                <dd class="testCode">支付密码：<input @click.stop type="password" v-model="testCode"></dd>
                 <dd class="btns">
                     <span>换卡</span>
                     <span @click.stop="testCodeFn">确认</span>
