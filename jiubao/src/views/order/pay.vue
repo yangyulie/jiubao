@@ -65,10 +65,16 @@ export default {
         })
     },
     ali_pay(){
-      Toast("支付宝支付暂未开放")
+      //Toast("支付宝支付暂未开放")
+      this.$router.push({
+        path:'/aliPay?id='+this.Id+'&type=1'
+      })
     },
     wx_pay(){
-      Toast("微信支付暂未开放")
+      // Toast("微信支付暂未开放")
+      this.$router.push({
+        path:'/aliPay?id='+this.Id+'&type=2'
+      })
     },
     bank_pay(){
       this.$router.push({

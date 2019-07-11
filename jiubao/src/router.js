@@ -263,6 +263,18 @@ export default new Router({
       name: 'addBank',
       component: () => import('./views/order/addBank.vue'),
       meta: { title: '绑定银行卡' },
+    },
+    {
+      path: '/setPassword',
+      name: 'setPassword',
+      component: () => import('./views/order/setPassword.vue'),
+      meta: { title: '设置支付密码' },
+    },
+    {
+      path: '/aliPay',
+      name: 'aliPay',
+      component: () => import('./views/order/aliPay.vue'),
+      meta: { title: '支付宝支付' },
     }
   ],
 });

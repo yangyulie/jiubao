@@ -160,5 +160,47 @@ export default {
             method:"post",
             data
         })
+    },
+    delBank(data={}){//解除绑定银行卡
+        return request({
+            url:"/apis/mypay/geilistDelBanks",
+            method:"post",
+            data
+        })
+    },
+    setPassword(data={}){//设置支付密码
+        return request({
+            url:"/apis/mypay/setMM",
+            method:"post",
+            data
+        })
+    },
+    getPhone(data={}){//获取手机号码
+        return request({
+            url:"/apis/mypay/getPhone",
+            method:"post",
+            data
+        })
+    },
+    eduPassword(data={}){//修改支付密码
+        return request({
+            url:"/apis/mypay/againMM",
+            method:"post",
+            data
+        })
+    },
+    ali_pay(data={}){//支付宝支付
+        return request({
+            url:"/apis/mypay/alipayPost",
+            method:"post",
+            data
+        })
+    },
+    wx_pay(data={}){//微信支付
+        return request({
+            url:"/apis/mypay/wxpayPost",
+            method:"post",
+            data
+        })
     }
 }

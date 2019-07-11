@@ -3,7 +3,7 @@
     <headed :tit="'银行卡'" :isShowRight="false" :isClose="false">
     </headed>
     <div class="wrap">
-        <ul v-if="banksList.length>0">
+        <ul v-if="banksList&&banksList.length>0">
             <li v-for="(item,index) in banksList" :key="index">
                 <dl>
                     <dt>
@@ -33,9 +33,9 @@
         </div>
         <div class="pop" v-show="isShowPop" @click="closePop">
             <dl class="popInner">
-                <dt>验证电话号码</dt>
-                <dd>我们已将验证码发送至“{{payInfo.phone}}”,请输入验证码进行验证，验证码{{endTime}}秒内有效。</dd>
-                <dd class="testCode">验证码：<input @click.stop type="number" v-model="testCode"></dd>
+                <dt>验证支付密码</dt>
+                <dd>请输入支付密码</dd>
+                <dd class="testCode">支付密码：<input @click.stop type="number" v-model="testCode"></dd>
                 <dd class="btns">
                     <span>换卡</span>
                     <span @click.stop="testCodeFn">确认</span>
@@ -62,11 +62,13 @@ export default {
       id:0,
       banksList:[],
       payInfo:{},
+      payId:'',
       testCode:'',
       endTime:300,
       timer:null,
       totalPrice:0,
-      isShowPop:false
+      isShowPop:false,
+      payPassword:''
     };
   },
   mounted() {
@@ -82,7 +84,7 @@ export default {
   },
   methods: {
     init() {
-      this.id = this.$route.query.id;
+      this.id = this.$route.query.id?this.$route.query.id:0;
       this.totalPrice = this.$route.query.totalPrice;
       this.getMyBanks();
     },
@@ -94,14 +96,18 @@ export default {
     testCodeFn(){//提交银行卡支付验证
         Indicator.open();
         let questData={
-            codes:this.testCode,
-            orderNumber:this.payInfo.orderNumber,
-            payId:this.payInfo.payId
+            pwd:this.testCode,
+            orderId:this.id,
+            payId:this.payId,
         }
-        Api.setMyBankSubmit(questData).then(res=>{
+        if(this.testCode==''){
+            Toast("请输入支付密码");
+            return;
+        }
+        Api.getMyBankPay(questData).then(res=>{
             Indicator.close();
             if(res.code==1){
-                Toast(res.msg)
+                // Toast(res.msg)
                 setTimeout(()=>{
                     this.$router.replace({
                         path:'/paySuc'
@@ -116,45 +122,58 @@ export default {
         this.isShowPop = false;
     },
     tipsUsed(id,num){
+        this.payId = id
+        if(this.payPassword==0){
+            MessageBox.confirm("尚未设置支付密码，请设置支付密码").then(res=>{
+                this.$router.push({
+                    path:'/setPassword?type=1'
+                })
+            }).catch(res=>{})
+            return;
+        }
         let len = num.length-4
         let _num = num.substr(len,4)
-        let msg = "确定使用银行卡尾号"+_num+"支付"+this.totalPrice+"元？"
+        let msg = "确定使用银行卡尾号"+_num+"支付"+this.totalPrice+"元？";
+        if(this.totalPrice>5000){
+            Toast("支付金额超出银行卡上限")
+            return;
+        }
         MessageBox.confirm(msg).then(res=>{
-            this.used(id)
+            //this.used(id)
+            this.isShowPop = true;
         }).catch(res=>{})
     },
     used(id){//使用银行卡
+        
         Indicator.open();
         let questData={
             orderId:this.id,
-            payId:id
+            payId:id,
+            pwd:this.testCode
         }
-        clearInterval(this.timer);
-        this.endTime = 300;
+        
         Api.getMyBankPay(questData).then(res=>{
             console.log(res)
             Indicator.close();
             if(res.rows.codes=="提交成功"){
-                this.isShowPop = true;
-                this.payInfo = res.rows;
-                this.timer=setInterval(()=>{
-                    this.endTime = this.endTime-1;
-                    if(this.endTime<=0){
-                        clearInterval(this.timer)
-                        this.closePop();
-                    }
-                },1000)
+                this.closePop();
             }else{
                 Toast(res.rows.codes)
             }
         })
     },
     deleteBank(id){//删除银行卡
-
+        MessageBox.confirm("是否确定解除绑定此银行卡？").then(res=>{
+            Api.delBank({Id:id}).then(res=>{
+                Toast(res.msg)
+                this.init()
+            })
+        }).catch(res=>{})
     },
     getMyBanks(){
         Api.getMyBanks().then(res=>{
-            this.banksList = res.rows
+            this.banksList = res.rows;
+            this.payPassword=res.usm
         })
     },
     //...mapActions(["setData"])
@@ -208,7 +227,7 @@ export default {
 .pop{
     position: fixed; background-color: rgba(0, 0, 0, .75); display: flex; justify-content: flex-start; align-items: flex-end; top: 0; left: 0; width: 100%; height: 100%;
     .popInner{
-        background-color: #fff; padding: 35px 30px 280px; color: #929292; font-size: 24px; line-height: 36px;
+        background-color: #fff; padding: 35px 30px 280px; color: #929292; font-size: 24px; line-height: 36px; width: 100%;
         dt{
             color: #313131; line-height: 26px; margin-bottom: 35px;
         }

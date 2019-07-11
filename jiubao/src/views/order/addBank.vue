@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <headed :tit="'新建收货地址'" :isShowRight="true" :isClose="false">
+    <headed :tit="'绑定银行卡'" :isShowRight="true" :isClose="false">
         <span @click="save">保存</span>
     </headed>
     <div class="wrap">
@@ -69,7 +69,7 @@
 import Api from "@/api/order.js";
 import headed from "@/components/headed.vue";
 import districts from "@/assets/districts.json";
-import { Indicator ,Popup ,Toast,Picker  } from 'mint-ui';
+import { Indicator ,Popup ,Toast,Picker,MessageBox  } from 'mint-ui';
 import { mapActions, mapState } from "vuex";
 import { setTimeout } from 'timers';
 export default {
@@ -158,8 +158,24 @@ export default {
         Api.setBindBankSubmit(questData).then(res=>{
             Indicator.close();
             if(res.code==1){
-                Toast(res.msg)
-                
+                // Toast(res.msg)
+                if(res.row==0){
+                    MessageBox({
+                        title: '提示',
+                        message: '您还没有设置支付密码，是否立即设置?',
+                        showCancelButton: true,
+                        confirmButtonText:"立即设置",
+                        cancelButtonText:"稍候设置"
+                    }).then(res=>{
+                        this.$router.replace({
+                            path:'/setPassword?type=1'
+                        })
+                    }).catch(res=>{
+                        this.$router.go(-1)
+                    })
+                }else{
+                    this.$router.go(-1)
+                }
             }else{
                 Toast(res.msg)
             }
