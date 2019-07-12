@@ -5,7 +5,7 @@
       <mt-swipe v-if="adList.length>0" :auto="4000" continuous>
         <mt-swipe-item v-for="(item,index) in adList" :key="index">
           <router-link :to="item.urls">
-            <img :src="item.picurls" alt>
+            <img v-lazy="item.picurls" alt>
             <p>{{item.remarks}}</p>
           </router-link>
         </mt-swipe-item>
@@ -14,7 +14,7 @@
     <ul class="classly">
       <li v-for="(item,index) in classList" :key="index">
         <router-link :to="item.urls">
-          <img :src="item.picurls" alt="">
+          <img v-lazy="item.picurls" alt="">
           <p>{{item.name}}</p>
         </router-link>
       </li>
@@ -27,7 +27,7 @@
         <dd class="pro">
           <div class="list" v-for="(i,idx) in actList" :key="idx">
             <router-link :to="i.urls">
-              <img class="proImg" :src="i.picurls" alt>
+              <img class="proImg" v-lazy="i.picurls" alt>
             </router-link>
           </div>
         </dd>
@@ -39,7 +39,7 @@
           <div><img src="@/assets/imgs/icon_11.png" alt=""></div>
           <p>
             <router-link :to="i.urls" v-for="(i,idx) in brandListAd" :key="idx">
-              <img :src="i.picurls" alt>
+              <img v-lazy="i.picurls" alt>
             </router-link>
           </p>
         </dt>
@@ -48,7 +48,7 @@
             <router-link :to="i.urls">
               <p class="name">{{i.name}}</p>
               <p class="remarks">{{i.remarks}}</p>
-              <img class="proImg" :src="i.picurls" alt>
+              <img class="proImg" v-lazy="i.picurls" alt>
             </router-link>
           </div>
         </dd>
@@ -59,14 +59,14 @@
         <dt class="tit">
           <div><router-link to="/class?typeId=0">{{recommendList.name}} <span></span> </router-link></div>
           <router-link :to="recommendList.urls">
-            <img :src="recommendList.urls" v-if="recommendList.urls!='#'" alt>
+            <img v-lazy="recommendList.urls" v-if="recommendList.urls!='#'" alt>
             <img src="@/assets/imgs/pic/pic_01.jpg" v-else alt>
           </router-link>
         </dt>
         <dd class="pro">
           <div class="list" v-for="(i,idx) in recommendList.data" :key="idx">
             <router-link :to="'/detail?id='+i.Id">
-              <img class="proImg" :src="i.purls" alt>
+              <img class="proImg" v-lazy="i.purls" alt>
               <proTag :is_now="i.indexs" ></proTag>
               <p class="name">{{i.name}}</p>
               <div class="norms">
@@ -90,12 +90,12 @@
       <dl v-for="(item,index) in proList" :key="index" v-if="item.rows.length>0">
         <dt class="tit">
           <div><router-link :to="'/class?typeId='+item.typeId">{{item.typeName}} <span></span> </router-link></div>
-          <router-link :to="'/class?typeId='+item.typeId"><img :src="item.picurls" alt></router-link>
+          <router-link :to="'/class?typeId='+item.typeId"><img v-lazy="item.picurls" alt></router-link>
         </dt>
         <dd v-if="item.rows.length>0"  class="pro">
           <div class="list" v-for="(i,idx) in item.rows" :key="idx">
             <router-link :to="'/detail?id='+i.Id">
-              <img class="proImg" :src="i.purls" alt>
+              <img class="proImg" v-lazy="i.purls" alt>
               <proTag :is_now="i.indexs" ></proTag>
               <p class="name">{{i.name}}</p>
               <div class="norms">

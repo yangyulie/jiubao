@@ -18,12 +18,12 @@ const externals = {
 const cdn = {
   // 开发环境
   dev: {
-    css: ['https://unpkg.com/mint-ui/lib/style.css'],
+    // css: ['https://unpkg.com/mint-ui/lib/style.css'],
     js: []
   },
   // 生产环境
   build: {
-    css: ['https://unpkg.com/mint-ui/lib/style.css'],
+    // css: ['https://unpkg.com/mint-ui/lib/style.css'],
     js: [
       'https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.min.js',
       'https://cdn.jsdelivr.net/npm/vue-router@3.0.1/dist/vue-router.min.js',

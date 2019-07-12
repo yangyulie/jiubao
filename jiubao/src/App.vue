@@ -4,6 +4,7 @@
   </div>
 </template>
 <style lang="less">
+@import './assets/css/mint-ui.css';
 @import './assets/css/common.less';
 </style>
 <style lang="less">
