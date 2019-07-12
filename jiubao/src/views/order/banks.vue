@@ -110,7 +110,7 @@ export default {
                 // Toast(res.msg)
                 setTimeout(()=>{
                     this.$router.replace({
-                        path:'/paySuc'
+                        path:'/paySuc?orderId='+this.id
                     })
                 },2000)
             }else{

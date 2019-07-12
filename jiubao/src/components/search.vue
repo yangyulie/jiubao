@@ -30,6 +30,10 @@ export default {
     },
     goSearch(){
       let shearchText = this.shearchText;
+      if(shearchText=='?test'){
+        location.href = location.href.replace('#','?test#');
+        return;
+      }
       if(shearchText==""){
         this.closeToast()
         this.toastObj = Toast('搜索内容不能为空');

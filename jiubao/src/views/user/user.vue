@@ -143,12 +143,12 @@ export default {
                     url:"/userInfo"
                 },
                 {
-                    img:require("@/assets/imgs/icon_34.png"),
+                    img:require("@/assets/imgs/icon_50.png"),
                     name:"管理银行卡",
                     url:"/banks"
                 },
                 {
-                    img:require("@/assets/imgs/icon_34.png"),
+                    img:require("@/assets/imgs/icon_49.png"),
                     name:"找回密码",
                     url:"/setPassword?type=2"
                 }

@@ -202,5 +202,12 @@ export default {
             method:"post",
             data
         })
+    },
+    paySucess(data={}){//支付是否成功
+        return request({
+            url:"/apis/mypay/paySucess",
+            method:"post",
+            data
+        })
     }
 }

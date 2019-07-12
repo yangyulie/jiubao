@@ -69,9 +69,10 @@ export default {
       
       let test = location.href;
       if(/test/.test(test)){
-        this.$router.push({
-          path:'/aliPay?id='+this.Id+'&type=1'
-        })
+        // this.$router.push({
+        //   path:'/aliPay?id='+this.Id+'&type=1'
+        // })
+        location.href='https://m.jiubao519.com/Default/payZfb?Id='+this.Id
       }else{
         Toast("支付宝支付暂未开放")
       }
@@ -79,14 +80,16 @@ export default {
     },
     wx_pay(){
       // Toast("微信支付暂未开放")
-      let test = location.href;
-      if(/test/.test(test)){
-        this.$router.push({
-          path:'/aliPay?id='+this.Id+'&type=2'
-        })
-      }else{
-        Toast("微信支付暂未开放")
-      }
+      location.href='https://m.jiubao519.com/Default/paywx?Id='+this.Id
+      // let test = location.href;
+      // if(/test/.test(test)){
+      //   location.href='https://m.jiubao519.com/Default/paywx?Id='+this.Id
+      //   // this.$router.push({
+      //   //   path:'/aliPay?id='+this.Id+'&type=2'
+      //   // })
+      // }else{
+      //   Toast("微信支付暂未开放")
+      // }
       
     },
     bank_pay(){
@@ -147,7 +150,7 @@ export default {
         if(res.code==1){
           Indicator.close();
           this.$router.replace({
-            path:'/paySuc'
+            path:'/paySuc?orderId='+this.id
           })
         }else{
           Toast(res.msg)
