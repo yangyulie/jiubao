@@ -34,7 +34,7 @@
 // @ is an alias to /src
 import Api from "@/api/user.js";
 import headed from "@/components/headed.vue";
-import { Indicator ,Toast } from 'mint-ui';
+import { Indicator ,Toast,MessageBox } from 'mint-ui';
 import { mapActions, mapState } from "vuex";
 export default {
   components: {
@@ -65,9 +65,8 @@ export default {
       this.getAddressFn();
     },
     goUseAddress(id){
-      this.$router.push({
-          path:'/order?cartIds='+this.cartIds+'&addressId='+ id+'&invoiceId='+ this.invoiceId,
-          replace:true
+      this.$router.replace({
+          path:'/order?cartIds='+this.cartIds+'&addressId='+ id+'&invoiceId='+ this.invoiceId
       })
     },
     defaultAddress(status,id){
@@ -75,11 +74,24 @@ export default {
         Id:id,
         states:status
       }
-      Api.defaultAddress(questData).then(res=>{
-        Toast(res.msg)
-        if(res.code==1){
-          this.init();
+      MessageBox({
+          title:'提示',
+          message:'是否确定删除？',
+          confirmButtonText:'确定',
+          cancelButtonText:'取消',
+          showCancelButton:true
+      }).then(action => {
+        if(action == 'confirm'){
+
+            Api.defaultAddress(questData).then(res=>{
+              Toast(res.msg)
+              if(res.code==1){
+                this.init();
+              }
+            })
+
         }
+        
       })
     },
     edtAddress(obj){

@@ -5,8 +5,8 @@
     </headed>
     <div class="wrap">
         <ul class="lists">
-            <li>
-                <input type="text" v-model="submitData.districts" placeholder="省份、城市、区县" @focus="showPopup">
+            <li @click="showPopup">
+                <input type="text" disabled v-model="submitData.districts" placeholder="省份、城市、区县">
             </li>
             <li>
                 <input type="text" v-model="submitData.address" placeholder="详细地址，如街道、楼牌号等">

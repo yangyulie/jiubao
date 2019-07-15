@@ -3,7 +3,7 @@
     <headed :tit="'提交订单'" :isShowRight="false" :isClose="false">
     </headed>
     <div class="wrap" v-if="isShow">
-        <div class="addressBox" v-if="addressInfo">
+        <div class="addressBox">
             <router-link :to="'/address?cartIds='+submitData.cartIds+'&invoiceId='+submitData.invoiceId" class="notAddress address" v-if="!addressInfo">
                 <span>请选择收货地址</span>
             </router-link>
@@ -16,13 +16,16 @@
             </router-link>
         </div>
         <div class="invoiceBox">
-            <router-link :to="'/invoice?cartIds='+submitData.cartIds+'&AddressId='+submitData.AddressId" class="notAddress address" v-if="isInvoice">
+            <router-link :to="'/invoice?cartIds='+submitData.cartIds+'&AddressId='+submitData.AddressId" class="notAddress address" :class="{isInvoive:invoiceInfo}" v-if="isInvoice" tag="div">
                 <span>发票：</span>
-                <dl v-if="invoiceInfo">
-                    <dt>{{invoiceInfo.CompanyName}}</dt>
-                    <dd>{{invoiceInfo.CompanyNo}}</dd>
-                </dl>
-                <span v-else>请设置开票信息</span>
+                <div v-if="invoiceInfo">
+                    <dl>
+                        <dt>{{invoiceInfo.CompanyName}}</dt>
+                        <dd>{{invoiceInfo.CompanyNo}}</dd>
+                    </dl>
+                    <span @click.stop="cancelInvoice">取消开票</span>
+                </div>
+                <span style="flex:1" v-else>请设置开票信息</span>
             </router-link>
             <router-link  :to="'/invoice?cartIds='+submitData.cartIds+'&AddressId='+submitData.AddressId" class="notAddress address" v-else>
                 <span>本次不开具发票</span>
@@ -157,12 +160,22 @@ export default {
         this.getAddressListFn()
         this.getInvoiceListFn()
     },
+    cancelInvoice(){
+        console.log(3434434)
+        this.invoiceInfo = false;
+        this.urlParam.invoiceId = 0;
+        return;
+    },
     changeFn(){
         this.submitData.ptck = this.allChecked*1
         console.log()
     },
     submitOrder(){
         console.log(this.submitData)
+        if(this.submitData.AddressId+''=="undefined"){
+            Toast("请填写收货地址");
+            return;
+        }
         Indicator.open({
             text: '提交中...',
             spinnerType: 'fading-circle'
@@ -239,6 +252,7 @@ export default {
                 }
             }else{
                 this.addressInfo = false
+                this.submitData.AddressId = 'undefined'
             }
             console.log(1111,res)
         })
@@ -274,10 +288,19 @@ export default {
 @bor:10px solid #f4f8ff;
 .address{
     padding: 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: @bor; font-size: 20px; color: #929292; background-color: #f4f8ff;
+    
     dl{
         flex: 1; margin: 0 20px;
         dt{
             color: #313131; font-size: 24px; padding-bottom: 5px;
+        }
+    }
+}
+.isInvoive{
+    div{
+        flex: 1; margin: 0 0 0 20px; display: flex; justify-content: space-between; align-items: center;
+        span{
+            color: #d81e06;
         }
     }
 }
@@ -286,6 +309,9 @@ export default {
 }
 .address::after{
     content: ''; border: 1px solid #444; border-left: 0; border-bottom: 0; transform: rotate(45deg); width: 10px; height: 10px;
+}
+.isInvoive::after{
+    display: none;
 }
 .isChecked{
     width: 100%; padding: 25px; border-bottom: @bor;

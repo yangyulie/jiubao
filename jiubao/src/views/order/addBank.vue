@@ -5,11 +5,11 @@
     </headed>
     <div class="wrap">
         <ul class="lists">
-            <li class="selectBox">
-                <span>选择银行</span><input type="text" placeholder="选择银行" v-model="bank.acctname" @focus="onShowPopup">
+            <li class="selectBox" @click="onShowPopup">
+                <span>选择银行</span><input type="text" placeholder="选择银行" v-model="bank.acctname" disabled>
             </li>
-            <li class="selectBox">
-                <span>选择卡类型</span><input type="text" v-model="banktype" placeholder="卡类型" @focus="onShowPopupCard">
+            <li class="selectBox" @click="onShowPopupCard">
+                <span>选择卡类型</span><input disabled type="text" v-model="banktype" placeholder="卡类型">
             </li>
             <li>
                 <span>银行卡号</span><input type="number" v-model="submitData.acctno" placeholder="请输入银行卡号">

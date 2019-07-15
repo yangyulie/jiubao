@@ -6,32 +6,32 @@ const PREV_API = '"http://localhost:36742"';
 const BASE_URL = process.env.NODE_ENV === 'production'? '/' : '/'; //配置域名
 // cdn预加载使用
 const externals = {
-  vue: 'Vue',
-  'vue-router': 'VueRouter',
-  vuex: 'Vuex',
-  axios: 'axios',
-  'mint-ui': 'MINT'
+  // vue: 'Vue',
+  // 'vue-router': 'VueRouter',
+  // vuex: 'Vuex',
+  // axios: 'axios',
+  // 'mint-ui': 'MINT'
   //   'js-cookie': 'Cookies',
   //   'nprogress': 'NProgress'
 }
 
-const cdn = {
-  // 开发环境
-  dev: {
-    // css: ['https://unpkg.com/mint-ui/lib/style.css'],
-    js: []
-  },
-  // 生产环境
-  build: {
-    // css: ['https://unpkg.com/mint-ui/lib/style.css'],
-    js: [
-      'https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.min.js',
-      'https://cdn.jsdelivr.net/npm/vue-router@3.0.1/dist/vue-router.min.js',
-      'https://unpkg.com/vuex@3.0.1/dist/vuex.min.js',
-      'https://cdn.jsdelivr.net/npm/axios@0.18.0/dist/axios.min.js',
-      'https://unpkg.com/mint-ui/lib/index.js'
-    ]
-  }
+ const cdn = {
+//   // 开发环境
+//   dev: {
+//     // css: ['https://unpkg.com/mint-ui/lib/style.css'],
+//     js: []
+//   },
+//   // 生产环境
+//   build: {
+//     // css: ['https://unpkg.com/mint-ui/lib/style.css'],
+//     js: [
+//       'https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.min.js',
+//       'https://cdn.jsdelivr.net/npm/vue-router@3.0.1/dist/vue-router.min.js',
+//       'https://unpkg.com/vuex@3.0.1/dist/vuex.min.js',
+//       'https://cdn.jsdelivr.net/npm/axios@0.18.0/dist/axios.min.js',
+//       'https://unpkg.com/mint-ui/lib/index.js'
+//     ]
+//   }
 }
 module.exports = {
   publicPath: './',
@@ -64,15 +64,15 @@ module.exports = {
     /**
      * 添加CDN参数到htmlWebpackPlugin配置中， 详见public/index.html 修改
      */
-    config.plugin('html').tap(args => {
-      if (process.env.NODE_ENV === 'production') {
-        args[0].cdn = cdn.build
-      }
-      if (process.env.NODE_ENV === 'development') {
-        args[0].cdn = cdn.dev
-      }
-      return args
-    })
+    // config.plugin('html').tap(args => {
+    //   if (process.env.NODE_ENV === 'production') {
+    //     args[0].cdn = cdn.build
+    //   }
+    //   if (process.env.NODE_ENV === 'development') {
+    //     args[0].cdn = cdn.dev
+    //   }
+    //   return args
+    // })
 
     // svg loader
     // const svgRule = config.module.rule('svg') // 找到svg-loader

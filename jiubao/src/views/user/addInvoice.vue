@@ -12,16 +12,16 @@
                 <span>＊纳税人识别号</span><input type="text" v-model="submitData.CompanyNo" placeholder="或统一社会信用代码">
             </li>
             <li>
-                <span>公司地址</span><input type="text" v-model="submitData.linkName" placeholder="请输入公司地址">
+                <span>公司地址</span><input type="text" v-model="submitData.address" placeholder="请输入公司地址">
             </li>
             <li>
-                <span>联系电话</span><input type="number" v-model="submitData.Phone" placeholder="请输入联系电话">
+                <span>联系电话</span><input type="number" v-model="submitData.tel" placeholder="请输入联系电话">
             </li>
             <li>
-                <span>开户银行</span><input type="text" v-model="submitData.Phone" placeholder="请输入公司开户银行">
+                <span>开户银行</span><input type="text" v-model="submitData.bankName" placeholder="请输入公司开户银行">
             </li>
             <li>
-                <span>银行账号</span><input type="number" v-model="submitData.Phone" placeholder="请输入银行账号">
+                <span>银行账号</span><input type="number" v-model="submitData.bankNo" placeholder="请输入银行账号">
             </li>
         </ul>
         <label :class="{show:allChecked}" class="isChecked"><span><img src="@/assets/imgs/icon_15.png" alt=""></span><input type="checkbox" v-model="allChecked">设为默认发票信息</label>
