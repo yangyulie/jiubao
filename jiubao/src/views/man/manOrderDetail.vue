@@ -20,13 +20,28 @@
                     </p>
                     <span>{{datas.orderactionName}}</span>
                 </dt>
-                <dd v-for="(item,index) in datas.shopcart.shopList" :key="index">
+                <dd v-for="(item,index) in datas.shopcart.shopList" :key="index" :class="{allProTop:item.tcList&&item.tcList.length>0}">
                     <img :src="item.picurls" alt="">
                     <dl>
                         <dt>{{item.name}}</dt>
                         <dd class="gray">{{item.jhl}} x {{item.guige}}</dd>
                         <dd class="price"><span>￥{{item.price}}</span><span> x {{item.Number}}</span></dd>
                     </dl>
+                    <div v-if="item.tcList&&item.tcList.length>0" class="allPro">
+                        <dl>
+                            <dt><span>{{item.name}}套餐</span> <span>￥{{item.price}}</span><span> x {{item.Number}}</span></dt>
+                            <dd v-for="(i,idx) in item.tcList" :key="idx">
+                                <div>
+                                    <img :src="i.picurls" alt="">
+                                    <dl>
+                                        <dt>{{i.name}}</dt>
+                                        <dd class="gray">{{item.jhl}} x {{i.guige}}</dd>
+                                        <dd class="price"><span>￥{{i.price}}</span><span> x {{i.number}}</span></dd>
+                                    </dl>
+                                </div>
+                            </dd>
+                        </dl>
+                    </div>
                 </dd>
             </dl>
         </div>
@@ -214,7 +229,7 @@ export default {
         >dd{
             display: flex; justify-content: flex-start; align-items: flex-start; font-size: 18px; color: #313131; padding: 25px 20px 0; flex-wrap: wrap;
             img{
-                width: 132px; margin-right: 27px;
+                width: 100px; margin-right: 27px;
             }
             dl{ 
                 width: 400px; padding-top: 20px;

@@ -72,7 +72,11 @@ export default {
         // this.$router.push({
         //   path:'/aliPay?id='+this.Id+'&type=1'
         // })
-        location.href='https://m.jiubao519.com/Default/payZfb?Id='+this.Id
+        //location.href='https://m.jiubao519.com/Default/payZfb?Id='+this.Id
+        window.location = "jiubao519://host/payZfb?Id="+this.Id; 
+        // Api.ali_pay({orderId:this.Id}).then(res=>{
+        //   console.log(res,999)
+        // })
       }else{
         Toast("支付宝支付暂未开放")
       }

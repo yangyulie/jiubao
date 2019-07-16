@@ -33,7 +33,7 @@
         <div class="rightList secreenHei" ref="proList"  v-show="isShowProList">
             <div ref="proListInner" class="proListInner">
                 <ul class="list" v-if="proList.length>0">
-                    <router-link tag="li" :to="'/detail?id='+item.Id" v-for="(item,index) in proList" :key="index">
+                    <router-link tag="li" :to="'/manDetail?id='+item.Id+'&cId='+addCarData.cId" v-for="(item,index) in proList" :key="index">
                         <img class="listProPic" :src="item.purls" alt="">
                         <dl>
                             <dt>{{item.name}}</dt>

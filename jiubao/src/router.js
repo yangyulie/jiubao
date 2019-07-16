@@ -275,6 +275,12 @@ export default new Router({
       name: 'aliPay',
       component: () => import('./views/order/aliPay.vue'),
       meta: { title: '支付宝支付' },
+    },
+    {
+      path: '/manDetail',
+      name: 'manDetail',
+      component: () => import('./views/man/manDetail.vue'),
+      meta: { title: '产品详情' },
     }
   ],
 });

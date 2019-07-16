@@ -67,14 +67,14 @@
                     </dl>
                     <div v-if="item.tcList&&item.tcList.length>0" class="allPro">
                         <dl>
-                            <dt><span>{{item.name}}套餐</span> <span>￥{{item.price}}</span><span> x {{item.Number}}</span></dt>
+                            <dt><span>{{item.name}}套餐</span> <span class="red">￥{{item.price}}</span><span> x {{item.Number}}</span></dt>
                             <dd v-for="(i,idx) in item.tcList" :key="idx">
                                 <div>
                                     <img :src="i.picurls" alt="">
                                     <dl>
                                         <dt>{{i.name}}</dt>
                                         <dd class="gray">{{item.jhl}} x {{i.guige}}</dd>
-                                        <dd class="price"><span>￥{{item.price}}</span><span> x {{item.Number}}</span></dd>
+                                        <dd class="price"><span>￥{{i.price}}</span><span> x {{item.Number}}</span></dd>
                                     </dl>
                                 </div>
                             </dd>
@@ -367,5 +367,8 @@ export default {
 }
 .price{ 
     display: flex; justify-content: space-between; align-items: center;
+}
+.red{
+    color: #d81e06;
 }
 </style>
