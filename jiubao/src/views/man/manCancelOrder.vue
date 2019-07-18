@@ -10,6 +10,7 @@
                 <textarea name="" v-model="value" placeholder="请填写备注" id="" cols="30" rows="10"></textarea>
             </dd>
         </dl>
+        <p class="red tipsRed" v-if="datas.rows.confirmStr.length>0">注意：{{datas.rows.confirmStr}}</p>
         <div class="submitBox">
             <button @click="submitPay">提交</button>
         </div>
@@ -23,7 +24,7 @@
 import Api from "@/api/man.js";
 import foot from "@/components/footMan.vue";
 import headed from "@/components/headed.vue";
-import { Indicator ,Toast } from 'mint-ui';
+import { Indicator ,Toast,MessageBox } from 'mint-ui';
 import { mapActions, mapState } from "vuex";
 export default {
   components: {
@@ -64,6 +65,20 @@ export default {
           }
         })
     },
+    submitFn(questData){
+      Api.submitOrderStatus(questData).then(res=>{
+        Toast(res.msg)
+        if(res.code==1){
+          this.$router.push({
+              path:'/man'
+          })
+        }else{
+          //Toast(res.msg)
+        }
+        
+        console.log(345,res)
+      })
+    },
     submitPay(){
         // if(!this.value){
         //     Toast("请填写备注")
@@ -71,16 +86,14 @@ export default {
         // }
         let questData=this.questData;
         questData["Remarks"] = this.value;
-        Api.submitOrderStatus(questData).then(res=>{
-            Toast(res.msg)
-            if(res.code==1){
-                this.$router.push({
-                    path:'/man'
-                })
-            }
-            
-            console.log(345,res)
-        })
+        let str = this.datas.rows.confirmStr;
+        if(str.length>0){
+          MessageBox.confirm(str).then(res=>{
+            this.submitFn(questData)
+          }).catch(res=>{})
+        }else{
+          this.submitFn(questData)
+        }
     },
     //...mapActions(["setData"])
   },
@@ -113,6 +126,12 @@ export default {
     }
     .submitBox{
         margin-top: 100px;
+    }
+    .tipsRed{
+      padding: 15px 25px; font-size: 24px;
+    }
+    .red{
+      color: #f00;
     }
 }
 </style>

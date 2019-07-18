@@ -97,6 +97,10 @@ export default {
       
     },
     bank_pay(){
+      if(this.datas.total*1>5000){
+        Toast("支付金额超出银行卡上限5000元")
+        return;
+      }
       this.$router.push({
         path:'/banks?id='+this.Id+'&totalPrice='+this.datas.total
       })
