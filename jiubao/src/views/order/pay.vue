@@ -154,7 +154,7 @@ export default {
         if(res.code==1){
           Indicator.close();
           this.$router.replace({
-            path:'/paySuc?orderId='+this.id
+            path:'/paySuc?orderId='+this.Id
           })
         }else{
           Toast(res.msg)

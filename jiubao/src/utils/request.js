@@ -24,6 +24,7 @@ service.interceptors.request.use(
     error => {
         // 这里处理一些请求出错的情况
         const data = error.response.data
+        Indicator.close();
         if (data.code === -11) {
             window.location.hash = '#/login'
             window.location.reload()
