@@ -255,11 +255,16 @@ export default {
           // this.tcId = -1;
           let min = res.data.stmList[0].price;
           let max = res.data.stmList[0].price;
+          
           for(let i=0;i<res.data.stmList.length;i++){
             console.log(i)
+            if(!this.token){
+              res.data.stmList[i].price = res.data.price;
+            }
             if(res.data.stmList[i].Id==this.tcId){
               this.getTC(res.data.stmList[i])
             }
+            
             if(res.data.stmList[i].price*1<min){
               min=res.data.stmList[i].price
             }

@@ -408,15 +408,16 @@ export default {
         let scrollHei = proListInnerHei-this.scrollData.proListHei-this.scrollData.scrollBottom;
         let sTop = this.scrollData.proList.scrollTop;
         if(scrollHei<=sTop&&this.scrollData.isQuest){
-            console.log(5555)
             this.questData.page = this.questData.page+1;
+            console.log(this.questData.page)
             this.scrollData.isQuest = false;
             this.getProList();
         }
     },
     getTC(){
         this.questData = {
-            tcId:1
+            tcId:1,
+            page:1
         }
         this.isSecClass = true;
         this.isShowProList = true;

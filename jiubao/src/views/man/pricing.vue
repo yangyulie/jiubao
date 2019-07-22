@@ -3,12 +3,24 @@
     <headed :tit="'订单核价'" :isShowRight="false" :isClose="false">
     </headed>
     <div class="wrap secreenHei" v-if="isShow">
+        <div class="msg" v-if="states==1">
+            <h2>提交审核留言</h2>
+            <textarea name="" id="" placeholder="审核留言" v-model="message" cols="30" rows="10"></textarea>
+        </div>
+        <div class="msg" v-if="states==2&&usermsgList">
+            <h2>业务员审核留言</h2>
+            <ul>
+                <li><span>业务员</span>： {{usermsgList.userId}}</li>
+                <li><span>留言内容</span>： {{usermsgList.mmessage}}</li>
+                <li><span>留言时间</span>： {{usermsgList.addtime}}</li>
+            </ul>
+        </div>
         <div class="proListBox">
             <dl class="prolist">
                 <dd v-for="(item,index) in datas" :key="index">
                     <img :src="item.purls" alt="">
                     <dl>
-                        <dt>{{item.name}}</dt>
+                        <dt :class="{red:item.boolAudit}">{{item.name}}</dt>
                         <dd class="gray">{{item.jhl}} x {{item.guige}}</dd>
                         <dd class="price"><span>￥{{item.price}}</span><span> x {{item.Number}}</span></dd>
                         <dd class="totalS">小计：<span>￥{{item.total}}</span></dd>
@@ -28,6 +40,8 @@
             <div class="totalBox">
             总计：￥<span>{{total}}</span>
             </div>
+            <!-- <button v-if="states==1" @click="show">提交留言</button>
+            <button v-if="states==2">查看留言</button> -->
             <button @click="goOrder">审核通过</button>
         </div>
     </div>
@@ -52,6 +66,9 @@ export default {
     return {
       datas:{},
       isShow:false,
+      states:0,
+      message:'',
+      usermsgList:{},
     };
   },
   mounted() {
@@ -77,7 +94,7 @@ export default {
     },
     goOrder(){
         MessageBox.confirm("确认核价通过？").then(res=>{
-            Api.setPricing({Id:this.id}).then(res=>{
+            Api.setPricing({Id:this.id,message:this.message}).then(res=>{
                 if(res.code==1){
                     this.$router.go(-1)
                 }else{
@@ -113,7 +130,9 @@ export default {
             Indicator.close();
             if(res.code==1){
                 this.datas = res.rows;
+                this.usermsgList = res.usermsgList;
                 this.isShow = true;
+                this.states = res.states
             }
         })
       
@@ -136,6 +155,27 @@ export default {
 @bor:10px solid #f4f8ff;
 .wrap{
     display: flex; flex-direction: column;
+}
+.msg{
+    padding: 25px; border-bottom: @bor;
+    h2{
+        margin-bottom: 15px;
+    }
+    textarea{
+        border: 1px solid #ccc; outline: none; resize: none; width: 100%; padding: 10px; font-size: 20px; height: 100px;
+    }
+    ul{
+        font-size: 20px;
+        li{
+            display: flex; justify-content: flex-start; align-items: center; line-height: 36px;
+            span{
+                width: 80px;
+            }
+        }
+    }
+}
+.red{
+    color: #d81e06;
 }
 .address{
     padding: 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: @bor; font-size: 20px; color: #929292; background-color: #f4f8ff;

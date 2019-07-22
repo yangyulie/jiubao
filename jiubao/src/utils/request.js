@@ -53,6 +53,7 @@ service.interceptors.response.use(
     },
     error => {
         console.log(error,8080)
+        questTotal = 0;
         Indicator.close();
         Toast("请求数据失败，请稍候再试!")
         // 这里处理一些response 出错时的逻辑

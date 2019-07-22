@@ -3,6 +3,14 @@
     <headed :tit="datas.rows.stName" :isShowRight="false" :isClose="false">
     </headed>
     <div class="wrap">
+        <div class="msg" v-if="datas.rows.usermsgList">
+            <h2>业务员审核留言</h2>
+            <ul>
+                <li><span>业务员</span>： {{datas.rows.usermsgList.userId}}</li>
+                <li><span>留言内容</span>： {{datas.rows.usermsgList.mmessage}}</li>
+                <li><span>留言时间</span>： {{datas.rows.usermsgList.addtime}}</li>
+            </ul>
+        </div>
         <dl class="list">
             <dd>支付方式：{{datas.rows.payName}}</dd>
             <dt>备注*：</dt>
@@ -106,6 +114,24 @@ export default {
 <style lang='less' scoped>
 @bor:10px solid #f4f8ff;
 .wrap{
+  .msg{
+    padding: 25px; border-bottom: @bor;
+    h2{
+        margin-bottom: 15px;
+    }
+    textarea{
+        border: 1px solid #ccc; outline: none; resize: none; width: 100%; padding: 10px; font-size: 20px; height: 100px;
+    }
+    ul{
+        font-size: 20px;
+        li{
+            display: flex; justify-content: flex-start; align-items: center; line-height: 36px;
+            span{
+                width: 80px;
+            }
+        }
+    }
+  }
     .list{
         border-bottom: @bor; padding: 25px;
         dt{

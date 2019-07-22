@@ -58,10 +58,15 @@
       <dl>
         <dt class="tit">
           <div><router-link to="/class?typeId=0">{{recommendList.name}} <span></span> </router-link></div>
-          <router-link :to="recommendList.urls">
+          <!-- <router-link :to="recommendList.urls">
             <img v-lazy="recommendList.urls" v-if="recommendList.urls!='#'" alt>
             <img src="@/assets/imgs/pic/pic_01.jpg" v-else alt>
-          </router-link>
+          </router-link> -->
+          <p>
+            <router-link :to="i.urls" v-for="(i,idx) in adRecommend" :key="idx">
+              <img v-lazy="i.picurls" alt>
+            </router-link>
+          </p>
         </dt>
         <dd class="pro">
           <div class="list" v-for="(i,idx) in recommendList.data" :key="idx">
@@ -115,7 +120,8 @@
         </dd>
       </dl>
     </div>
-    <foot :is_now="0"></foot>
+    <foot :is_now="0" v-if="loginType!=2"></foot>
+    <footMan :is_now="0" v-else></footMan>
   </div>
 </template>
 
@@ -123,6 +129,7 @@
 // @ is an alias to /src
 import Api from "@/api/index.js";
 import foot from "@/components/foot.vue";
+import footMan from "@/components/footMan.vue";
 import search from "@/components/search.vue";
 import proTag from "@/components/proTags.vue";
 import { Indicator ,Toast } from 'mint-ui';
@@ -130,6 +137,7 @@ import { mapActions, mapState } from "vuex";
 export default {
   components: {
     foot,
+    footMan,
     proTag,
     search
   },
@@ -143,6 +151,7 @@ export default {
       brandList:[],
       brandListAd:[],
       adRecommend:[],
+      loginType:1,
       token:'',
       addCarData:{
         Id:"",
@@ -162,6 +171,7 @@ export default {
     init() {
       let storage=window.localStorage;
       this.token = storage.getItem("token");
+      this.loginType=storage.getItem("loginType"),
       this.getIndex(); //获取商品列表
       this.getAd(); //获取顶部广告
       this.getRecommend(); //获取推荐商品
@@ -241,6 +251,26 @@ export default {
 }
 .adBox {
   height: 355px;
+}
+.recommend{
+  .tit{
+    div::before{
+        display: none;
+      }
+    div{
+      img{
+        width: 92px;
+        margin-bottom: 0;
+      }
+    }
+    p{
+      .flex();
+      justify-content: space-between;
+      a{
+        flex: 1;
+      }
+    }
+  }
 }
 .brand{
   padding: @padding;
@@ -347,7 +377,6 @@ export default {
 }
 .pro{ 
   display: flex;
-  align-items: flex-start;
   justify-content: flex-start;
   flex-wrap: wrap;
 }

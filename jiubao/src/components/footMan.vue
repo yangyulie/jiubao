@@ -39,6 +39,13 @@ export default {
     return {
       list: [
         {
+          name: "首页",
+          url: "/",
+          img: require("@/assets/imgs/navbar/index.png"),
+          actImg: require("@/assets/imgs/navbar/index_1.png"),
+          isLogin:false
+        },
+        {
           name: "我的客户",
           url: "/myUser",
           img: require("@/assets/imgs/navbar/user.png"),

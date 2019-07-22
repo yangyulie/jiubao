@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <headed :tit="'新建收货地址'" :isShowRight="true" :isClose="false">
+    <headed :tit="'新建发票管理'" :isShowRight="true" :isClose="false">
         <span @click="save">保存</span>
     </headed>
     <div class="wrap">
