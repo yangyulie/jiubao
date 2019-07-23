@@ -1,8 +1,13 @@
 <template>
   <div class="home">
-    <headed :tit="titleList[id]" :isShowRight="false" :isClose="false">
+    <headed :tit="companyName" :isShowRight="false" :isClose="false">
     </headed>
     <div class="wrap">
+        <div class="tabListBox">
+            <ol class="tabList" ref="tabList">  
+            <li v-for="(item,index) in tabList" :key="index" :class="{now:id==item.id}" @click="orderTab(item.id)"><span>{{item.name}}</span></li>
+            </ol>
+        </div>
         <ul class="lists" v-if="list&&list.length>0">
             <li v-for="(item,index) in list" :key="index" @click="goOrderDetail(item.Id)">
                 <dl>
@@ -11,8 +16,7 @@
                             <img src="@/assets/imgs/icon_38.png" alt="">
                             {{item.orderId}}
                         </p>
-                        <span v-if="item.paystates">{{item.paystates}}</span>
-                        <span v-else>{{item.payId}}</span>
+                        <span>{{item.orderactionName}}</span>
                     </dt>
                     <dd class="proPicList" v-if="item.shopList&&item.shopList.length>0">
                       <div>
@@ -27,11 +31,11 @@
                     </dd>
                     <dd>
                         <div>
-                            <p>商品数量：{{item.Number}}</p>
-                            支付金额：<span>￥{{item.total}}</span>
-                            <p>商家名称：{{item.companyname}}</p>
+                            <p><span>商品数量：{{item.Number}}</span><span class="red">支付状态：{{item.payId==0?"未支付":item.payName}}</span></p>
+                            <p><span>支付金额：<span>￥{{item.total}}</span></span><span class="red">收款状态：{{!item.paystates?"未收款":"已收款"}}</span></p>
+                            <p><span>商家名称：{{item.companyName}}</span><span>{{item.addtime}}</span></p>
                         </div>
-                        <p>{{item.addtime}}</p>
+                        <!-- <p>{{item.addtime}}</p> -->
                     </dd>
                 </dl>
             </li>
@@ -43,7 +47,7 @@
           </div>
         </div>
     </div>
-    <foot :is_now="2"></foot>
+    <foot :is_now="1"></foot>
   </div>
 </template>
 
@@ -64,18 +68,65 @@ export default {
       titleList:[
           "全部订单","业务待审核","财务核价订单","待支付订单","待确认订单","待出库订单","待收货订单","已完成订单","作废订单","待退货订单","取消订单"
       ],
+      tabList:[
+        {
+          name:"全部",
+          id:0
+        },
+        {
+          name:"业务核价",
+          id:1
+        },
+        {
+          name:"财务核价",
+          id:2
+        },
+        {
+          name:"待付款",
+          id:3
+        },
+        {
+          name:"待确认",
+          id:4
+        },
+        {
+          name:"待出库",
+          id:5
+        },
+        {
+          name:"待收货",
+          id:6
+        },
+        {
+          name:"已完成",
+          id:7
+        },
+        {
+          name:"已作废",
+          id:8
+        },
+        {
+          name:"待退货",
+          id:9
+        }
+      ],
       id:0,
       list:[],
       isQuest:true,
+      companyName:'',
       questData:{
         page:1,
-        sId:0
+        cId:0,
+        Id:0,
+        pageSize:10
       }
     };
   },
   mounted() {
-    this.id = this.$route.query.sId
-    this.questData.sId = this.id
+    // this.id = this.$route.query.cId
+    this.companyName = this.$route.query.companyName
+    console.log(this.companyName,999)
+    this.questData.cId = this.$route.query.cId
     this.init();
     // const {setData} = this;
     // console.log(this.data)
@@ -87,7 +138,7 @@ export default {
   },
   methods: {
     init() {
-      this.getOrderListFn();
+      this.getShopOrderListFn();
       window.addEventListener('scroll',this.pageFn,false)
     },
     showMorePro(idx){
@@ -107,7 +158,7 @@ export default {
       if(sTop>=questHeight&&this.isQuest){
         this.questData.page = this.questData.page*1+1
         this.isQuest = false;
-        this.getOrderListFn();
+        this.getShopOrderListFn();
       }
     },
     getScrollHeight(){  //获取文档内容实际高度
@@ -131,29 +182,37 @@ export default {
         }
         return scrollTop;  
     },
-    getOrderListFn(){
+    orderTab(id){
+      this.questData.page = 1;
+      this.questData.id = id;
+      this.id = id;
+      window.scrollTop = 0;
+      this.getShopOrderListFn();
+    },
+    getShopOrderListFn(){
     console.log(this.id)
-        Api.getManOrderList(this.questData).then(res=>{
+        Api.getShopOrderList(this.questData).then(res=>{
           
-          if(res.code==1){
-            if(res.page==0){
-                return;
-            }
-            if(res.page>=res.currentPage){
-                this.isQuest = false;
-            }else{
-                this.isQuest = true;
-            }
-            if(this.questData.page==1){
-              this.list = res.rows
-            }else{
-              this.list = this.list.concat(res.rows)
-            }
+            if(res.code==1){
+                if(res.page==0){
+                    return;
+                }
+                if(res.page>=res.currentPage){
+                    this.isQuest = false;
+                }else{
+                    this.isQuest = true;
+                }
+                if(this.questData.page==1){
+                this.list = res.rows
+                }else{
+                this.list = this.list.concat(res.rows)
+                }
             
-          }else if(res.code==-12){
+            }else if(res.code==-12){
 
-          }else{
-            Toast(res.msg)
+            }else{
+                this.list =[];
+                // Toast(res.msg)
           }
         })
     },
@@ -167,6 +226,27 @@ export default {
 </script>
 <style lang='less' scoped>
 @bor:15px solid #f4f8ff;
+.red{
+    color: #f00;
+}
+.tabListBox{
+    height: 70px; border-bottom: @bor;
+  }
+  .tabList{
+    display: flex; justify-content: space-between; align-items: center; font-size: 24px; color: #313131; position: fixed; z-index: 9; left: 0; top: 70px; width: 100%; background-color: #fff; overflow-x: scroll;
+    li{
+      flex: 1; display: flex; justify-content: center; align-items: center; white-space: nowrap;
+      span{
+        margin: 10px 15px 0; padding: 0 0 10px; text-align: center;
+      } 
+    }
+    li.now{
+      span{
+        color: #2892fe; border-bottom: 4px solid #2892fe;
+      }
+      
+    }
+  }
 .wrap{
     .proPicList{
       border-bottom: 1px solid #eee;
@@ -204,8 +284,9 @@ export default {
             dd{
                 display: flex; justify-content: space-between; align-items: center; padding: 20px 25px 0;
                 div{
+                    flex: 1;
                     p{
-                        padding-bottom: 8px;
+                        padding-bottom: 8px; display: flex; justify-content: space-between;
                     }
                 }
                 >p{

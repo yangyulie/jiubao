@@ -154,4 +154,11 @@ export default {
             data
         })
     },
+    getShopOrderList(data={}){//获取代下单商家列表
+        return request({
+            url:"/apis/Apiswork/MyCompanyOrder",
+            method:"post",
+            data
+        })
+    },
 }

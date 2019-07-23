@@ -10,7 +10,7 @@
         <ul class="lists">
             <li v-for="(item,index) in list" :key="index">
                 <span class="tag">{{item.Settlement}}</span>
-                <div>
+                <div @click="goOrderList(item)">
                     <p>{{item.companyName}}</p>
                     <span>{{item.address}}</span>
                 </div>
@@ -59,6 +59,12 @@ export default {
     init() {
       this.getMyUserListFn();
       window.addEventListener('scroll',this.pageFn,false)
+    },
+    goOrderList(data){
+      console.log(data,8989)
+      this.$router.push({
+        path:"/manShopOrderList?cId="+data.Id+"&companyName="+data.companyName
+      })
     },
     goSearch(){
       this.questData.skey = this.shearchText;

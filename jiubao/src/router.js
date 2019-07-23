@@ -28,13 +28,13 @@ export default new Router({
       path: '/product',
       name: 'product',
       component: () => import('./views/index/product.vue'),
-      meta: { title: '产品列表' },
+      meta: { title: '产品列表',keepAlive:true },
     },
     {
       path: '/class',
       name: 'class',
       component: () => import('./views/index/class.vue'),
-      meta: { title: '分类列表' },
+      meta: { title: '分类列表',keepAlive:true },
     },
     {
       path: '/car',
@@ -160,7 +160,7 @@ export default new Router({
       path: '/setOrderProList',
       name: 'setOrderProList',
       component: () => import('./views/man/setOrderProList.vue'),
-      meta: { title: '代理下单产品列表' },
+      meta: { title: '代理下单产品列表',keepAlive:true },
     },
     {
       path: '/myCar',
@@ -281,6 +281,12 @@ export default new Router({
       name: 'manDetail',
       component: () => import('./views/man/manDetail.vue'),
       meta: { title: '产品详情' },
-    }
+    },
+    {
+      path: '/manShopOrderList',
+      name: 'manDetail',
+      component: () => import('./views/man/manShopOrderList.vue'),
+      meta: { title: '订单列表' },
+    },
   ],
 });
