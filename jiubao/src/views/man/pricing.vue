@@ -96,7 +96,7 @@ export default {
         MessageBox.confirm("确认核价通过？").then(res=>{
             Api.setPricing({Id:this.id,message:this.message}).then(res=>{
                 if(res.code==1){
-                    this.$router.go(-1)
+                    this.$router.go(-2)
                 }else{
                     Toast(res.msg)
                 }
