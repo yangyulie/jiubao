@@ -210,6 +210,13 @@ export default {
     goCar(){//去购物车
       let isLogin = this.isLogin();
       if(!isLogin) return;
+      let isType = window.localStorage.getItem("loginType");
+      if(isType==2){
+        this.$router.push({
+          path: '/myCar'
+        });
+        return;
+      }
       this.$router.push({
         path: '/car'
       });
@@ -227,18 +234,22 @@ export default {
     addCar(){//加入购物车
       let isLogin = this.isLogin();
       if(!isLogin) return;
-      
-      if(this.datas.setmealBool&&!this.tcId){
-        this.selectBale();
+      let isType = window.localStorage.getItem("loginType");
+      if(isType==2){
+        Toast("业务员只能去代理下单处加入购物车");
         return;
       }
+      // if(this.datas.setmealBool&&!this.tcId){
+      //   this.selectBale();
+      //   return;
+      // }
       Indicator.open({
         text: '加载中...',
         spinnerType: 'fading-circle'
       });
       let addCarData={};
       addCarData.Id=this.id;
-      addCarData.tcId = this.tcId;
+      addCarData.tcId = this.tcId||0;
       addCarData.Number = this.number;
       Api.addCarFn(addCarData).then(res=>{
         Indicator.close();
@@ -257,7 +268,6 @@ export default {
           let max = res.data.stmList[0].price;
           
           for(let i=0;i<res.data.stmList.length;i++){
-            console.log(i)
             if(!this.token){
               res.data.stmList[i].price = res.data.price;
             }

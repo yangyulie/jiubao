@@ -18,7 +18,7 @@
             </li>
         </ul>
     </div>
-    <foot :is_now="0"></foot>
+    <foot :is_now="1"></foot>
   </div>
 </template>
 

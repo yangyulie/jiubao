@@ -25,7 +25,7 @@
             <div ref="proListInner" class="proListInner">
                 <div class="notData" v-if="proList.length==0"><img src="@/assets/imgs/not.png" alt=""></div>
                 <ul class="list" v-else>
-                    <router-link tag="li" :to="'/detail?id='+item.Id" v-for="(item,index) in proList" :key="index">
+                    <li @click.stop="goDetail(item.Id,item.tcId)" v-for="(item,index) in proList" :key="index">
                         <img class="listProPic" :src="item.purls" alt="">
                         <dl>
                             <dt>{{item.name}}</dt>
@@ -43,7 +43,7 @@
                                 </div>
                             </dd>
                         </dl>
-                    </router-link>
+                    </li>
                 </ul> 
             </div>
         </div>
@@ -124,6 +124,15 @@ export default {
         this.questData = this.$route.query
         this.getProList();
       
+    },
+    goDetail(id,tcId){
+        let url = '/detail?id='+id;
+        if(tcId){
+            url = '/detail?id='+id+'&tcId='+tcId
+        }
+        this.$router.push({
+            path:url
+        })
     },
     //TODO:搜索功能，筛选功能待完成
     goCar(){//前往购物车列表

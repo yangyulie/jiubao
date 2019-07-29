@@ -29,7 +29,7 @@
             </dd>
         </dl>
     </div>
-    <foot :is_now="2"></foot>
+    <foot :is_now="3"></foot>
   </div>
 </template>
 

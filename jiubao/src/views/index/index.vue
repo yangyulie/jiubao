@@ -70,7 +70,8 @@
         </dt>
         <dd class="pro">
           <div class="list" v-for="(i,idx) in recommendList.data" :key="idx">
-            <router-link :to="'/detail?id='+i.Id">
+             <!-- :to="'/detail?id='+i.Id+'&tcId='+i.tcId" -->
+            <div @click.stop="goDetail(i.Id,i.tcId)"> 
               <img class="proImg" v-lazy="i.purls" alt>
               <proTag :is_now="i.indexs" ></proTag>
               <p class="name">{{i.name}}</p>
@@ -86,7 +87,7 @@
                 </p>
                 
               </div>
-            </router-link>
+            </div>
           </div>
         </dd>
       </dl>
@@ -95,7 +96,12 @@
       <dl v-for="(item,index) in proList" :key="index" v-if="item.rows.length>0">
         <dt class="tit">
           <div><router-link :to="'/class?typeId='+item.typeId">{{item.typeName}} <span></span> </router-link></div>
-          <router-link :to="'/class?typeId='+item.typeId"><img v-lazy="item.picurls" alt></router-link>
+          <p v-if="item.picurls">
+            <router-link v-for="(i,idx) in item.picurls" :key="idx" :to="i.urls"> <!-- :to="'/class?typeId='+item.typeId" -->
+              <img v-lazy="'https://pic.jiubao519.com'+i.picurls" alt>
+            </router-link>
+          </p>
+          
         </dt>
         <dd v-if="item.rows.length>0"  class="pro">
           <div class="list" v-for="(i,idx) in item.rows" :key="idx">
@@ -175,6 +181,15 @@ export default {
       this.getIndex(); //获取商品列表
       this.getAd(); //获取顶部广告
       this.getRecommend(); //获取推荐商品
+    },
+    goDetail(id,tcId){
+      let url = '/detail?id='+id;
+      if(tcId){
+        url = '/detail?id='+id+'&tcId='+tcId
+      }
+      this.$router.push({
+        path:url
+      })
     },
     isLogin(){//判断是否登录
       
@@ -374,6 +389,16 @@ export default {
     background-color: #ff6600;
     margin-right: 15px;
   }
+  p{
+      .flex();
+      justify-content: space-between;
+      a{
+        flex: 1;
+      }
+      a:last-child{
+        margin-left: 5px;
+      }
+    }
 }
 .pro{ 
   display: flex;

@@ -60,7 +60,7 @@
         </div>
         <div class="proListBox" v-if="datas.AcartList&&datas.AcartList.length>0">
             <dl class="prolist otherProlist">
-                <dt>其他商品</dt>
+                <dt>【商品】</dt>
                 <dd v-for="(item,index) in datas.AcartList" :key="index" :class="{allProTop:item.tcList&&item.tcList.length>0}">
                     <img :src="item.picurls" alt="">
                     <dl>
@@ -86,7 +86,7 @@
                 </dd>
             </dl>
             <div class="prolistTotal">
-                <div>其他商品总计： <span>￥{{datas.AcartListSum}}</span></div>
+                <div>商品总计： <span>￥{{datas.AcartListSum}}</span></div>
             </div>
         </div>
         <div class="totalPriceBox">
