@@ -180,35 +180,37 @@ export default {
             text: '提交中...',
             spinnerType: 'fading-circle'
         });
-        Api.submitOrder(this.submitData).then(res=>{
-            Indicator.close();
-            Toast(res.msg)
-            if(res.code==1){
-                MessageBox({
-                    title:'提示',
-                    message:'订单创建成功，是否立即支付？',
-                    confirmButtonText:'立即支付',
-                    cancelButtonText:'提交核价',
-                    showCancelButton:true
-                }).then(action => {
-                    if(action == 'confirm'){
-
+        MessageBox({
+            title:'提示',
+            message:'订单创建成功，是否立即支付？',
+            confirmButtonText:'立即支付',
+            cancelButtonText:'提交核价',
+            showCancelButton:true
+        }).then(action => {
+            Api.submitOrder(this.submitData).then(res=>{
+                Indicator.close();
+                if(action == 'confirm'){
+                    if(res.code==1){
                         this.$router.replace({
                             path:'/pay?id='+res.row
                         })
-
                     }else{
-
+                        Toast(res.msg);
+                    }
+                }else{
+                    if(res.code==1){
                         this.$router.replace({
                             path:'/orderDetail?id='+res.row
                         })
-
+                    }else{
+                        Toast(res.msg);
                     }
-                    
-                })
-            }
-            console.log(123456,res)
+                }
+            })
+            
+            
         })
+        
     },
     getInvoiceListFn(){
         ApiUser.getInvoiceList().then(res=>{

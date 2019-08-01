@@ -89,7 +89,8 @@
                 <router-link tag="button" :to="'/manCancelOrder?id='+id">立即确认</router-link>
             </p>
             <p v-if="datas.states==5">
-                <router-link tag="button" :to="'/manBackOrder?id='+id">退单</router-link>
+                <!-- <router-link tag="button" :to="'/manBackOrder?id='+id">退单</router-link> -->
+                <button @click="confirmGoOrder">退单</button>
                 <button @click="confirmGoOrder">确认出库</button>
             </p>
         </div>
@@ -134,6 +135,8 @@ export default {
         this.getOrderDetailFn();
     },
     confirmGoOrder(){
+        Toast("请登录PC端执行该操作");
+        return;
         Api.submitGoOrder({Id:this.id}).then(res=>{
             console.log(res)
             if(res.code==1){

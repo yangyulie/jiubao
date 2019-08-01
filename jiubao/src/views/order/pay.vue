@@ -7,9 +7,12 @@
             <dt>支付方式</dt>
             <dd class="payMode">
                 <label :class="{show:payMode==item.Id}" class="isChecked" v-for="(item,index) in datas.rows" :key="index">
+                    <p><img :src="item.picurls" alt=""></p>
+                    <div>
+                      <input type="radio" v-model="payMode" :value="item.Id">{{item.payName}}
+                      <div v-if="item.Id==5&&payMode==item.Id" v-html="item.remarks"></div>
+                    </div>
                     <span><img src="@/assets/imgs/icon_15.png" alt=""></span>
-                    <input type="radio" v-model="payMode" :value="item.Id">{{item.payName}}
-                    <div v-show="payMode==5&&item.Id==5" v-html="item.remarks"></div>
                 </label>
             </dd>
         </dl>
@@ -186,9 +189,21 @@ export default {
         }
     }
     .isChecked{
-        width: 100%; flex-wrap: wrap;
-        div{
-          width: 100%; padding-left: 50px;
+        width: 100%; flex-wrap: wrap; display: flex; justify-content: space-between; align-items: center;
+        >p{
+          width: 36px; height: 36px;
+          img{
+            display: inline-block; width: 100%;
+          }
+        }
+        >div{
+          flex: 1; display: flex; justify-content: flex-start; align-items: center; color: #333; font-size: 26px; margin-left: 20px; line-height: 26px;
+          div{
+            color: #929292; font-size: 20px; margin-left: 10px;
+          }
+        }
+        span{
+           margin: 0;
         }
     }
     .payTotal{
