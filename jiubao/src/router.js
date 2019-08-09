@@ -22,7 +22,7 @@ export default new Router({
       path: '/login',
       name: 'login',
       component: () => import('./views/index/login.vue'),
-      meta: { title: '登录' },
+      meta: { title: '登录',keepAlive:true },
     },
     {
       path: '/product',
