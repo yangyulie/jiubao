@@ -288,5 +288,11 @@ export default new Router({
       component: () => import('./views/man/manShopOrderList.vue'),
       meta: { title: '订单列表' },
     },
+    {
+      path: '/agreement',
+      name: 'agreement',
+      component: () => import('./views/index/agreement.vue'),
+      meta: { title: '用户协议' },
+    },
   ],
 });

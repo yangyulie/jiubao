@@ -83,5 +83,12 @@ export default {
             method:"post",
             data
         })
+    },
+    getAgreement(data={}){//获取用户协议
+        return request({
+            url:"/apis/ApisDefault/userXy",
+            method:"post",
+            data
+        })
     }
 }

@@ -189,7 +189,7 @@ export default {
         }
     }
     .isChecked{
-        width: 100%; flex-wrap: wrap; display: flex; justify-content: space-between; align-items: center;
+        width: 100%; flex-wrap: wrap; display: flex; justify-content: space-between; align-items: flex-start;
         >p{
           width: 36px; height: 36px;
           img{
@@ -197,9 +197,9 @@ export default {
           }
         }
         >div{
-          flex: 1; display: flex; justify-content: flex-start; align-items: center; color: #333; font-size: 26px; margin-left: 20px; line-height: 26px;
+          flex: 1; display: flex; justify-content: flex-start; align-items: center; color: #333; font-size: 26px; margin-left: 20px; line-height: 26px; flex-wrap: wrap; 
           div{
-            color: #929292; font-size: 20px; margin-left: 10px;
+            color: #929292; font-size: 20px; line-height: 32px;margin-top: 15px;
           }
         }
         span{

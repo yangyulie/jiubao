@@ -38,6 +38,14 @@
           <input :type="item.type" v-model="item.value" :placeholder="item.tips">
         </li>
       </ul>
+      <div class="userAgreement">
+        <mt-checklist
+          :max="1"
+          v-model="value"
+          :options="options">
+        </mt-checklist>
+        <router-link to="/agreement" class="look">立即查看></router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -46,7 +54,7 @@
 // @ is an alias to /src
 import Api from "@/api/index.js";
 import headed from "@/components/headed.vue";
-import { Toast } from 'mint-ui';
+import { Toast,Checklist  } from 'mint-ui';
 import { mapActions, mapState } from "vuex";
 import { setInterval, clearInterval, setTimeout } from 'timers';
 export default {
@@ -65,6 +73,13 @@ export default {
       countdown:120,//倒计时初始值
       tel:"",
       code:'',
+      value:[],
+      options:[
+        {
+          value:1,
+          label:"《用户协议》"
+        }
+      ],
       formList:[
         {
           isStar:true,
@@ -129,6 +144,7 @@ export default {
       
     },
     submit(){
+      
       let questData = {};
       let isTest = this.formList.every((item,index)=>{
           let isFor = true;
@@ -152,7 +168,12 @@ export default {
         }
         return isFor;
       })
+      
       if(isTest){
+        if(this.value[0]!=1){
+          Toast("必须同意用户协议才可注册");
+          return;
+        }
         Api.register(questData).then(res=>{
           this.closeToast();
           this.toastObj = Toast(res.msg);
@@ -394,5 +415,11 @@ export default {
 
     }
   }
+}
+.userAgreement{
+  font-size: 24px; display: flex; justify-content: space-between; align-items: center; padding-right: 25px;
+}
+.look{
+  color: #2892fe; text-decoration: underline;
 }
 </style>
