@@ -65,13 +65,17 @@ a{
 width: 30px; height: 30px;
 }
 .mint-checkbox-core::after{
-width: 11px; height: 20px; top: 6px; left: 14px;
+width: 11px; height: 20px; top: 0px; left: 8px;
 }
 .mint-checkbox-label{
   margin-left: 12px; font-size: 24px;
 }
 .mint-cell:last-child{
   background: none;
+}
+.mint-checklist.is-limit .mint-checkbox-core:not(:checked){
+  background-color: #26a2ff;
+  border-color: #26a2ff;
 }
 //提示层文字
 .mint-toast-text{ font-size: 24px;}
