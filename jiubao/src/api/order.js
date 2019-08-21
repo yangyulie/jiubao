@@ -209,5 +209,19 @@ export default {
             method:"post",
             data
         })
+    },
+    paySell(data={}){//优惠券购买方式
+        return request({
+            url:"/apis/CouponUser/couponPayInfo",
+            method:"post",
+            data
+        })
+    },
+    buySell(data={}){//优惠券购买
+        return request({
+            url:"/apis/CouponUser/couponPayOrder",
+            method:"post",
+            data
+        })
     }
 }

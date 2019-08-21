@@ -151,6 +151,11 @@ export default {
                     img:require("@/assets/imgs/icon_49.png"),
                     name:"找回密码",
                     url:"/setPassword?type=2"
+                },
+                {
+                    img:require("@/assets/imgs/icon_52.png"),
+                    name:"我的优惠券",
+                    url:"/mySell"
                 }
             ]
         }

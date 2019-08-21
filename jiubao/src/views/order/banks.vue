@@ -86,6 +86,7 @@ export default {
     init() {
       this.id = this.$route.query.id?this.$route.query.id:0;
       this.totalPrice = this.$route.query.totalPrice;
+      this.typeId = this.$route.query.typeId;
       this.getMyBanks();
     },
     goBindBank(id){//绑定银行卡
@@ -99,6 +100,7 @@ export default {
             pwd:this.testCode,
             orderId:this.id,
             payId:this.payId,
+            typeId:this.typeId||""
         }
         if(this.testCode==''){
             Toast("请输入支付密码");

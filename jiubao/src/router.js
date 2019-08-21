@@ -294,5 +294,23 @@ export default new Router({
       component: () => import('./views/index/agreement.vue'),
       meta: { title: '用户协议' },
     },
+    {
+      path: '/mySell',
+      name: 'mySell',
+      component: () => import('./views/user/mySell.vue'),
+      meta: { title: '我的优惠券' },
+    },
+    {
+      path: '/sellCenter',
+      name: 'sellCenter',
+      component: () => import('./views/user/sellCenter.vue'),
+      meta: { title: '优惠券礼包' },
+    },
+    {
+      path: '/paySellPage',
+      name: 'paySellPage',
+      component: () => import('./views/order/paySellPage.vue'),
+      meta: { title: '购买优惠券' },
+    },
   ],
 });

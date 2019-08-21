@@ -97,5 +97,19 @@ export default {
             method:"post",
             data
         })
-    }
+    },
+    getMySellList(data={}){//设置商家信息
+        return request({
+            url:"/apis/CouponUser/Mycoupon",
+            method:"post",
+            data
+        })
+    },
+    getSellCenterList(data={}){//优惠券礼包列表
+        return request({
+            url:"/apis/CouponUser/couponList",
+            method:"post",
+            data
+        })
+    },
 }
