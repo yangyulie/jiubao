@@ -49,7 +49,8 @@
         </div>
         
     </div>
-    <foot :is_now="1"></foot>
+    <foot :is_now="1" v-if="loginType!=2"></foot>
+    <footMan :is_now="1" v-else></footMan>
   </div>
 </template>
 
@@ -57,11 +58,13 @@
 // @ is an alias to /src
 import Api from "@/api/index.js";
 import foot from "@/components/foot.vue";
+import footMan from "@/components/footMan.vue";
 import search from "@/components/search.vue";
 import { Indicator ,Toast } from 'mint-ui';
 import { mapActions, mapState } from "vuex";
 export default {
   components: {
+    footMan,
     foot
   },
   data() {
@@ -78,6 +81,7 @@ export default {
       rightSecClassList:[],
       isShowProList:false,
       isType:false,
+      loginType:1,
       questData:{
           page:1
       },
@@ -122,6 +126,7 @@ export default {
         let storage=window.localStorage;
         this.token = storage.getItem("token");
         this.questData = this.$route.query;
+        this.loginType=storage.getItem("loginType"),
         this.questData.page =1;
         this.getProList();
       

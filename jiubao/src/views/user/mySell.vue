@@ -6,7 +6,7 @@
       <div v-if="list&&list.length>0">
         <ul>
           <li v-for="(item,index) in list" :key="index">
-            <img :src="item.picUrls" alt="">
+            <router-link class="btn" to="/sellCenter" tag="a"><img :src="item.picUrls" alt=""></router-link>
           </li>
         </ul>
         <div class="btnBox">

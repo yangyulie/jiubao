@@ -9,7 +9,7 @@
             支付成功
             <div class="btns">
                 <router-link to="/" replace>继续购物</router-link>
-                <router-link to="/orderList?id=4" replace>查看订单</router-link>
+                <router-link v-if="!typeId" to="/orderList?id=4" replace>查看订单</router-link>
             </div>
             <p class="tips">{{num}}秒后自动返回订单列表</p>
           </div>
@@ -18,7 +18,7 @@
           <div>
             <span><img src="@/assets/imgs/icon_51.png" alt=""></span>
             支付失败
-            <div class="fail">
+            <div class="fail" v-if="!typeId">
                 <router-link to="/orderList?id=3" replace>查看订单重新付款</router-link>
             </div>
             <p class="tips">{{num}}秒后自动返回订单列表</p>
@@ -46,12 +46,14 @@ export default {
     return {
         num:5,
         orderId:'',
+        typeId:'',
         timer:null,
         isSuc:false
     };
   },
   mounted() {
     this.orderId = this.$route.query.orderId;
+    this.typeId = this.$route.query.typeId;
     this.init();
     // const {setData} = this;
     // console.log(this.data)
@@ -64,17 +66,24 @@ export default {
   methods: {
     init() {
       //this.setGoOrderList();
+      
       this.paySucess();
     },
     paySucess(){
-      Api.paySucess({orderId:this.orderId}).then(res=>{
+      let data={
+        orderId:this.orderId
+      }
+      if(this.typeId){
+        data.typeId = this.typeId
+      }
+      Api.paySucess(data).then(res=>{
         if(res.code==1){
           this.isSuc = true;
-          this.setGoOrderList();
+          //this.setGoOrderList();
         }
         if(res.code==0){
           this.isSuc = false;
-          this.setGoOrderList();
+          //this.setGoOrderList();
         }
         if(res.code==-1){
           Toast("订单异常");
@@ -101,6 +110,7 @@ export default {
                       path:'/orderList?id=3'
                   })
                 }
+                timer = null
             }else{
                 this.num = this.num-1;
             }

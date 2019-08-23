@@ -105,10 +105,10 @@ export default {
           if(res.code==1){
             this.datas = res;
             
-            if(res.userFirstOrder||res.userMycoupon.length>0){
+            if(res.userFirstOrder||res.userMycoupon&&res.userMycoupon.length>0){
                 this.isSelectSell = true;
             }
-            if(res.userMycoupon.length>0){
+            if(res.userMycoupon&&res.userMycoupon.length>0){
                 let _this = this;
                 if(this.couponId){
                   let newArr = res.userMycoupon.filter((item,index)=>{
@@ -126,33 +126,11 @@ export default {
     ali_pay(){
       //Toast("支付宝支付暂未开放")
       location.href='https://m.jiubao519.com/Default/payZfb?Id='+this.Id
-      // let test = location.href;
-      // if(/test/.test(test)){
-      //   // this.$router.push({
-      //   //   path:'/aliPay?id='+this.Id+'&type=1'
-      //   // })
-      //   //location.href='https://m.jiubao519.com/Default/payZfb?Id='+this.Id
-      //   window.location = "jiubao519://host/payZfb?Id="+this.Id; 
-      //   // Api.ali_pay({orderId:this.Id}).then(res=>{
-      //   //   console.log(res,999)
-      //   // })
-      // }else{
-      //   Toast("支付宝支付暂未开放")
-      // }
       
     },
     wx_pay(){
       // Toast("微信支付暂未开放")
       location.href='https://m.jiubao519.com/Default/paywx?Id='+this.Id
-      // let test = location.href;
-      // if(/test/.test(test)){
-      //   location.href='https://m.jiubao519.com/Default/paywx?Id='+this.Id
-      //   // this.$router.push({
-      //   //   path:'/aliPay?id='+this.Id+'&type=2'
-      //   // })
-      // }else{
-      //   Toast("微信支付暂未开放")
-      // }
       
     },
     bank_pay(){
@@ -247,7 +225,13 @@ export default {
     // ...mapState(['app','app2',"data"])
     sellPrice:function(){
         let total = 0;
-        total = this.datas.userFirstOrder.Amount*1+this.selectSellObj.Amount*1;
+        if(this.datas.userFirstOrder&&this.datas.userFirstOrder.Amount){
+          total +=this.datas.userFirstOrder.Amount*1
+        }
+        if(this.selectSellObj&&this.selectSellObj.Amount){
+
+          total += this.selectSellObj.Amount*1;
+        }
         return total;
         
     },

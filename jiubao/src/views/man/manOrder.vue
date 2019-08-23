@@ -291,7 +291,13 @@ export default {
     // ...mapState(['app','app2',"data"])
     sellPrice:function(){
         let total = 0;
-        total = this.datas.userFirstOrder.Amount+this.selectSellObj.Amount;
+        if(this.datas.userFirstOrder&&this.datas.userFirstOrder.Amount){
+          total +=this.datas.userFirstOrder.Amount*1
+        }
+        if(this.selectSellObj&&this.selectSellObj.Amount){
+
+          total += this.selectSellObj.Amount*1;
+        }
         return total;
         
     },

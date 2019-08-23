@@ -111,8 +111,9 @@ export default {
             if(res.code==1){
                 // Toast(res.msg)
                 setTimeout(()=>{
+                    let url = this.typeId ? this.typeId:'A01'
                     this.$router.replace({
-                        path:'/paySuc?orderId='+this.id
+                        path:'/paySuc?orderId='+this.id+'&typeId='+url
                     })
                 },2000)
             }else{

@@ -227,8 +227,10 @@ export default {
                 Indicator.close();
                 if(action == 'confirm'){
                     if(res.code==1){
+                        let firstId = this.datas.userFirstOrder&&this.datas.userFirstOrder.Id?this.datas.userFirstOrder.Id:'';
+                        let couponId = this.selectSellObj&&this.selectSellObj.Id?this.selectSellObj.Id:'';
                         this.$router.replace({
-                            path:'/pay?id='+res.row+'&firstId='+this.datas.userFirstOrder.Id+'&couponId='+this.selectSellObj.Id
+                            path:'/pay?id='+res.row+'&firstId='+firstId+'&couponId='+couponId
                         })
                     }else{
                         Toast(res.msg);
@@ -309,10 +311,10 @@ export default {
             if(res.code==1){
                 this.datas = res.rows;
                 this.isShow = true;
-                if(res.rows.userFirstOrder||res.rows.userMycoupon.length>0){
+                if(res.rows.userFirstOrder||res.rows.userMycoupon&&res.rows.userMycoupon.length>0){
                     this.isSelectSell = true;
                 }
-                if(res.rows.userMycoupon.length>0){
+                if(res.rows.userMycoupon&&res.rows.userMycoupon.length>0){
                     this.selectSellObj = res.rows.userMycoupon[0]
                 }
             }
@@ -326,7 +328,13 @@ export default {
     // ...mapState(['app','app2',"data"])
     sellPrice:function(){
         let total = 0;
-        total = this.datas.userFirstOrder.Amount+this.selectSellObj.Amount;
+        if(this.datas.userFirstOrder&&this.datas.userFirstOrder.Amount){
+          total +=this.datas.userFirstOrder.Amount*1
+        }
+        if(this.selectSellObj&&this.selectSellObj.Amount){
+
+          total += this.selectSellObj.Amount*1;
+        }
         return total;
         
     },

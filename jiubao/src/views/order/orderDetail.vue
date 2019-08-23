@@ -172,9 +172,11 @@ export default {
     // ...mapState(['app','app2',"data"])
     sellPrice:function(){
         let total = 0;
-        total = this.datas.orderDiscount.reduce((t,i)=>{
-            return t+i.Amount
-        },0);
+        if(this.datas.orderDiscount&&this.datas.orderDiscount.length>0){
+            total = this.datas.orderDiscount.reduce((t,i)=>{
+                return t+i.Amount
+            },0);
+        }
         return total;
         
     },
