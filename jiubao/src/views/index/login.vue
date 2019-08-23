@@ -17,7 +17,7 @@
               <img src="@/assets/imgs/icon_04.png" alt="">
               <p><input type="number" id="tel" v-model="tel" placeholder="请输入您的手机号"></p>
           </label>
-          <label for="tel">
+          <label for="code">
               <img src="@/assets/imgs/icon_05.png" alt="">
               <p>
                 <input type="number" id="code" v-model="code" placeholder="请输入您的验证码">

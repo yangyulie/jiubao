@@ -54,6 +54,23 @@
                 付款方式：{{datas.payType.payment}} <span class="red">{{datas.payType.Paystates}}</span>
             </dd>
         </dl>
+        <dl class="orderInfo" v-if="isSelectSell">
+            <dt>优惠信息</dt>
+            <dd style="padding-left:0">
+                <div class="sellBox">
+                    <div class="sellNameBox">
+                        <p v-for="(item,index) in datas.orderDiscount" :key="index">
+                            <span>{{item.DiscountName}}</span><br>
+                            <em>减免：{{item.Amount}}元</em>
+                        </p>
+                        <ul>
+                            <li>总减免：-{{sellPrice}}元</li>
+                            <li>减免后订单总额：{{datas.Total}}元</li>
+                        </ul>
+                    </div>
+                </div>
+            </dd>
+        </dl>
         <dl class="orderInfo">
             <dt>开票信息</dt>
             <dd>
@@ -97,6 +114,7 @@ export default {
     return {
       datas:{},
       isShow:false,
+      isSelectSell:false,
       id:0
     };
   },
@@ -140,6 +158,9 @@ export default {
             if(res.code==1){
                 this.datas = res.rows;
                 this.isShow = true;
+                if(res.rows.orderDiscount&&res.rows.orderDiscount.length>0){
+                    this.isSelectSell = true;
+                }
             }
         })
       
@@ -149,13 +170,39 @@ export default {
   },
   computed: {
     // ...mapState(['app','app2',"data"])
-    
+    sellPrice:function(){
+        let total = 0;
+        total = this.datas.orderDiscount.reduce((t,i)=>{
+            return t+i.Amount
+        },0);
+        return total;
+        
+    },
   }
 };
 </script>
 <style lang='less' scoped>
 @bor:10px solid #f4f8ff;
-
+.sellBox{
+    padding: 15px 0;
+    .sellNameBox{
+        p{
+            font-size: 18px; color: #d81e06; line-height: 30px; margin-bottom: 15px;
+            span{
+                font-size: 24px; display: inline-block; height: 43px; line-height: 43px; padding: 0 20px; background-color: #f9dcd8; border-radius: 22px; text-indent: 0; overflow: hidden; max-width: 100%; white-space: nowrap;
+            }
+            em{
+                text-indent: 1em; display: block; font-style: normal;
+            }
+        }
+        ul{
+            font-size: 18px; color: #d81e06; line-height: 30px;
+            li{
+                 text-indent: 1em;
+            }
+        }
+    }
+}
 .address{
     padding: 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: @bor; font-size: 20px; color: #929292; background-color: #f4f8ff;
     dl{

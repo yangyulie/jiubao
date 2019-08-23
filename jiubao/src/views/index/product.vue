@@ -121,7 +121,8 @@ export default {
     init() {
         let storage=window.localStorage;
         this.token = storage.getItem("token");
-        this.questData = this.$route.query
+        this.questData = this.$route.query;
+        this.questData.page =1;
         this.getProList();
       
     },

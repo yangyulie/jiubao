@@ -92,6 +92,23 @@
         <div class="totalPriceBox">
             订单金额总计： <span>￥{{datas.total}}</span>
         </div>
+        <div class="sellBox" v-if="isSelectSell">
+            <div class="sellNameBox">
+                <p v-if="datas.userFirstOrder">
+                    <span>{{datas.userFirstOrder.FirstOrderName}}</span><br>
+                    <em>预计减免：{{datas.userFirstOrder.Amount}}元</em>
+                </p>
+                <p v-if="selectSellObj.Amount">
+                    <span>{{selectSellObj.couponName}}</span><br>
+                    <em>预计减免：{{selectSellObj.Amount}}元</em>
+                </p>
+                <ul>
+                    <li>预计总减免：-{{sellPrice}}元</li>
+                    <li>预计减免后订单总额：{{datas.total-sellPrice}}元</li>
+                </ul>
+            </div>
+        </div>
+        <div class="selectSell" v-if="datas.userMycoupon&&datas.userMycoupon.length>0" @click="showSellList"><span>选择优惠券</span></div>
         <div class="markBox">
             <p>添加订单备注</p>
             <textarea name="" id="" cols="30" rows="10" v-model="submitData.Remarks" placeholder="请您在此添加订单备注"></textarea>
@@ -99,6 +116,13 @@
         <div class="submitBox">
             <button @click="submitOrder">提交订单</button>
         </div>
+    </div>
+    <div class="sellListPop" @click="showSellList" :class="{now:isShowSellList}">
+        <ul>
+            <li v-for="(item,index) in datas.userMycoupon" :key="index" @click="getThisSell(index)">
+                <img :src="item.picurls" alt="">
+            </li>
+        </ul>
     </div>
     <foot :is_now="2"></foot>
   </div>
@@ -127,9 +151,14 @@ export default {
       invoiceInfo:false,
       isInvoice:false,
       payMode:'',
+      isSelectSell:false,
+      selectSellObj:{},
+      isShowSellList:false,
       allChecked:""
     };
   },
+
+
   mounted() {
     this.init();
     
@@ -141,6 +170,7 @@ export default {
   watch:{
     
   },
+  
   methods: {
     init() {
         this.urlParam = this.$route.query;
@@ -159,6 +189,12 @@ export default {
         this.getOrder();
         this.getAddressListFn()
         this.getInvoiceListFn()
+    },
+    getThisSell(idx){
+        this.selectSellObj = this.datas.userMycoupon[idx];
+    },
+    showSellList(){
+        this.isShowSellList = !this.isShowSellList;
     },
     cancelInvoice(){
         console.log(3434434)
@@ -192,7 +228,7 @@ export default {
                 if(action == 'confirm'){
                     if(res.code==1){
                         this.$router.replace({
-                            path:'/pay?id='+res.row
+                            path:'/pay?id='+res.row+'&firstId='+this.datas.userFirstOrder.Id+'&couponId='+this.selectSellObj.Id
                         })
                     }else{
                         Toast(res.msg);
@@ -273,6 +309,12 @@ export default {
             if(res.code==1){
                 this.datas = res.rows;
                 this.isShow = true;
+                if(res.rows.userFirstOrder||res.rows.userMycoupon.length>0){
+                    this.isSelectSell = true;
+                }
+                if(res.rows.userMycoupon.length>0){
+                    this.selectSellObj = res.rows.userMycoupon[0]
+                }
             }
         })
       
@@ -282,12 +324,55 @@ export default {
   },
   computed: {
     // ...mapState(['app','app2',"data"])
-    
+    sellPrice:function(){
+        let total = 0;
+        total = this.datas.userFirstOrder.Amount+this.selectSellObj.Amount;
+        return total;
+        
+    },
   }
 };
 </script>
 <style lang='less' scoped>
 @bor:10px solid #f4f8ff;
+.sellListPop{
+    position: fixed; width: 100%; height: 100vh; background-color: rgba(0, 0, 0, .5); z-index: 10; display: none; justify-content: center; align-items: flex-end; left: 0; top: 0;
+    ul{
+        width: 100%; padding: 20px; display: flex; box-sizing: border-box; justify-content: flex-start; align-items: center; flex-wrap: wrap; max-height: 80vh; overflow-y: auto; background-color: #fff;
+        li{
+            margin-bottom: 20px;
+        }
+    }
+}
+.sellListPop.now{
+    display: flex;
+}
+.sellBox{
+    border-bottom: @bor; padding: 15px 18px;
+    .sellNameBox{
+        p{
+            font-size: 18px; color: #d81e06; line-height: 30px; margin-bottom: 15px;
+            span{
+                font-size: 24px; display: inline-block; height: 43px; line-height: 43px; padding: 0 20px; background-color: #f9dcd8; border-radius: 22px; text-indent: 0;
+            }
+            em{
+                text-indent: 1em; display: block; font-style: normal;
+            }
+        }
+        ul{
+            font-size: 18px; color: #d81e06; line-height: 30px;
+            li{
+                 text-indent: 1em;
+            }
+        }
+    }
+}
+.selectSell{
+    border-bottom: @bor; height: 80px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; font-size: 24px; color: #313131;
+}
+.selectSell::after{
+    content: ''; border: 2px solid #ccc; border-bottom: 0; border-left: 0; transform: rotate(45deg); display: block; width: 20px; height: 20px;
+}
 .address{
     padding: 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: @bor; font-size: 20px; color: #929292; background-color: #f4f8ff;
     
