@@ -17,8 +17,8 @@
             </dd>
         </dl>
         <div class="payTotal">
-            <span v-if="isSelectSell">支付金额： ￥{{datas.total-sellPrice}}元</span>
-            <span v-else>支付金额： ￥{{datas.total}}元</span>
+            <!-- <span v-if="isSelectSell">支付金额： ￥{{datas.total-sellPrice}}元</span> -->
+            <span>订单总金额： ￥{{(datas.total*1).toFixed(2)}}元</span>
         </div>
         <div class="selectSell" v-if="datas.userFirstOrder&&datas.userFirstOrder.length>0" @click="showActList">
             <span style="flex:1">选择优惠活动</span>
@@ -26,7 +26,7 @@
         </div>
         <div class="reduceBox" v-if="selectActObj&&selectActObj.FirstOrderName">
             <p>
-                <em>活动减免：{{selectActObj.Amount}}元</em>
+                <em>活动减免：-{{selectActObj.Amount}}元</em>
             </p>
         </div>
         <div class="selectSell" v-if="datas.userMycoupon&&datas.userMycoupon.length>0" @click="showSellList">
@@ -35,14 +35,14 @@
         </div>
         <div class="reduceBox" v-if="selectSellObj&&selectSellObj.couponName">
             <p>
-                <em>优惠券减免：{{selectSellObj.Amount}}元</em>
+                <em>优惠券减免：-{{selectSellObj.Amount}}元</em>
             </p>
         </div>
         <div class="sellBox" v-if="isSelectSell">
             <div class="sellNameBox">
                 <ul>
-                    <li>总计减免：-{{sellPrice}}元</li>
-                    <li>减免后总计订单金额：{{datas.total-sellPrice}}元</li>
+                    <li>总计减免：-{{sellPrice.toFixed(2)}}元</li>
+                    <li><span class="black">支付金额：{{(datas.total-sellPrice).toFixed(2)}}元</span></li>
                 </ul>
             </div>
         </div>

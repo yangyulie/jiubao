@@ -95,7 +95,7 @@
         </div>
         <div class="reduceBox" v-if="selectActObj&&selectActObj.FirstOrderName">
             <p>
-                <em>预计减免：{{selectActObj.Amount}}元</em>
+                <em>预计减免：-{{selectActObj.Amount}}元</em>
             </p>
         </div>
         <div class="selectSell" v-if="datas.userMycoupon&&datas.userMycoupon.length>0" @click="showSellList">
@@ -104,14 +104,14 @@
         </div>
         <div class="reduceBox" v-if="selectSellObj&&selectSellObj.couponName">
             <p>
-                <em>预计减免：{{selectSellObj.Amount}}元</em>
+                <em>预计减免：-{{selectSellObj.Amount}}元</em>
             </p>
         </div>
         <div class="sellBox" v-if="isSelectSell">
             <div class="sellNameBox">
                 <ul>
                     <li>预计总减免：-{{sellPrice}}元</li>
-                    <li>预计减免后订单总额：{{datas.total-sellPrice}}元</li>
+                    <li><span class="black">预计减免后订单总额：{{datas.total-sellPrice}}元</span></li>
                 </ul>
             </div>
         </div>
