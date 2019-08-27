@@ -192,3 +192,69 @@ span:before{
     }
   }
 }
+@bor:10px solid #f4f8ff;
+.reduceBox{
+  color: #d81e06; font-size: 24px; display: flex; justify-content: flex-end; align-items: center; padding: 20px;border-bottom:@bor;
+  em{
+      font-style:normal; 
+  }
+}
+.sellListPop{
+  position: fixed; width: 100%; height: 100vh; background-color: rgba(0, 0, 0, .5); z-index: 10; display: none; justify-content: center; align-items: flex-end; left: 0; top: 0;
+  ul{
+      width: 100%; padding: 20px; display: flex; box-sizing: border-box; justify-content: flex-start; align-items: center; flex-wrap: wrap; max-height: 80vh; overflow-y: auto; background-color: #fff; min-height: 40vh;
+      li{
+          margin-bottom: 20px; margin-right: 20px; overflow: hidden; display: flex; justify-content: center; align-items: center;
+          span{
+              font-size: 24px; height: 100%; flex: 1; white-space: nowrap; color: #d81e06; border: 2px solid #d81e06; padding: 10px 20px; border-radius: 30px;
+          }
+          
+      }
+      .notUseSell{
+          span{
+              color: #fff; border: 0; height: 58px; box-sizing: border-box;
+          }
+      }
+  }
+}
+.sellListPop.now{
+  display: flex;
+}
+.sellBox{
+  border-bottom: @bor; padding: 15px 18px;
+  .sellNameBox{
+      p{
+          font-size: 18px; color: #d81e06; line-height: 30px; margin-bottom: 15px;
+          span{
+              font-size: 24px; display: inline-block; height: 43px; line-height: 43px; padding: 0 20px; background-color: #f9dcd8; border-radius: 22px; text-indent: 0;
+          }
+          em{
+              text-indent: 1em; display: block; font-style: normal;
+          }
+      }
+      ul{
+          font-size: 18px; color: #d81e06; line-height: 30px;
+          li{
+               text-indent: 1em; text-align: right;
+          }
+      }
+  }
+}
+.selectSell{
+  border-bottom: @bor; height: 80px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; font-size: 24px; color: #313131;
+  .sellName{
+      font-size: 24px; display: inline-block; height: 43px; line-height: 43px; padding: 0 20px; background-color: #f9dcd8; border-radius: 22px; text-indent: 0; color: #d81e06;
+  }
+}
+.selectSell::after{
+  content: ''; border: 2px solid #ccc; border-bottom: 0; border-left: 0; transform: rotate(45deg); display: block; width: 20px; height: 20px;
+}
+.notUseSell{
+  height: 60px; background: #fff; width: 100%; margin-bottom: 0;
+  div{
+    position: fixed; background: #fff; bottom: 0; left: 0; width: 100%; height: 100px;display: flex; justify-content: center; align-items: center; padding: 0 20px;
+    span{
+      width: 500px; height: 58px; display: flex; justify-content: center; align-items: center; color: #fff; font-size: 24px; background-color: #26a2ff; border-radius: 10px;
+    }
+  }
+}

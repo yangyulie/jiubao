@@ -89,23 +89,32 @@
         <div class="totalPriceBox">
             订单金额总计： <span>￥{{datas.total}}</span>
         </div>
+        <div class="selectSell" v-if="datas.userFirstOrder&&datas.userFirstOrder.length>0" @click="showActList">
+            <span style="flex:1">选择优惠活动</span>
+            <span class="sellName" v-if="selectActObj&&selectActObj.FirstOrderName">{{selectActObj.FirstOrderName}}</span>
+        </div>
+        <div class="reduceBox" v-if="selectActObj&&selectActObj.FirstOrderName">
+            <p>
+                <em>预计减免：{{selectActObj.Amount}}元</em>
+            </p>
+        </div>
+        <div class="selectSell" v-if="datas.userMycoupon&&datas.userMycoupon.length>0" @click="showSellList">
+            <span style="flex:1">选择优惠券</span>
+            <span class="sellName" v-if="selectSellObj&&selectSellObj.couponName">{{selectSellObj.couponName}}</span>
+        </div>
+        <div class="reduceBox" v-if="selectSellObj&&selectSellObj.couponName">
+            <p>
+                <em>预计减免：{{selectSellObj.Amount}}元</em>
+            </p>
+        </div>
         <div class="sellBox" v-if="isSelectSell">
             <div class="sellNameBox">
-                <p v-if="datas.userFirstOrder">
-                    <span>{{datas.userFirstOrder.FirstOrderName}}</span><br>
-                    <em>预计减免：{{datas.userFirstOrder.Amount}}元</em>
-                </p>
-                <p v-if="selectSellObj.Amount">
-                    <span>{{selectSellObj.couponName}}</span><br>
-                    <em>预计减免：{{selectSellObj.Amount}}元</em>
-                </p>
                 <ul>
                     <li>预计总减免：-{{sellPrice}}元</li>
                     <li>预计减免后订单总额：{{datas.total-sellPrice}}元</li>
                 </ul>
             </div>
         </div>
-        <div class="selectSell" v-if="datas.userMycoupon&&datas.userMycoupon.length>0" @click="showSellList"><span>选择优惠券</span></div>
         <div class="markBox">
             <p>添加订单备注</p>
             <textarea name="" id="" cols="30" rows="10" v-model="submitData.Remarks" placeholder="请您在此添加订单备注"></textarea>
@@ -117,9 +126,18 @@
     </div>
     <div class="sellListPop" @click="showSellList" :class="{now:isShowSellList}">
         <ul>
-            <li v-for="(item,index) in datas.userMycoupon" :key="index" @click="getThisSell(index)">
+            <li style="margin-right:0" v-for="(item,index) in datas.userMycoupon" :key="index" @click="getThisSell(index)">
                 <img :src="item.picurls" alt="">
             </li>
+            <li class="notUseSell" @click="notUseSell"><div><span>不使用优惠券</span></div></li>
+        </ul>
+    </div>
+    <div class="sellListPop" @click="showActList" :class="{now:isShowActList}">
+        <ul>
+            <li v-for="(item,index) in datas.userFirstOrder" :key="index" @click="getThisAct(index)">
+                <span>{{item.FirstOrderName}}</span>
+            </li>
+            <li style="margin-right:0" class="notUseSell" @click="notUseAct"><div><span>不使用优惠活动</span></div></li>
         </ul>
     </div>
     <foot :is_now="1"></foot>
@@ -151,7 +169,9 @@ export default {
       isSelectSell:false,
       selectSellObj:{},
       isShowSellList:false,
-      allChecked:0
+      isShowActList:false,
+      allChecked:0,
+      selectActObj:{}
     };
   },
   mounted() {
@@ -185,11 +205,38 @@ export default {
         this.getAddressListFn()
         this.getInvoiceListFn()
     },
+    notUseSell(){
+        this.selectSellObj = {};
+        if(!this.selectActObj.FirstOrderName){
+            this.isSelectSell = false
+            
+        }
+    },
+    notUseAct(){
+        this.selectActObj = {};
+        if(!this.selectSellObj.couponName){
+            this.isSelectSell = false
+        }
+    },
     getThisSell(idx){
         this.selectSellObj = this.datas.userMycoupon[idx];
+        this.isSelectSell = true;
+    },
+    getThisAct(idx){
+        this.selectActObj = this.datas.userFirstOrder[idx];
+        this.isSelectSell = true;
     },
     showSellList(){
         this.isShowSellList = !this.isShowSellList;
+    },
+    showActList(){
+        this.isShowActList = !this.isShowActList;
+    },
+    cancelInvoice(){
+        console.log(3434434)
+        this.invoiceInfo = false;
+        this.urlParam.invoiceId = 0;
+        return;
     },
     changeFn(){
         this.submitData.ptck = this.allChecked*1
@@ -291,8 +338,8 @@ export default {
     // ...mapState(['app','app2',"data"])
     sellPrice:function(){
         let total = 0;
-        if(this.datas.userFirstOrder&&this.datas.userFirstOrder.Amount){
-          total +=this.datas.userFirstOrder.Amount*1
+        if(this.selectActObj&&this.selectActObj.Amount){
+          total +=this.selectActObj.Amount*1
         }
         if(this.selectSellObj&&this.selectSellObj.Amount){
 
@@ -307,44 +354,7 @@ export default {
 </script>
 <style lang='less' scoped>
 @bor:10px solid #f4f8ff;
-.sellListPop{
-    position: fixed; width: 100%; height: 100vh; background-color: rgba(0, 0, 0, .5); z-index: 10; display: none; justify-content: center; align-items: flex-end; left: 0; top: 0;
-    ul{
-        width: 100%; padding: 20px; display: flex; box-sizing: border-box; justify-content: flex-start; align-items: center; flex-wrap: wrap; max-height: 80vh; overflow-y: auto; background-color: #fff;
-        li{
-            margin-bottom: 20px;
-        }
-    }
-}
-.sellListPop.now{
-    display: flex;
-}
-.sellBox{
-    border-bottom: @bor; padding: 15px 18px;
-    .sellNameBox{
-        p{
-            font-size: 18px; color: #d81e06; line-height: 30px; margin-bottom: 15px;
-            span{
-                font-size: 24px; display: inline-block; height: 43px; line-height: 43px; padding: 0 20px; background-color: #f9dcd8; border-radius: 22px; text-indent: 0;
-            }
-            em{
-                text-indent: 1em; display: block; font-style: normal;
-            }
-        }
-        ul{
-            font-size: 18px; color: #d81e06; line-height: 30px;
-            li{
-                 text-indent: 1em;
-            }
-        }
-    }
-}
-.selectSell{
-    border-bottom: @bor; height: 80px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; font-size: 24px; color: #313131;
-}
-.selectSell::after{
-    content: ''; border: 2px solid #ccc; border-bottom: 0; border-left: 0; transform: rotate(45deg); display: block; width: 20px; height: 20px;
-}
+
 .address{
     padding: 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: @bor; font-size: 20px; color: #929292; background-color: #f4f8ff;
     dl{

@@ -17,34 +17,53 @@
             </dd>
         </dl>
         <div class="payTotal">
-            支付金额： ￥{{datas.total}}元
+            <span v-if="isSelectSell">支付金额： ￥{{datas.total-sellPrice}}元</span>
+            <span v-else>支付金额： ￥{{datas.total}}元</span>
+        </div>
+        <div class="selectSell" v-if="datas.userFirstOrder&&datas.userFirstOrder.length>0" @click="showActList">
+            <span style="flex:1">选择优惠活动</span>
+            <span class="sellName" v-if="selectActObj&&selectActObj.FirstOrderName">{{selectActObj.FirstOrderName}}</span>
+        </div>
+        <div class="reduceBox" v-if="selectActObj&&selectActObj.FirstOrderName">
+            <p>
+                <em>活动减免：{{selectActObj.Amount}}元</em>
+            </p>
+        </div>
+        <div class="selectSell" v-if="datas.userMycoupon&&datas.userMycoupon.length>0" @click="showSellList">
+            <span style="flex:1">选择优惠券</span>
+            <span class="sellName" v-if="selectSellObj&&selectSellObj.couponName">{{selectSellObj.couponName}}</span>
+        </div>
+        <div class="reduceBox" v-if="selectSellObj&&selectSellObj.couponName">
+            <p>
+                <em>优惠券减免：{{selectSellObj.Amount}}元</em>
+            </p>
         </div>
         <div class="sellBox" v-if="isSelectSell">
             <div class="sellNameBox">
-                <p v-if="datas.userFirstOrder">
-                    <span>{{datas.userFirstOrder.FirstOrderName}}</span><br>
-                    <em>预计减免：{{datas.userFirstOrder.Amount}}元</em>
-                </p>
-                <p v-if="selectSellObj.Amount">
-                    <span>{{selectSellObj.couponName}}</span><br>
-                    <em>预计减免：{{selectSellObj.Amount}}元</em>
-                </p>
                 <ul>
-                    <li>预计总减免：-{{sellPrice}}元</li>
-                    <li>预计减免后订单总额：{{datas.total-sellPrice}}元</li>
+                    <li>总计减免：-{{sellPrice}}元</li>
+                    <li>减免后总计订单金额：{{datas.total-sellPrice}}元</li>
                 </ul>
             </div>
         </div>
-        <div class="selectSell" v-if="datas.userMycoupon&&datas.userMycoupon.length>0" @click="showSellList"><span>选择优惠券</span></div>
         <div class="submitBox">
             <button @click="submitPay">立即支付</button>
         </div>
     </div>
     <div class="sellListPop" @click="showSellList" :class="{now:isShowSellList}">
         <ul>
-            <li v-for="(item,index) in datas.userMycoupon" :key="index" @click="getThisSell(index)">
+            <li style="margin-right:0" v-for="(item,index) in datas.userMycoupon" :key="index" @click="getThisSell(index)">
                 <img :src="item.picurls" alt="">
             </li>
+            <li class="notUseSell" style="margin-right:0" @click="notUseSell"><div><span>不使用优惠券</span></div></li>
+        </ul>
+    </div>
+    <div class="sellListPop" @click="showActList" :class="{now:isShowActList}">
+        <ul>
+            <li v-for="(item,index) in datas.userFirstOrder" :key="index" @click="getThisAct(index)">
+                <span>{{item.FirstOrderName}}</span>
+            </li>
+            <li style="margin-right:0" class="notUseSell" @click="notUseAct"><div><span>不使用优惠活动</span></div></li>
         </ul>
     </div>
   </div>
@@ -66,10 +85,12 @@ export default {
       isSelectSell:false,
       selectSellObj:{},
       isShowSellList:false,
+      isShowActList:false,
       Id:0,
       firstId:0,
       couponId:0,
-      payMode:""
+      payMode:"",
+      selectActObj:{}
     };
   },
   mounted() {
@@ -90,11 +111,36 @@ export default {
       this.couponId = this.$route.query.couponId;
       this.getPayFn()
     },
+    
+    notUseSell(){
+        this.selectSellObj = {};
+        console.log(!this.selectActObj&&!this.selectActObj.FirstOrderName,!this.selectActObj,!this.selectActObj.FirstOrderName)
+        if(!this.selectActObj.FirstOrderName){
+            this.isSelectSell = false
+            
+        }
+    },
+    notUseAct(){
+        this.selectActObj = {};
+        console.log(!this.selectSellObj&&!this.selectSellObj.couponName,!this.selectSellObj,!this.selectSellObj.couponName)
+        if(!this.selectSellObj.couponName){
+            this.isSelectSell = false
+            console.log(11111)
+        }
+    },
     getThisSell(idx){
         this.selectSellObj = this.datas.userMycoupon[idx];
+        this.isSelectSell = true;
+    },
+    getThisAct(idx){
+        this.selectActObj = this.datas.userFirstOrder[idx];
+        this.isSelectSell = true;
     },
     showSellList(){
         this.isShowSellList = !this.isShowSellList;
+    },
+    showActList(){
+        this.isShowActList = !this.isShowActList;
     },
     getPayFn(){
         Api.getPay({Id:this.Id}).then(res=>{
@@ -104,9 +150,11 @@ export default {
           // }
           if(res.code==1){
             this.datas = res;
-            
-            if(res.userFirstOrder||res.userMycoupon&&res.userMycoupon.length>0){
+            if((res.userFirstOrder&&res.userFirstOrder.length>0)||(res.userMycoupon&&res.userMycoupon.length>0)){
                 this.isSelectSell = true;
+            }
+            if(res.userFirstOrder&&res.userFirstOrder.length>0){
+                this.selectActObj = res.userFirstOrder[0]
             }
             if(res.userMycoupon&&res.userMycoupon.length>0){
                 let _this = this;
@@ -158,8 +206,8 @@ export default {
           Id:this.Id,
           payId:this.payMode
       }
-      if(this.datas.userFirstOrder&&this.datas.userFirstOrder.Id){
-        questData.firstId = this.datas.userFirstOrder.Id
+      if(this.selectActObj&&this.selectActObj.Id){
+        questData.firstId = this.selectActObj.Id
       }
       if(this.selectSellObj&&this.selectSellObj.Id){
         questData.couponId = this.selectSellObj.Id
@@ -225,8 +273,8 @@ export default {
     // ...mapState(['app','app2',"data"])
     sellPrice:function(){
         let total = 0;
-        if(this.datas.userFirstOrder&&this.datas.userFirstOrder.Amount){
-          total +=this.datas.userFirstOrder.Amount*1
+        if(this.selectActObj&&this.selectActObj.Amount){
+          total +=this.selectActObj.Amount*1
         }
         if(this.selectSellObj&&this.selectSellObj.Amount){
 
@@ -240,44 +288,7 @@ export default {
 </script>
 <style lang='less' scoped>
 @bor:10px solid #f4f8ff;
-.sellListPop{
-    position: fixed; width: 100%; height: 100vh; background-color: rgba(0, 0, 0, .5); z-index: 10; display: none; justify-content: center; align-items: flex-end; left: 0; top: 0;
-    ul{
-        width: 100%; padding: 20px; display: flex; box-sizing: border-box; justify-content: flex-start; align-items: center; flex-wrap: wrap; max-height: 80vh; overflow-y: auto; background-color: #fff;
-        li{
-            margin-bottom: 20px;
-        }
-    }
-}
-.sellListPop.now{
-    display: flex;
-}
-.sellBox{
-    border-bottom: @bor; padding: 15px 18px; border-top: @bor; margin-top: 25px;
-    .sellNameBox{
-        p{
-            font-size: 18px; color: #d81e06; line-height: 30px; margin-bottom: 15px;
-            span{
-                font-size: 24px; display: inline-block; height: 43px; line-height: 43px; padding: 0 20px; background-color: #f9dcd8; border-radius: 22px; text-indent: 0;
-            }
-            em{
-                text-indent: 1em; display: block; font-style: normal;
-            }
-        }
-        ul{
-            font-size: 18px; color: #d81e06; line-height: 30px;
-            li{
-                 text-indent: 1em;
-            }
-        }
-    }
-}
-.selectSell{
-    border-bottom: @bor; height: 80px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; font-size: 24px; color: #313131;
-}
-.selectSell::after{
-    content: ''; border: 2px solid #ccc; border-bottom: 0; border-left: 0; transform: rotate(45deg); display: block; width: 20px; height: 20px;
-}
+
 .wrap{
     .list{
         border-bottom: @bor; padding: 25px;
@@ -307,10 +318,7 @@ export default {
         }
     }
     .payTotal{
-        text-align: right; padding: 25px 50px 0 0; font-size: 24px; color: #313131;
-    }
-    .submitBox{
-        margin-top: 100px;
+        text-align: right; padding: 25px 50px 25px 0; font-size: 24px; color: #313131; border-bottom: @bor;
     }
 }
 </style>

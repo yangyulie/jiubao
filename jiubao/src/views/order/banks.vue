@@ -3,6 +3,7 @@
     <headed :tit="'银行卡'" :isShowRight="false" :isClose="false">
     </headed>
     <div class="wrap">
+        <p class="tips">单卡当日单笔支付不能超过5000元；</p>
         <ul v-if="banksList&&banksList.length>0">
             <li v-for="(item,index) in banksList" :key="index">
                 <dl>
@@ -189,6 +190,9 @@ export default {
 </script>
 <style lang='less' scoped>
 @bor:10px solid #f4f8ff;
+.tips{
+    padding: 0 15px 20px; border-bottom: @bor; color: #d81e06; font-size: 24px; line-height: 36px;
+}
 .wrap{
     padding: 35px 20px 0;
     ul{

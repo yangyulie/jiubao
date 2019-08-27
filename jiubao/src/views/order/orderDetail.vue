@@ -64,7 +64,7 @@
                             <em>减免：{{item.Amount}}元</em>
                         </p>
                         <ul>
-                            <li>总减免：-{{sellPrice}}元</li>
+                            <li>总计减免：-{{sellPrice}}元</li>
                             <li>减免后订单总额：{{datas.Total}}元</li>
                         </ul>
                     </div>
@@ -186,24 +186,8 @@ export default {
 <style lang='less' scoped>
 @bor:10px solid #f4f8ff;
 .sellBox{
-    padding: 15px 0;
-    .sellNameBox{
-        p{
-            font-size: 18px; color: #d81e06; line-height: 30px; margin-bottom: 15px;
-            span{
-                font-size: 24px; display: inline-block; height: 43px; line-height: 43px; padding: 0 20px; background-color: #f9dcd8; border-radius: 22px; text-indent: 0; overflow: hidden; max-width: 100%; white-space: nowrap;
-            }
-            em{
-                text-indent: 1em; display: block; font-style: normal;
-            }
-        }
-        ul{
-            font-size: 18px; color: #d81e06; line-height: 30px;
-            li{
-                 text-indent: 1em;
-            }
-        }
-    }
+    padding: 15px 0; border-bottom: 0;
+    
 }
 .address{
     padding: 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: @bor; font-size: 20px; color: #929292; background-color: #f4f8ff;
