@@ -30,7 +30,7 @@
             </p>
         </div>
         <div class="selectSell" v-if="datas.userMycoupon&&datas.userMycoupon.length>0" @click="showSellList">
-            <span style="flex:1">选择优惠券</span>
+            <span style="flex:1">可参加活动</span>
             <span class="sellName" v-if="selectSellObj&&selectSellObj.couponName">{{selectSellObj.couponName}}</span>
         </div>
         <div class="reduceBox" v-if="selectSellObj&&selectSellObj.couponName">
